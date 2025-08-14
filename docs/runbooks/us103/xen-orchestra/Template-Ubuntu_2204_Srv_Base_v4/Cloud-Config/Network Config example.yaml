@@ -1,0 +1,27 @@
+#  Bryan Smith
+#  06/30/2025
+#  -----------------------------------------------------------------------------------------------------------------------------------------
+#  For use with the template "Template-Ubuntu_2204_Srv_Base_v4"
+#  paste everything starting with #cloud-config in the "network config" field when creating a template; do not paste the cmments above it.
+#  See readme for more details
+#  Saved in cloud config  on XO under "Ubuntu_2204_Srv_Base_v4"
+#  Copy from #cloud-config down.
+#  Replace anything in <here>
+#  -----------------------------------------------------------------------------------------------------------------------------------------
+
+#cloud-config
+network:
+  version: 2
+  ethernets:
+    eth0:
+      dhcp4: false
+      addresses:
+        - <IP>/<prefix>
+      routes: 
+        - to: default
+          via: <gateway>
+      nameservers:
+        search: [ad.infutable.com]
+        addresses:
+          - <gateway>
+          - 1.1.1.1
