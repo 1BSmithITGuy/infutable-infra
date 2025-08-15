@@ -80,14 +80,12 @@ fi
   alias kn='kubens'
 
 #  git filesystem navigation shortcut aliases (BSS)
-  alias bsdev='cd /srv/repos/Homelab/US103/dev/'
-  alias bsprod='cd /srv/repos/Homelab/US103/prod/'
-  alias bsdevorc='cd /srv/repos/Homelab/US103/dev/orchestration'
+  alias bsorc='cd /srv/repos/infutable-infra/orchestration'
 
 #  Orchestration aliases (BSS)
-  alias bsk8start='/srv/repos/Homelab/US103/prod/orchestration/bin/us103-start-k8s.sh'
-  alias bsk8shut='/srv/repos/Homelab/US103/prod/orchestration/bin/us103-shutdown-k8s.sh'
-  alias bs103shut='/srv/repos/Homelab/US103/prod/orchestration/bin/us103-shutdown-the-world.sh'
+  alias bsk8start='/srv/repos/infutable-infra/orchestration/us103/bin/us103-start-k8s.sh'
+  alias bsk8shut='/srv/repos/infutable-infra/orchestration/us103/bin/us103-shutdown-k8s.sh'
+  alias bs103shut='/srv/repos/infutable-infra/orchestration/us103/bin/us103-shutdown-the-world.sh'
 
 # Bash completion
 if ! shopt -oq posix; then
