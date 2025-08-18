@@ -1,0 +1,26 @@
+{
+  // Auto-save “like Notepad++”
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 500,
+
+  // Reopen your last editors exactly as you left them
+  "window.restoreWindows": "all",
+  "workbench.startupEditor": "none",
+
+  // Keep unsaved tabs around (Hot Exit)
+  "files.hotExit": "onExitAndWindowClose",
+
+  // Make ad-hoc notes pleasant
+  "editor.wordWrap": "on",
+  "files.defaultLanguage": "markdown",
+
+  // --- Images from clipboard → saved file + Markdown link
+  "pasteImage.path": "${currentFileDir}/_img",
+  "pasteImage.namePrefix": "${currentFileNameWithoutExt}-",
+  "pasteImage.forceUnixStyleSeparator": true,
+
+  // Markdown preview usability
+  "markdown.preview.scrollEditorWithPreview": true,
+  "markdown.preview.breaks": true
+}
+

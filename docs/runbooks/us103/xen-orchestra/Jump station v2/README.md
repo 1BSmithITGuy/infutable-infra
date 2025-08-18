@@ -104,7 +104,7 @@ autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 ## 🔧 Essential Software Setup
 
 ```bash
-sudo apt install -y tree git curl jq htop unzip build-essential   nodejs npm vim code remmina
+sudo apt install -y tree git curl jq htop unzip build-essential   nodejs npm vim code remmina gimp
 ```
 
 **Visual Studio Code (manual install steps):**
