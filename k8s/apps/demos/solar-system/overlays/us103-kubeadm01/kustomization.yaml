@@ -1,7 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-# No namespace resource here; we assume it already exists.
+#  No namespace resource here; we assume it already exists.
 namespace: us103-demos
 namePrefix: us103-
 
@@ -21,4 +21,5 @@ commonAnnotations:
 
 images:
   - name: siddharth67/solar-system
-    newTag: v9
+    newTag: v6
+  
