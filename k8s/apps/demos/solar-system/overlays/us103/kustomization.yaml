@@ -21,4 +21,4 @@ commonAnnotations:
 
 images:
   - name: siddharth67/solar-system
-    newTag: v9
+    newTag: v6
