@@ -19,16 +19,18 @@
   "markdown.preview.breaks": true,
   
 // Markdown Paste (telesoho)
-"MarkdownPaste.path": "/tmp/mpaste",
+//"markdown-paste.path": "${fileDirname}/_img",
+"MarkdownPaste.path": "${fileDirname}/_img",
 "MarkdownPaste.autoSelectClipboardType": "always",
 "MarkdownPaste.imageRules": [
-  {
-    "when": "editorLangId == 'markdown' && clipboardType == 'image'",
-    "path": "/tmp/mpaste"
+
+  
+
+   {
+    // for Markdown editor, when clipboard is an image, save under ./_img
+    "when": "editorLangId == markdown && clipboardType == image",
+    "path": "${fileDirname}/_img"
   }
-],
-"markdown.copyFiles.destination": {
-  "**/*.md": "${documentDirName}/_img/${fileName}"
-}
+]
 }
 

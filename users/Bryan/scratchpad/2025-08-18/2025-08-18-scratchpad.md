@@ -50,3 +50,6 @@ sh -c 'd="$HOME/scratchpad"; f="$d/$(date +%F).md"; mkdir -p "$d"; [ -f "$f" ] |
 ![alt text](image-1.png)
 
 sh -c 'root="/srv/repos/infutable-infra/users/Bryan/scratchpad"; day="$(date +%F)"; dir="$root/$day"; file="$dir/$day.md"; mkdir -p "$dir/_img"; [ -f "$file" ] || printf "# %s\n\n## Inbox\n\n## Notes\n\n" "$day" > "$file"; code --new-window "$root"; sleep 0.3; code -r -g "$file"'
+
+
+![alt text](image-10.png)
