@@ -2,7 +2,7 @@
 #----------------------------------------------------------------------------------------------------------------
 #  Bryan Smith
 #  BSmithITGuy@gmail.com
-#  Last Update:  08/20/2025
+#  Last Update:  08/21/2025
 #
 #  DESCRIPTION:
 #    Installs ArgoCD, adds repo, and adds k3s cluster.
@@ -10,10 +10,17 @@
 #  PREREQUISITES:
 #    -  Kubectl is installed and in the correct context.  
 #    -  SSH key is setup in github and in the correct directory (see README.md)
+#    -  Cluster certificates are stored in /srv/secrets/clusters/us103-k3s01/
+#    -  Required files:   
+#       ├── namespace.yaml                # ArgoCD namespace
+#       ├── ingress.yaml                  # NGINX ingress configuration  
+#       ├── cluster-us103-k3s01.yaml      # Cluster metadata (no secrets)
 #----------------------------------------------------------------------------------------------------------------
 
 # Configuration
-SSH_KEY_PATH="/srv/ssh-keys/automation/argocd/repos/infutable-infra/id_ed25519_github-deploy-infutable-infra-us103"
+SECRETS_BASE="/srv/secrets"
+SSH_KEY_PATH="$SECRETS_BASE/ssh-keys/automation/argocd/github-deploy-infutable-infra-us103"
+CLUSTER_CERTS_PATH="$SECRETS_BASE/clusters/us103-k3s01"
 GITHUB_REPO="git@github.com:1BSmithITGuy/infutable-infra.git"
 
 echo "==================================="
@@ -30,13 +37,33 @@ fi
 
 echo "✓ SSH deploy key found at $SSH_KEY_PATH"
 
+# Verify cluster certificates exist
+if [ ! -f "$CLUSTER_CERTS_PATH/ca.crt" ] || [ ! -f "$CLUSTER_CERTS_PATH/client.crt" ] || [ ! -f "$CLUSTER_CERTS_PATH/client.key" ]; then
+    echo "ERROR: Cluster certificates not found at $CLUSTER_CERTS_PATH"
+    echo "Please ensure the following files exist:"
+    echo "  - $CLUSTER_CERTS_PATH/ca.crt"
+    echo "  - $CLUSTER_CERTS_PATH/client.crt"
+    echo "  - $CLUSTER_CERTS_PATH/client.key"
+    exit 1
+fi
+
+echo "✓ Cluster certificates found at $CLUSTER_CERTS_PATH"
+
 # Create namespace
 echo "Creating namespace..."
 kubectl apply -f namespace.yaml
 
 # Install base ArgoCD
 echo "Installing base ArgoCD..."
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+# Use local manifest file if it exists, otherwise download from stable
+if [ -f "argocd-install.yaml" ]; then
+    echo "Using local argocd-install.yaml"
+    kubectl apply -n argocd -f argocd-install.yaml
+else
+    echo "WARNING: No local argocd-install.yaml found, downloading from stable branch"
+    echo "Run ./download-argocd-manifests.sh to download a specific version"
+    kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+fi
 
 # Wait for base installation to settle
 echo "Waiting for base installation to settle..."
@@ -55,8 +82,38 @@ kubectl create secret generic repo-infutable \
     argocd.argoproj.io/secret-type=repository | \
   kubectl apply -f -
 
-echo "Adding K3s cluster configuration..."
-kubectl apply -f cluster-us103-k3s01.yaml
+# Create cluster secret with certificates from local files
+echo "Adding K3s cluster configuration with local certificates..."
+
+# Read certificates (no sudo needed with group permissions)
+CA_CERT=$(base64 -w0 < "$CLUSTER_CERTS_PATH/ca.crt")
+CLIENT_CERT=$(base64 -w0 < "$CLUSTER_CERTS_PATH/client.crt")
+CLIENT_KEY=$(base64 -w0 < "$CLUSTER_CERTS_PATH/client.key")
+
+# Create the cluster config JSON (NO base64 encoding here)
+CLUSTER_CONFIG=$(cat <<EOF
+{
+  "bearerToken": "",
+  "tlsClientConfig": {
+    "insecure": false,
+    "caData": "$CA_CERT",
+    "certData": "$CLIENT_CERT",
+    "keyData": "$CLIENT_KEY"
+  }
+}
+EOF
+)
+
+# Create the cluster secret (kubectl will base64 encode it automatically)
+kubectl create secret generic cluster-us103-k3s01 \
+  --namespace=argocd \
+  --from-literal=name="us103-k3s01" \
+  --from-literal=server="https://BSUS103KM01:6443" \
+  --from-literal=config="$CLUSTER_CONFIG" \
+  --dry-run=client -o yaml | \
+  kubectl label -f - --dry-run=client -o yaml --local \
+    argocd.argoproj.io/secret-type=cluster | \
+  kubectl apply -f -
 
 echo "Configuring ingress..."
 kubectl apply -f ingress.yaml
@@ -99,6 +156,7 @@ echo "✓ Dark theme enabled"
 echo "✓ GitHub repository configured: $GITHUB_REPO"
 echo "✓ K3s cluster added: us103-k3s01"
 echo "✓ SSH key loaded from: $SSH_KEY_PATH"
+echo "✓ Cluster certificates loaded from: $CLUSTER_CERTS_PATH"
 echo ""
 echo "To change the admin password after login:"
 echo "  argocd account update-password"
