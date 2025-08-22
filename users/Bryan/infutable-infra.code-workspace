@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "infutable-infra",
+			"path": "../.."
+		},
+		{
+			"name": "Homelab",
+			"path": "../../../Homelab"
+		}
+	],
+	"settings": {}
+}
