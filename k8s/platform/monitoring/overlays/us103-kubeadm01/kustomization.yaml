@@ -1,0 +1,29 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: monitoring
+
+resources:
+  - ../../base
+  - prometheus-pvc.yaml
+  - grafana-pvc.yaml
+
+
+patches:
+  - target:
+      group: ""         # core/v1 has empty group
+      version: v1
+      kind: ConfigMap
+      name: prometheus-config
+      namespace: monitoring
+    path: prometheus-config-patch.yaml
+
+  - path: prometheus-deployment-patch.yaml
+  - path: grafana-deployment-patch.yaml
+
+labels:
+  - pairs:
+      site: US103
+      cluster: kubeadm01
+    includeSelectors: true
+    includeTemplates: true
