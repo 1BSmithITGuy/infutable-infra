@@ -2,12 +2,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: prometheus
-  namespace: monitoring
 spec:
   template:
     spec:
       volumes:
       - name: prometheus-storage
-        emptyDir: null
+        $patch: replace
         persistentVolumeClaim:
           claimName: prometheus-storage
