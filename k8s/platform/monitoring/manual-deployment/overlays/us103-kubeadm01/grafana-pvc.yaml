@@ -1,0 +1,12 @@
+piVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+spec:
+  template:
+    spec:
+      volumes:
+      - name: grafana-storage
+        $patch: replace
+        persistentVolumeClaim:
+          claimName: grafana-storage

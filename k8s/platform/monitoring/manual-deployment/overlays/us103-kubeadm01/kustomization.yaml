@@ -27,3 +27,4 @@ labels:
       cluster: kubeadm01
     includeSelectors: true
     includeTemplates: true
+  - prometheus-rbac-patch.yaml
