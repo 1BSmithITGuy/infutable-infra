@@ -1,3 +1,4 @@
+# ===================== Grafana Configuration =====================
 grafana:
   ingress:
     enabled: true
@@ -7,9 +8,43 @@ grafana:
   
   # Password auto-generated if not set
   # adminPassword: ""
+  
+  # Auto-provision dashboards on deployment
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+      - name: 'default'
+        orgId: 1
+        folder: 'infUtable'
+        type: file
+        disableDeletion: false
+        updateIntervalSeconds: 10
+        options:
+          path: /var/lib/grafana/dashboards/default
+  
+  dashboards:
+    default:
+      # Multi-cluster overview
+      kubernetes-cluster-monitoring:
+        gnetId: 315
+        revision: 3
+        datasource: Prometheus
+      # Node-level deep dive  
+      node-exporter-full:
+        gnetId: 1860
+        revision: 33
+        datasource: Prometheus
+      # Cluster resources
+      kubernetes-cluster-prometheus:
+        gnetId: 6417
+        revision: 1
+        datasource: Prometheus
 
+# ===================== Prometheus Configuration =====================
 prometheus:
   prometheusSpec:
+    # Data retention and storage
     retention: 15d
     storageSpec:
       volumeClaimTemplate:
@@ -18,3 +53,47 @@ prometheus:
           resources:
             requests:
               storage: 10Gi
+    
+    # External labels to identify THIS Prometheus instance
+    externalLabels:
+      cluster: us103-kubeadm01
+      site_code: us103
+      provider: on-prem
+      prometheus_instance: primary
+    
+    # ===================== External Monitoring Targets =====================
+    additionalScrapeConfigs:
+    
+    # K3s Cluster - Node Exporter
+    # Deployed via: kubectl --context=us103-k3s01 apply -f external-monitoring/deploy-node-exporter.sh
+    - job_name: 'k3s-nodes'
+      static_configs:
+      - targets: 
+        - 'bsus103km01:30910'  # K3s master node
+        # Add additional K3s nodes here as needed
+      relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        regex: '([^:]+):.*'
+        replacement: '${1}'
+      - target_label: cluster
+        replacement: 'us103-k3s01'
+      - target_label: site_code
+        replacement: 'us103'
+      - target_label: provider
+        replacement: 'on-prem'
+      - target_label: node_type
+        replacement: 'master'
+    
+    # K3s Cluster - Kube State Metrics
+    # Deployed via: kubectl --context=us103-k3s01 apply -f external-monitoring/deploy-kube-state-metrics.sh
+    - job_name: 'k3s-kube-state'
+      static_configs:
+      - targets: ['bsus103km01:30911']
+      relabel_configs:
+      - target_label: cluster
+        replacement: 'us103-k3s01'
+      - target_label: site_code
+        replacement: 'us103'
+      - target_label: provider
+        replacement: 'on-prem'

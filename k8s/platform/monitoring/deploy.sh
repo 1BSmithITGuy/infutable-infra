@@ -5,6 +5,8 @@ set -e
 
 echo "=== Deploying Monitoring Stack ==="
 
+kubectl config use-context us103-kubeadm01
+
 # Check prerequisites
 command -v helm >/dev/null 2>&1 || { echo "Helm required but not installed. Aborting." >&2; exit 1; }
 command -v kubectl >/dev/null 2>&1 || { echo "kubectl required but not installed. Aborting." >&2; exit 1; }
