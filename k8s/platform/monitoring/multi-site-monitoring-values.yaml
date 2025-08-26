@@ -1,0 +1,85 @@
+grafana:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - grafana.us103kubeadm01.infutable.com
+  adminPassword: infutable-admin
+  
+  # Pre-install useful dashboards
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+      - name: 'default'
+        orgId: 1
+        folder: ''
+        type: file
+        disableDeletion: false
+        updateIntervalSeconds: 10
+        allowUiUpdates: true
+        options:
+          path: /var/lib/grafana/dashboards/default
+  
+  dashboards:
+    default:
+      node-exporter:
+        gnetId: 1860  # Node Exporter Full dashboard
+        datasource: Prometheus
+      kubernetes-cluster:
+        gnetId: 8588
+        datasource: Prometheus
+
+prometheus:
+  prometheusSpec:
+    retention: 15d
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi
+    
+    # Monitor external targets
+    additionalScrapeConfigs:
+    # K3s Cluster Nodes (after installing node-exporter there)
+    - job_name: 'k3s-nodes'
+      static_configs:
+      - targets: 
+        # Add your k3s node IPs here
+        # - '10.0.3.10:9100'
+        # - '10.0.3.11:9100'
+        labels:
+          cluster: 'k3s'
+          site: 'us103'
+    
+    # XCP-ng Hosts (after installing node-exporter)
+    - job_name: 'xcp-ng-hosts'
+      static_configs:
+      - targets:
+        # Add after installing node-exporter on XCP-ng
+        # - '10.0.1.10:9100'
+        # - '10.0.1.11:9100'
+        labels:
+          job: 'xcp-ng'
+          site: 'us103'
+    
+    # OPNsense (has built-in Prometheus plugin)
+    - job_name: 'opnsense'
+      static_configs:
+      - targets:
+        # - 'opnsense.infutable.com:9273'
+        labels:
+          job: 'firewall'
+          site: 'us103'
+    
+    # Windows VMs with windows_exporter
+    - job_name: 'windows'
+      static_configs:
+      - targets:
+        # - 'dc01.infutable.com:9182'
+        # - 'dc02.infutable.com:9182'
+        labels:
+          job: 'windows'
+          site: 'us103'
