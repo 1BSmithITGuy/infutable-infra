@@ -1,48 +1,60 @@
 # Monitoring Stack
 
-Enterprise monitoring using Prometheus and Grafana via kube-prometheus-stack Helm chart.
+Multi-cluster monitoring using Prometheus and Grafana deployed via Helm.
 
-## Quick Deploy
+## Architecture
 
+- **Primary Cluster** (us103-kubeadm01): Runs full monitoring stack
+- **Secondary Cluster** (us103-k3s01): Runs exporters only
+- **Components**: Prometheus, Grafana, Node Exporter, kube-state-metrics, AlertManager
+
+## Deployment
+
+### Primary Stack
 ```bash
 cd k8s/platform/monitoring
 ./deploy.sh
 ```
 
-## Architecture
-
-- **Prometheus**: Metrics collection and storage
-- **Grafana**: Visualization and dashboards  
-- **Node Exporter**: Host-level metrics (CPU, RAM, disk)
-- **kube-state-metrics**: Kubernetes object metrics
-- **AlertManager**: Alert routing (configured but not active)
+### External Cluster Monitoring (/external-monitoring)
+```bash
+./deploy-node-exporter.sh      # Hardware metrics
+./deploy-kube-state-metrics.sh  # Kubernetes object metrics
+```
 
 ## Access
 
-- **URL**: http://grafana.us103kubeadm01.infutable.com
-- **Username**: admin
-- **Password**: Auto-generated, retrieve with:
-  ```bash
-  kubectl get secret -n monitoring monitoring-grafana -o jsonpath="{.data.admin-password}" | base64 -d
-  ```
-
-## Included Dashboards
-
-Pre-configured dashboards available in Grafana:
-- Kubernetes Cluster Overview
-- Node Exporter Full
-- Pod/Container metrics
-- Persistent Volume usage
+**URL**: http://grafana.us103kubeadm01.infutable.com  
+**Username**: admin  
+**Password**: 
+```bash
+kubectl get secret -n monitoring monitoring-grafana -o jsonpath="{.data.admin-password}" | base64 -d
+```
 
 ## Configuration
 
-Edit `prometheus-values.yaml` to modify:
-- Retention period (default: 15d)
-- Storage size (default: 10Gi)
-- Ingress settings
-- Additional scrape targets
+All configuration is in `prometheus-values.yaml`. Key settings:
+- Data retention: 15 days
+- Storage: 10GB per component
+- External targets: K3s cluster metrics via NodePort
 
-## Adding External Targets
+### Reference Documentation
+- [Chart Values Reference](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)
+- [Configuration Options](https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack)
+
+## Dashboards
+
+### Pre-configured
+- **315**: Kubernetes Cluster Monitoring (multi-cluster view)
+- **1860**: Node Exporter Full (hardware metrics)
+- **6417**: Kubernetes Cluster Resources
+
+### Custom
+- `dashboards/US103-Overview.json`: Combined view of all nodes across clusters
+
+## Operations
+
+### Adding External Targets
 
 To monitor infrastructure outside Kubernetes, add static targets to `prometheus-values.yaml`:
 
@@ -55,22 +67,50 @@ prometheus:
       - targets: ['hostname:port']
 ```
 
-See `prometheus-values-multi-site.yaml` for examples.
-
-## Maintenance
-
+### Update Configuration
 ```bash
-# Upgrade configuration
-helm upgrade monitoring prometheus-community/kube-prometheus-stack -n monitoring -f prometheus-values.yaml
+helm upgrade monitoring prometheus-community/kube-prometheus-stack \
+  -n monitoring -f prometheus-values.yaml
+```
 
-# View current values
-helm get values monitoring -n monitoring
-
-# Uninstall
+### Complete Removal
+```bash
 helm uninstall monitoring -n monitoring
+kubectl delete pvc -n monitoring --all
 kubectl delete namespace monitoring
 ```
 
-## Manual Deployment
+## Labels Strategy
 
-See `manual-deployment/` for educational deployment without Helm. Not for production use.
+Consistent labels across all metrics for filtering:
+- `cluster`: Cluster identifier (us103-kubeadm01, us103-k3s01)
+- `site_code`: Physical location (us103)
+- `provider`: Infrastructure provider (on-prem, aws, azure)
+- `node_type`: Node role (master, worker)
+
+## Files
+
+- `prometheus-values.yaml`: Production configuration
+- `deploy.sh`: Deployment script
+- `external-monitoring/`: Scripts for external cluster setup
+- `manual-deployment/`: Learning exercise - raw Kubernetes manifests (not for production)
+
+
+## Troubleshooting
+
+**Check Prometheus targets:**
+```bash
+kubectl -n monitoring port-forward svc/monitoring-kube-prometheus-prometheus 9090
+# Open http://localhost:9090/targets
+```
+
+**View Grafana logs:**
+```bash
+kubectl logs -n monitoring deployment/monitoring-grafana | grep -i dashboard
+```
+
+**Common Issues:**
+- N/A values in dashboards: Check Prometheus targets page for failed scrapes
+- Dashboard provisioning errors: Folder name conflicts - import manually instead
+- Connection refused errors: Normal for kube-controller-manager, kube-scheduler, etcd
+

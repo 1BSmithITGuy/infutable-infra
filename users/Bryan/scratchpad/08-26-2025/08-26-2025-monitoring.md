@@ -48,16 +48,3 @@ kube-state-metrics-7c64d947d4-888jh            0/1     Pending   0          46h
 └──╼ $k get pods -n monitoring | grep kube-state
 monitoring-kube-state-metrics-69dcd947d6-qfw7j           1/1     Running   1 (7h7m ago)   21h
 
--  this is running, so I do not know why the local cluster prom/grafana is showing down still (see above screenshot).  
-
-This is the node-exporter-full dashboard.  I have this nice representation in the screenshot of CPU, memory, disk, etc.  It only shows the one host though - the external cluster.  
-
-How do I have these same visualizations (widgets, whatever) for the nodes in the cluster it is on?  under "hosts" I do not see the hosts for the cluster it is on (makes sense since this is the "node-exporter" dashboard, but I am sure we can get these same visuals on the local cluster nodes too?)
-
-I pasted the json for the entire dashboard, but I just want the part at the top that I screenshotted for now on a new dashboard - but I want the same visualizations for other nodes (specifically named bsus103.  I would like a new dashboard with ONLY those widgets/panels (visualizations, whatever) about CPU/ram/swap/root fs used, etc (and the other things in that screenshot too).  
-So, I want a dashboard to have only these metrics, but for all the hosts and not just bsus103km01 (again noting that this is the node-exporter dashboard, and I assume the local cluster it is on isn't using node-exporter?)
-
-The other (local) nodes are:
-bsus103k-8m01	
-bsus103k-8w01	
-bsus103k-8w02
