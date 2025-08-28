@@ -29,6 +29,7 @@ spec:
         
         # Ingress configuration
         ingress:
+          ingressClassName: nginx
           tls:
             source: rancher
             secretName: tls-rancher-ingress

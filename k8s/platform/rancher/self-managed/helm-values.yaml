@@ -9,6 +9,7 @@ bootstrapPassword: "infUtableR@ncher2024!"
 
 # Ingress configuration
 ingress:
+  ingressClassName: nginx  # Critical: Must match your ingress controller
   tls:
     source: rancher
     secretName: tls-rancher-ingress
