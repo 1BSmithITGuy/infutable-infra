@@ -104,8 +104,9 @@ deploy_rancher() {
         --namespace ${RANCHER_NAMESPACE} \
         --version ${RANCHER_CHART_VERSION} \
         --values ${VALUES_FILE} \
+        --set ingress.ingressClassName=nginx \
         --wait \
-        --timeout 10m
+        --timeout 20m
     
     echo_success "Rancher deployment completed!"
 }
