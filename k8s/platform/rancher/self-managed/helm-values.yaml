@@ -1,0 +1,76 @@
+# k8s/platform/rancher/self-managed/helm-values.yaml
+# Rancher configuration for self-managed deployment on kubeadm cluster
+
+# Hostname configuration
+hostname: rancher.us103kubeadm01.infutable.com
+
+# Bootstrap password (change this!)
+bootstrapPassword: "infUtableR@ncher2024!"
+
+# Ingress configuration
+ingress:
+  tls:
+    source: rancher
+    secretName: tls-rancher-ingress
+
+# Let's Encrypt configuration for automatic certificates
+letsEncrypt:
+  email: admin@infutable.com
+  environment: staging  # Change to 'production' when ready
+  ingress:
+    class: nginx
+
+# Resource limits (adjust based on your cluster capacity)
+resources:
+  limits:
+    cpu: 1000m
+    memory: 2Gi
+  requests:
+    cpu: 500m
+    memory: 1Gi
+
+# Replica count (can be 1 for homelab)
+replicas: 1
+
+# Additional trusted CAs (if needed for internal certificates)
+additionalTrustedCAs: false
+
+# AntiAffinity configuration (disable for single-node testing)
+antiAffinity: preferred
+
+# Global cattle settings
+global:
+  cattle:
+    psp:
+      # Pod Security Policy (disable if not needed)
+      enabled: false
+
+# Feature flags for demonstrations
+rancherImageTag: "v2.8.8"  # Use stable version
+
+# Monitoring integration
+monitoring:
+  # This will integrate with your existing Prometheus
+  enabled: true
+
+# Backup configuration
+backup:
+  enabled: true
+  # S3 configuration (optional - can use local storage)
+  # s3:
+  #   endpoint: ""
+  #   bucketName: "rancher-backups"
+  #   accessKey: ""
+  #   secretKey: ""
+
+# Audit logging
+auditLog:
+  level: 1  # Basic audit logging
+  maxAge: 30
+  maxBackup: 10
+  maxSize: 100
+
+# User preferences
+userPreferences:
+  # Default to dark theme (looks more professional in demos)
+  theme: auto
