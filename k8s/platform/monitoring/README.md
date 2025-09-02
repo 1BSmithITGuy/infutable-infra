@@ -49,8 +49,10 @@ All configuration is in `prometheus-values.yaml`. Key settings:
 - **1860**: Node Exporter Full (hardware metrics)
 - **6417**: Kubernetes Cluster Resources
 
-### Custom
+### Custom Dashboards
+To import, go to **Dashboards**, select **import**, and browse to the JSON file.
 - `dashboards/US103-Overview.json`: Combined view of all nodes across clusters
+
 
 ## Operations
 
