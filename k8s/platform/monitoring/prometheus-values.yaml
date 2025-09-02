@@ -97,3 +97,34 @@ prometheus:
         replacement: 'us103'
       - target_label: provider
         replacement: 'on-prem'
+
+    # k3s Management Cluster (rancher) - Node Exporter
+    - job_name: 'rancher-node'
+      static_configs:
+      - targets: 
+        - 'bsus103k-mgt01:30910'
+      relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        regex: '([^:]+):.*'
+        replacement: '${1}'
+      - target_label: cluster
+        replacement: 'rancher-management'
+      - target_label: site_code
+        replacement: 'us103'
+      - target_label: provider
+        replacement: 'on-prem'
+      - target_label: node_type
+        replacement: 'management'
+    
+    # k3s Management Cluster (rancher) - Kube State Metrics
+    - job_name: 'rancher-kube-state'
+      static_configs:
+      - targets: ['bsus103k-mgt01:30911']
+      relabel_configs:
+      - target_label: cluster
+        replacement: 'rancher-management'
+      - target_label: site_code
+        replacement: 'us103'
+      - target_label: provider
+        replacement: 'on-prem'
