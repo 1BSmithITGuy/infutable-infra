@@ -239,6 +239,8 @@ sudo /srv/repos/Homelab/US103/prod/orchestration/bin/us103-update-orcserver-host
 - [ ] Add automated backup routine for `/srv/repos`
 - [ ] Create template from this VM (remove keys, history, temp files)
 - [ ] Credential/key management
+- [ ] brew install
+- [ ] talosctl install (via brew)
 ---
 
 ## 🗓️ Setup Timeline

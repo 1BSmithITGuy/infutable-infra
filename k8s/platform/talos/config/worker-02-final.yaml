@@ -1,0 +1,69 @@
+version: v1alpha1
+debug: false
+persist: true
+machine:
+    type: worker
+    token: y28g7n.pau0r7mw57fhawg3
+    ca:
+        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJQekNCOHFBREFnRUNBaEVBKzkrbEZvSHdLdmxOdGlVTXhvZFoxakFGQmdNclpYQXdFREVPTUF3R0ExVUUKQ2hNRmRHRnNiM013SGhjTk1qVXdPVEEwTWpJeE1UUTNXaGNOTXpVd09UQXlNakl4TVRRM1dqQVFNUTR3REFZRApWUVFLRXdWMFlXeHZjekFxTUFVR0F5dGxjQU1oQURRN3FsVGx2am10UWt2TXovUld1WURxeEFIMmhSU1F1TXY1Ck92Yk1XTVVxbzJFd1h6QU9CZ05WSFE4QkFmOEVCQU1DQW9Rd0hRWURWUjBsQkJZd0ZBWUlLd1lCQlFVSEF3RUcKQ0NzR0FRVUZCd01DTUE4R0ExVWRFd0VCL3dRRk1BTUJBZjh3SFFZRFZSME9CQllFRlBjQVEwTUVtT3FScWFPVQp4Rm8rQmNCUWl4UGNNQVVHQXl0bGNBTkJBQVhSNGtHY1Vva0dScWJlMWhoOVhuZDVBdGVsUVo5QTloeU05V1dqCjdPRzNRZDM5T3dHTVA1Y3IrcENqV2pwQktYdElPU2Y5ZkZodlRWMEpONm1xZVFzPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+        key: ""
+    certSANs: []
+    kubelet:
+        image: ghcr.io/siderolabs/kubelet:v1.34.0
+        extraArgs:
+            node-ip: 10.0.2.4
+        defaultRuntimeSeccompProfileEnabled: true
+        disableManifestsDirectory: true
+    network:
+        hostname: bsus103tal-k8w02
+        interfaces:
+            - interface: eth0
+              addresses:
+                - 10.0.2.4/27
+              routes:
+                - network: 0.0.0.0/0
+                  gateway: 10.0.2.1
+              dhcp: false
+        nameservers:
+            - 10.0.1.2
+            - 10.0.1.3
+        searchDomains:
+            - k8s.infutable.com
+            - infutable.com
+    install:
+        disk: /dev/sda
+        image: ghcr.io/siderolabs/installer:v1.11.0
+        wipe: false
+    features:
+        rbac: true
+        stableHostname: true
+        apidCheckExtKeyUsage: true
+        diskQuotaSupport: true
+        kubePrism:
+            enabled: true
+            port: 7445
+        hostDNS:
+            enabled: true
+            forwardKubeDNSToHost: true
+cluster:
+    id: Ss3EmVayWHw4wk2Gsr9bjse1FAsj8nRRqqrEUiHxnn4=
+    secret: MZdqZidiypqNANdIXOrR/npzB7yiY0rHvV55UWIYJAc=
+    controlPlane:
+        endpoint: https://bsus103tal-k8m01.k8s.infutable.com:6443
+    clusterName: us103-talos01
+    network:
+        dnsDomain: cluster.local
+        podSubnets:
+            - 10.244.0.0/16
+        serviceSubnets:
+            - 10.96.0.0/12
+    token: tidlxp.8rbmbk1i07cn7a23
+    ca:
+        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJpakNDQVMrZ0F3SUJBZ0lRQlArVDBMNG1rRUQ1MURrMGQvV2c3akFLQmdncWhrak9QUVFEQWpBVk1STXcKRVFZRFZRUUtFd3ByZFdKbGNtNWxkR1Z6TUI0WERUSTFNRGt3TkRJeU1URTBOMW9YRFRNMU1Ea3dNakl5TVRFMApOMW93RlRFVE1CRUdBMVVFQ2hNS2EzVmlaWEp1WlhSbGN6QlpNQk1HQnlxR1NNNDlBZ0VHQ0NxR1NNNDlBd0VICkEwSUFCTEFkMDRBNmdML0g3M3JRVWpCU2VCeWhCb2UrZEtENkx0b092eHlKZklWTmhGZmRTLzA3dzBQbjl6ZUgKOGlaVzAvbUxyamxEb0NDZ0pvOTBxazhYRWVpallUQmZNQTRHQTFVZER3RUIvd1FFQXdJQ2hEQWRCZ05WSFNVRQpGakFVQmdnckJnRUZCUWNEQVFZSUt3WUJCUVVIQXdJd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBZEJnTlZIUTRFCkZnUVVjZmdKd3ZZNFo4bUtVc2FRb2duUVRYTnVQd2N3Q2dZSUtvWkl6ajBFQXdJRFNRQXdSZ0loQVByMXhzYi8KdG41ajE3YXZuamNNWnA5UjBSUGgxeDhrS3ZMclg5a1hudGdYQWlFQXI2SHVWRUJyV3hJYVIzc01nbE82KzVvTQo1WFg5TkMwS1liRFVJNWZua1QwPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+        key: ""
+    discovery:
+        enabled: true
+        registries:
+            kubernetes:
+                disabled: true
+            service: {}
