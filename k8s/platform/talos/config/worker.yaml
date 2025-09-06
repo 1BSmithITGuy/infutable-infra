@@ -14,7 +14,7 @@ machine:
         disableManifestsDirectory: true
     network: {}
     install:
-        disk: /dev/sda
+        disk: /dev/xvda
         image: ghcr.io/siderolabs/installer:v1.11.0
         wipe: false
     features:

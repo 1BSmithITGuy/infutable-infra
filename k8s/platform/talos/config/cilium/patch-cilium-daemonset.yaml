@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: cilium
+  namespace: kube-system
+spec:
+  template:
+    spec:
+      # 1) Remove the init that Talos forbids (asks for CAP_SYS_MODULE)
+      initContainers:
+      - name: clean-cilium-state
+        $patch: delete
+
+      # 2) Set Talos' CNI binary path on the init containers
+      - name: mount-cgroup
+        env:
+        - name: BIN_PATH
+          value: /var/lib/cni/bin
+      - name: apply-sysctl-overwrites
+        env:
+        - name: BIN_PATH
+          value: /var/lib/cni/bin
+
+      # 3) Fix the installer to write into /host/var/lib/cni/bin
+      - name: install-cni-binaries
+        volumeMounts:
+        - name: cni-path
+          mountPath: /host/var/lib/cni/bin
+
+      # 4) Drop SYS_MODULE from the agent's capability list
+      containers:
+      - name: cilium-agent
+        securityContext:
+          capabilities:
+            add:
+              - CHOWN
+              - KILL
+              - NET_ADMIN
+              - NET_RAW
+              - IPC_LOCK
+              # - SYS_MODULE   # removed for Talos compatibility
+              - SYS_ADMIN
+              - SYS_RESOURCE
+              - DAC_OVERRIDE
+              - FOWNER
+              - SETGID
+              - SETUID
+
+      # 5) Point the "cni-path" hostPath volume at /var/lib/cni/bin
+      volumes:
+      - name: cni-path
+        hostPath:
+          path: /var/lib/cni/bin
+
