@@ -19,7 +19,7 @@ machine:
     network:
         hostname: bsus103tal-k8m01
         interfaces:
-            - interface: eth0
+            - interface: enX0
               addresses:
                 - 10.0.2.2/27
               routes:
@@ -33,7 +33,7 @@ machine:
             - k8s.infutable.com
             - infutable.com
     install:
-        disk: /dev/sda
+        disk: /dev/xvda
         image: ghcr.io/siderolabs/installer:v1.11.0
         wipe: false
     features:

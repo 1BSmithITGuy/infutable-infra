@@ -2,7 +2,7 @@ machine:
   network:
     hostname: bsus103tal-k8m01
     interfaces:
-      - interface: eth0
+      - interface: enX0
         dhcp: false
         addresses: [10.0.2.2/27]
         routes:
