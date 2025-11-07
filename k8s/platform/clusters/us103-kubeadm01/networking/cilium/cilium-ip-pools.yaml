@@ -1,0 +1,52 @@
+---
+# -----------------------------------------------------------------------------
+# Cilium BGP pools - us103-kubeadm01
+# Bryan Smith
+# BSmithITGuy@gmail.com
+# Last modified: 11/04/2025
+# Purpose: BGP VIP pools and L2 pool
+# -----------------------------------------------------------------------------
+
+
+# L2 IP Pool - Internal Infrastructure (RESTRICTED)
+# Only accessible on VLAN200
+apiVersion: cilium.io/v2alpha1
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: infra-l2-pool
+spec:
+  blocks:
+  - start: "10.0.0.16"
+    stop: "10.0.0.20"
+  serviceSelector:
+    matchLabels:
+      io.cilium/l2-announce: "true"
+      io.cilium/lb-pool: "infra-l2-pool"
+
+---
+# BGP Pool - Public Infrastructure
+apiVersion: cilium.io/v2alpha1
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: public-infra-bgp-pool
+spec:
+  blocks:
+  - cidr: 172.25.200.96/27
+  serviceSelector:
+    matchLabels:
+      io.cilium/bgp-announce: "bgp"
+      io.cilium/lb-pool: "public-infra-bgp-pool"
+
+---
+# BGP Pool - Public Applications
+apiVersion: cilium.io/v2alpha1
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: public-app-bgp-pool
+spec:
+  blocks:
+  - cidr: 172.25.250.96/27
+  serviceSelector:
+    matchLabels:
+      io.cilium/bgp-announce: "bgp"
+      io.cilium/lb-pool: "public-app-bgp-pool"

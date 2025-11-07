@@ -1,0 +1,81 @@
+# -----------------------------------------------------------------------------
+# MetalLB Configuration - us103-kubeadm01
+
+# Bryan Smith
+# BSmithITGuy@gmail.com
+# Last modified:  10/30/2025
+
+# Purpose: L2 and BGP IP pool config
+# -----------------------------------------------------------------------------
+
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: app-pool
+  namespace: metallb-system
+spec:
+  addresses:
+    - 172.25.250.96/27    # app BGP VIPs
+  autoAssign: true
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: infra-bgp-pool
+  namespace: metallb-system
+spec:
+  addresses:
+    - 172.25.200.96/27    # less critical infra consoles - BGP
+  autoAssign: true
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: infra-l2-pool
+  namespace: metallb-system
+spec:
+  addresses:
+    - 10.0.0.16-10.0.0.20    # Critical infra consoles
+  autoAssign: true
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: infra-l2
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+    - infra-l2-pool
+---
+apiVersion: metallb.io/v1beta1
+kind: BFDProfile
+metadata:
+  name: opnsense-bfd
+  namespace: metallb-system
+spec:
+  transmitInterval: 200
+  receiveInterval: 200
+  detectMultiplier: 10
+  echoMode: false         #  REQUIRED for OPNsense
+---
+apiVersion: metallb.io/v1beta2
+kind: BGPPeer
+metadata:
+  name: opnsense
+  namespace: metallb-system
+spec:
+  peerAddress: 10.250.3.1
+  peerASN: 65000
+  myASN: 65003
+  bfdProfile: opnsense-bfd
+  ebgpMultiHop: false
+---
+apiVersion: metallb.io/v1beta1
+kind: BGPAdvertisement
+metadata:
+  name: bgp-announce
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+    - app-pool
+    - infra-bgp-pool

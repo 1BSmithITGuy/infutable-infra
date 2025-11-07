@@ -25,7 +25,7 @@ helm upgrade --install monitoring prometheus-community/kube-prometheus-stack \
 
 echo ""
 echo "=== Deployment Complete ==="
-echo "Grafana URL: http://grafana.us103kubeadm01.infutable.com"
+echo "Grafana URL: http://grafana.infra.infutable.com"
 echo ""
 echo "Retrieve admin password:"
 echo "kubectl get secret -n monitoring monitoring-grafana -o jsonpath=\"{.data.admin-password}\" | base64 -d"

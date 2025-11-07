@@ -1,0 +1,135 @@
+# -----------------------------------------------------------------------------
+# ArgoCD Helm Values - us103-kubeadm01
+#
+# Bryan Smith
+# BSmithITGuy@gmail.com
+#
+# Purpose: ArgoCD deployment for multi-cluster management
+# Deployment: Non-HA (homelab/development)
+# -----------------------------------------------------------------------------
+
+global:
+  domain: argocd.infra.infutable.com
+
+## ArgoCD Server
+server:
+  replicas: 1
+
+  ingress:
+    enabled: true
+    ingressClassName: nginx-infra
+    annotations:
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+      nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+      nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    hosts:
+      - argocd.infra.infutable.com
+    tls: []
+  # Run in insecure mode (TLS terminated at ingress)
+  extraArgs:
+    - --insecure
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+## ArgoCD Configs
+configs:
+  # Server configuration
+  cm:
+    url: https://argocd.infra.infutable.com
+
+    # Enable dark theme by default
+    ui.theme: dark
+
+    # Application health check options
+      #  https://argo-cd.readthedocs.io/en/stable/operator-manual/health/
+      #  This is Lua code that ArgoCD uses to determine application health and report to UI.
+    resource.customizations.health.argoproj.io_Application: |
+      hs = {}
+      hs.status = "Progressing"
+      hs.message = ""
+      if obj.status ~= nil then
+        if obj.status.health ~= nil then
+          hs.status = obj.status.health.status
+          if obj.status.health.message ~= nil then
+            hs.message = obj.status.health.message
+          end
+        end
+      end
+      return hs
+
+  # Repository credentials (managed by deployment script)
+  # Secret will be created by deploy.sh
+
+  # RBAC configuration
+  rbac:
+    policy.default: role:readonly
+    policy.csv: |
+      p, role:admin, applications, *, */*, allow
+      p, role:admin, clusters, *, *, allow
+      p, role:admin, repositories, *, *, allow
+      g, admin, role:admin
+
+## Application Controller
+controller:
+  # Non-HA: single replica
+  replicas: 1
+
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 1
+      memory: 1Gi
+
+## Repo Server
+repoServer:
+  # Non-HA: single replica
+  replicas: 1
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+## Redis
+redis:
+  # Non-HA: single instance
+  enabled: true
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+## Notifications Controller (optional, disabled for simplicity)
+notifications:
+  enabled: false
+
+## ApplicationSet Controller
+applicationSet:
+  enabled: true
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+## Dex (disabled - not using SSO)
+dex:
+  enabled: false

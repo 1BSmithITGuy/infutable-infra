@@ -228,6 +228,10 @@ current-context: us103-k3s01
 ```bash
 sudo /srv/repos/Homelab/US103/prod/orchestration/bin/us103-update-orcserver-hostsfile.sh
 ```
+Install claude code:
+```bash
+brew install --cask claude-code
+```
 
 ---
 
