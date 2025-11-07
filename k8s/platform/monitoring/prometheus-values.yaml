@@ -4,7 +4,7 @@ grafana:
     enabled: true
     ingressClassName: nginx
     hosts:
-      - grafana.us103kubeadm01.infutable.com
+      - grafana.infra.infutable.com
   
   # Password auto-generated if not set
   # adminPassword: ""
@@ -22,7 +22,14 @@ grafana:
         updateIntervalSeconds: 10
         options:
           path: /var/lib/grafana/dashboards/default
-  
+  persistence:
+    enabled: true
+    type: pvc
+    storageClassName: local-path
+    size: 5Gi
+    accessModes:
+      - ReadWriteOnce
+
   dashboards:
     default:
       # Multi-cluster overview
@@ -124,6 +131,37 @@ prometheus:
       relabel_configs:
       - target_label: cluster
         replacement: 'rancher-management'
+      - target_label: site_code
+        replacement: 'us103'
+      - target_label: provider
+        replacement: 'on-prem'
+
+    # us103-talos01 Cluster - node exporter
+    - job_name: 'us103-talos01-node-exporter'
+      static_configs:
+      - targets: 
+        - 'bsus103tal-k8m01.k8s.infutable.com:30910'
+        - 'bsus103tal-k8w01.k8s.infutable.com:30910'
+        - 'bsus103tal-k8w02.k8s.infutable.com:30910'
+      relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        regex: '([^:]+):.*'
+        replacement: '${1}'
+      - target_label: cluster
+        replacement: 'us103-talos01'
+      - target_label: site_code
+        replacement: 'us103'
+      - target_label: provider
+        replacement: 'on-prem'
+    
+    # k8s Talos cluster - Kube State Metrics
+    - job_name: 'us103-talos01-kube-state'
+      static_configs:
+      - targets: ['bsus103tal-k8m01.k8s.infutable.com:30911']
+      relabel_configs:
+      - target_label: cluster
+        replacement: 'us103-talos01'
       - target_label: site_code
         replacement: 'us103'
       - target_label: provider
