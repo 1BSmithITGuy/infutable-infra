@@ -26,11 +26,6 @@ resources:
 
 # PostgreSQL storage
 postgresql:
-  auth:
-    # Fixed passwords for lab environment
-    # TODO: Migrate to HashiCorp Vault for production-grade secret management
-    postgresPassword: "NetboxAdminPass2024!"
-    password: "NetboxDBPass2024!"
   primary:
     persistence:
       storageClass: local-path
