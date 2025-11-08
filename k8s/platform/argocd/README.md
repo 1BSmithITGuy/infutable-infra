@@ -188,8 +188,14 @@ k8s/
 │   ├── README.md                       # This file
 │   ├── deploy.sh                       # Automated deployment script
 │   ├── helm-values.yaml                # ArgoCD Helm chart configuration
-│   ├── applications/                   # ArgoCD Application manifests (GitOps pointers)
-│   │   └── netbox-us103-talos01.yaml  # Points to apps/netbox for deployment
+│   ├── applications/                   # ArgoCD Application manifests (organized by cluster)
+│   │   ├── us103-talos01/              # Talos cluster applications
+│   │   │   ├── netbox.yaml             # Netbox IPAM
+│   │   │   └── local-path-provisioner.yaml  # Storage provisioner
+│   │   ├── us103-kubeadm01/            # Kubeadm cluster applications
+│   │   │   └── (argocd self-managed, monitoring, etc.)
+│   │   └── us103-k3s01/                # K3s cluster applications
+│   │       └── (future applications)
 │   └── scripts/                        # Helper scripts
 │       └── (future utilities)
 │
@@ -209,8 +215,9 @@ k8s/
 ```
 
 **Pattern:**
-- **ArgoCD Application manifests** → `k8s/platform/argocd/applications/`
-  - These tell ArgoCD *what* to deploy and *where*
+- **ArgoCD Application manifests** → `k8s/platform/argocd/applications/<cluster-name>/`
+  - Organized by cluster for easy management
+  - Each file tells ArgoCD *what* to deploy and *where*
 - **Application configurations** → `k8s/apps/<app-name>/`
   - These contain the actual app configs that get deployed
 
@@ -241,10 +248,12 @@ spec:
       - CreateNamespace=true
 ```
 
-Apply the manifest:
+Save to `applications/<cluster-name>/<app-name>.yaml` and apply:
 
 ```bash
-kubectl apply -f applications/my-app.yaml
+kubectl apply -f applications/<cluster-name>/<app-name>.yaml
+# Or apply all apps for a cluster:
+kubectl apply -f applications/<cluster-name>/
 ```
 
 ## Adding New Clusters
