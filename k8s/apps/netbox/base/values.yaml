@@ -15,6 +15,10 @@ postgresql:
   auth:
     username: netbox
     database: netbox
+    # Fixed passwords for lab environment
+    # TODO: Migrate to HashiCorp Vault
+    postgresPassword: "NetboxAdminPass2024!"
+    password: "NetboxDBPass2024!"
 
 redis:
   enabled: true
