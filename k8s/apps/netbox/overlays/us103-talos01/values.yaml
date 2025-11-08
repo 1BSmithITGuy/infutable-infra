@@ -27,12 +27,10 @@ resources:
 # PostgreSQL storage
 postgresql:
   auth:
-    # Use existing secret for credentials (stored in /srv/secrets/netbox/)
-    # Secret must be applied manually: kubectl apply -f /srv/secrets/netbox/postgresql-passwords.yaml
-    existingSecret: netbox-postgresql-credentials
-    secretKeys:
-      adminPasswordKey: postgres-password
-      userPasswordKey: password
+    # Fixed passwords for lab environment
+    # TODO: Migrate to HashiCorp Vault for production-grade secret management
+    postgresPassword: "NetboxAdminPass2024!"
+    password: "NetboxDBPass2024!"
   primary:
     persistence:
       storageClass: local-path
