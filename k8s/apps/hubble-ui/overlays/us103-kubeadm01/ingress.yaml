@@ -14,6 +14,6 @@ spec:
           service:
             name: hubble-ui
             port:
-              number:80
+              number: 80
         path: /
         pathType: Prefix
