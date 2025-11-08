@@ -1,20 +1,24 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: grafana
-  namespace: monitoring
+  name: rancher
+  namespace: cattle-system
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
-  ingressClassName: nginx-public
+  ingressClassName: nginx
   rules:
-  - host: grafana.infra.infutable.com
+  - host: rancher.infutable.com
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: grafana
+            name: rancher
             port:
-              number: 3000
+              number: 80
+  tls:
+  - hosts:
+    - rancher.infutable.com
+    secretName: tls-rancher-ingress

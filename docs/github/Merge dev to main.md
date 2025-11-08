@@ -9,20 +9,17 @@ Compare branch: dev
 
 Review the file changes — make sure everything looks as you expect.
 
-Give the PR a title like:
+click "create pull request" button.
 
-Merge dev into main – initial content migration
-
-
-Optional: In the description, note that this is the first merge from your migration work.
+Give the PR a title
 
 # Step 2 – Merge the PR
 
 Since main has Require linear history turned on, you’ll probably only see Squash merge (and maybe Rebase).
 
-Squash merge is clean — it combines all your dev commits into one commit in main.
+Squash and merge is clean — it combines all your dev commits into one commit in main.
 
-Click Merge pull request → confirm.
+Click Squash and merge, then click confirm.
 
 Step 5 – Sync local main
 git switch main

@@ -1,0 +1,24 @@
+# Cluster-specific overlay for us103-kubeadm01
+ingress:
+  enabled: true
+  className: nginx-public          
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+  hosts:                           # <-- list of hosts
+    - host: netbox.infra.infutable.com
+      paths:
+        - /                        # chart accepts plain "/" entries
+  tls: []                          
+
+persistence:
+  enabled: true
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 512Mi
+  limits:
+    cpu: 1
+    memory: 1Gi

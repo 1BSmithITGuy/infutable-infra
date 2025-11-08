@@ -1,0 +1,40 @@
+# NetBox Helm base configuration
+image:
+  registry: docker.io
+  repository: netboxcommunity/netbox
+  tag: v4.4.5
+
+housekeeping:
+  image:
+    registry: docker.io
+    repository: netboxcommunity/netbox
+    tag: v4.4.5
+
+postgresql:
+  enabled: true
+  auth:
+    username: netbox
+    password: netboxpass
+    database: netbox
+
+redis:
+  enabled: true
+
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  size: 10Gi
+
+superuser:
+  name: admin
+  email: admin@infra.infutable.com
+  password: strongpassword
+
+extraEnvVars:
+  - name: ALLOWED_HOSTS
+    value: "netbox.infra.infutable.com"
+
+# Common app tuning
+gunicorn:
+  workers: 3
+  timeout: 120

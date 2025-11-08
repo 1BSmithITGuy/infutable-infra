@@ -1,0 +1,21 @@
+---
+# -----------------------------------------------------------------------------
+# Cilium l2 policy - us103-kubeadm01
+# Bryan Smith
+# BSmithITGuy@gmail.com
+# Last modified: 11/04/2025
+# Purpose: 5 IPs on VLAN200 for critical infra (web consoles, etc)
+# -----------------------------------------------------------------------------
+
+apiVersion: cilium.io/v2alpha1
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: infra-l2-pool
+spec:
+  blocks:
+  - start: "10.0.0.16"
+    stop: "10.0.0.20"
+  serviceSelector:
+    matchLabels:
+      io.cilium/l2-announce: "true"
+      io.cilium/lb-pool: "infra-l2-pool"

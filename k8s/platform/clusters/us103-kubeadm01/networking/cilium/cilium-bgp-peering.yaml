@@ -1,0 +1,36 @@
+---
+# -----------------------------------------------------------------------------
+# Cilium BGP Peering Configuration - us103-kubeadm01
+# Bryan Smith
+# BSmithITGuy@gmail.com
+# Last modified: 11/04/2025
+# Purpose: BGP peering with OPNsense
+# Note: BFD not supported in open source Cilium 1.16.4
+# -----------------------------------------------------------------------------
+
+apiVersion: cilium.io/v2alpha1
+kind: CiliumBGPPeeringPolicy
+metadata:
+  name: opnsense-bgp
+spec:
+  nodeSelector:
+    matchLabels:
+      node-role.kubernetes.io/worker: "true"  # Only workers have eth1 for BGP
+  virtualRouters:
+  - localASN: 65003
+    exportPodCIDR: false
+    serviceSelector:
+      matchExpressions:
+      - key: io.cilium/bgp-announce
+        operator: In
+        values:
+        - "bgp"
+    neighbors:
+    - peerAddress: 10.250.3.1/32
+      peerASN: 65000
+      connectRetryTimeSeconds: 30
+      holdTimeSeconds: 90
+      keepAliveTimeSeconds: 30
+      gracefulRestart:
+        enabled: true
+        restartTimeSeconds: 120

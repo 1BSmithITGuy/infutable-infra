@@ -1,11 +1,17 @@
 # Monitoring Stack
 
+**Author:** Bryan Smith (BSmithITGuy@gmail.com)  
+**Purpose:** Deploy Grafana/Prometheus    
+**Date:** 11/07/2025  
+
 Multi-cluster monitoring using Prometheus and Grafana deployed via Helm.
 
 ## Architecture
 
 - **Primary Cluster** (us103-kubeadm01): Runs full monitoring stack
-- **Secondary Cluster** (us103-k3s01): Runs exporters only
+- **Other monitored Clusters** 
+  - (us103-k3s01): Runs exporters only
+  - (us103-talos01):  Runs exporters only
 - **Components**: Prometheus, Grafana, Node Exporter, kube-state-metrics, AlertManager
 
 ## Deployment
@@ -24,7 +30,7 @@ cd k8s/platform/monitoring
 
 ## Access
 
-**URL**: http://grafana.us103kubeadm01.infutable.com  
+**URL**: http://grafana.infra.infutable.com  
 **Username**: admin  
 **Password**: 
 ```bash
@@ -36,21 +42,17 @@ kubectl get secret -n monitoring monitoring-grafana -o jsonpath="{.data.admin-pa
 All configuration is in `prometheus-values.yaml`. Key settings:
 - Data retention: 15 days
 - Storage: 10GB per component
-- External targets: K3s cluster metrics via NodePort
 
 ### Reference Documentation
 - [Chart Values Reference](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack)
 - [Configuration Options](https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack)
 
-## Dashboards
 
-### Pre-configured
-- **315**: Kubernetes Cluster Monitoring (multi-cluster view)
-- **1860**: Node Exporter Full (hardware metrics)
-- **6417**: Kubernetes Cluster Resources
-
-### Custom
+### Custom Dashboards
+To import, go to **Dashboards**, select **import**, and browse to the JSON file.
 - `dashboards/US103-Overview.json`: Combined view of all nodes across clusters
+- See /dashboards/README.md before importing dashboards.
+
 
 ## Operations
 

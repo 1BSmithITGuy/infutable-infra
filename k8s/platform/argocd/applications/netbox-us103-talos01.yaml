@@ -1,0 +1,67 @@
+# -----------------------------------------------------------------------------
+# ArgoCD Application - Netbox on us103-talos01
+#
+# Bryan Smith
+# BSmithITGuy@gmail.com
+#
+# Purpose: Deploy Netbox to Talos cluster for infrastructure documentation
+# -----------------------------------------------------------------------------
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: netbox-us103-talos01
+  namespace: argocd
+  labels:
+    # Site and cluster identification
+    site: us103
+    cluster: us103-talos01
+    cluster-type: talos
+
+    # Application classification
+    app.kubernetes.io/name: netbox
+    app.kubernetes.io/component: ipam
+    app.kubernetes.io/part-of: infrastructure
+
+    # Management
+    managed-by: argocd
+    environment: production
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  # Source: Git repository with Helm chart wrapper
+  source:
+    repoURL: git@github.com:1BSmithITGuy/infutable-infra.git
+    targetRevision: main
+    path: k8s/apps/netbox/base
+    helm:
+      # Use base values + overlay for Talos
+      valueFiles:
+        - values.yaml
+        - ../overlays/us103-talos01/values.yaml
+      releaseName: netbox
+
+  # Destination: Talos cluster
+  destination:
+    name: us103-talos01  # Cluster name as registered in ArgoCD
+    namespace: netbox
+
+  # Sync policy
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  # Health check
+  ignoreDifferences: []

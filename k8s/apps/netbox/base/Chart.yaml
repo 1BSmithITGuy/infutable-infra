@@ -1,0 +1,12 @@
+# Netbox Helm Chart wrapper
+apiVersion: v2
+name: netbox
+description: NetBox IPAM and DCIM application
+type: application
+version: 1.0.0
+appVersion: "4.4.5"
+
+dependencies:
+  - name: netbox
+    version: "7.1.18"
+    repository: https://charts.netbox-community.com

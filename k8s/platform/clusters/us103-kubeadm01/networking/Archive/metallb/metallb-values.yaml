@@ -1,0 +1,21 @@
+# -----------------------------------------------------------------------------
+# MetalLB helm install values - us103-kubeadm01
+
+# Bryan Smith
+# BSmithITGuy@gmail.com
+# Last modified:  10/30/2025
+
+# Purpose: Metallb helm install values
+# -----------------------------------------------------------------------------
+
+controller:
+  enabled: true
+
+speaker:
+  enabled: true
+  frr:
+    enabled: true
+
+  # Only schedule on nodes labelled worker
+  nodeSelector:
+    node-role.kubernetes.io/worker: "true"

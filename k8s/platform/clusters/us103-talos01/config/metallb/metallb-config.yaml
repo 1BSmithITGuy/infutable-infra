@@ -1,0 +1,74 @@
+# -----------------------------------------------------------------------------
+# MetalLB Configuration - us103-talos01
+#
+# Bryan Smith
+# BSmithITGuy@gmail.com
+#
+# Purpose: MetalLB BGP pools for Talos cluster
+# Managed by: ArgoCD (future)
+# -----------------------------------------------------------------------------
+
+# BGP Pool - Public Infrastructure (netbox, monitoring, etc)
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: public-infra-bgp-pool
+  namespace: metallb-system
+spec:
+  addresses:
+    - 172.25.200.0/27
+  autoAssign: true
+---
+# BGP Pool - Public Applications (user-facing apps)
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: public-app-bgp-pool
+  namespace: metallb-system
+spec:
+  addresses:
+    - 172.25.250.0/27
+  autoAssign: true
+---
+apiVersion: metallb.io/v1beta1
+kind: BFDProfile
+metadata:
+  name: opnsense-bfd
+  namespace: metallb-system
+spec:
+  transmitInterval: 200
+  receiveInterval: 200
+  detectMultiplier: 10
+  echoMode: false
+---
+apiVersion: metallb.io/v1beta2
+kind: BGPPeer
+metadata:
+  name: opnsense
+  namespace: metallb-system
+spec:
+  peerAddress: 10.250.3.1
+  peerASN: 65000
+  myASN: 65001
+  bfdProfile: opnsense-bfd
+  ebgpMultiHop: false
+---
+# Advertise public infrastructure pool via BGP
+apiVersion: metallb.io/v1beta1
+kind: BGPAdvertisement
+metadata:
+  name: public-infra-bgp
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+    - public-infra-bgp-pool
+---
+# Advertise public applications pool via BGP
+apiVersion: metallb.io/v1beta1
+kind: BGPAdvertisement
+metadata:
+  name: public-app-bgp
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+    - public-app-bgp-pool
