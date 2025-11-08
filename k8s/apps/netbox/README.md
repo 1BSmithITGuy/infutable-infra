@@ -39,5 +39,5 @@ Netbox is deployed via ArgoCD Application manifests located in `k8s/platform/arg
 
 - **Upstream Chart Repository:** https://github.com/netbox-community/netbox-chart
 - **Helm Chart:** `netbox-community/netbox` version 7.1.18
-- **Add Helm Repo:** `helm repo add netbox-community https://charts.netbox-community.com`
+- **Add Helm Repo:** `helm repo add netbox-community https://netbox-community.github.io/netbox-chart/`
 - **Chart Documentation:** https://github.com/netbox-community/netbox-chart/blob/main/README.md
