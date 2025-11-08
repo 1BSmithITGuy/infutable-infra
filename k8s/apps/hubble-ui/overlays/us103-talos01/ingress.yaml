@@ -1,0 +1,19 @@
+# Hubble UI Ingress - us103-talos01 overlay
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hubble-ui
+  namespace: kube-system
+spec:
+  ingressClassName: nginx-public  # Public BGP, infra pool (172.25.200.1)
+  rules:
+  - host: hubble-talos01.infra.infutable.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: hubble-ui
+            port:
+              number: 80
+        path: /
+        pathType: Prefix

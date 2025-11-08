@@ -1,0 +1,19 @@
+# Hubble UI Ingress - Base Configuration
+# This is deployed via ArgoCD to expose Cilium Hubble UI
+# Hubble deployments/services are managed by Cilium Helm chart
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hubble-ui
+  namespace: kube-system
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: hubble-ui
+            port:
+              number: 80
+        path: /
+        pathType: Prefix

@@ -1,0 +1,57 @@
+# -----------------------------------------------------------------------------
+# ArgoCD Application - Hubble UI on us103-talos01
+#
+# Bryan Smith
+# BSmithITGuy@gmail.com
+#
+# Purpose: Deploy Hubble UI ingress for Cilium observability
+# Date: 11/08/2025
+# -----------------------------------------------------------------------------
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hubble-ui-us103-talos01
+  namespace: argocd
+  labels:
+    # Site and cluster identification
+    site: us103
+    cluster: us103-talos01
+    cluster-type: talos
+
+    # Application classification
+    app.kubernetes.io/name: hubble-ui
+    app.kubernetes.io/component: ingress
+    app.kubernetes.io/part-of: platform
+
+    # Management
+    managed-by: argocd
+    environment: production
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  # Source: Git repository with overlay
+  source:
+    repoURL: git@github.com:1BSmithITGuy/infutable-infra.git
+    targetRevision: main
+    path: k8s/apps/hubble-ui/overlays/us103-talos01
+
+  # Destination: Talos cluster
+  destination:
+    name: us103-talos01
+    namespace: kube-system
+
+  # Sync policy
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

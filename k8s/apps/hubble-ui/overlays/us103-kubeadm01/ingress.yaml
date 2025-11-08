@@ -1,0 +1,19 @@
+# Hubble UI Ingress - us103-kubeadm01 overlay
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hubble-ui
+  namespace: kube-system
+spec:
+  ingressClassName: nginx-infra  # Private L2 (10.0.0.16)
+  rules:
+  - host: hubble-kubeadm01.infra.infutable.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: hubble-ui
+            port:
+              number:80
+        path: /
+        pathType: Prefix
