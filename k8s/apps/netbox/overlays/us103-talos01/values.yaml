@@ -1,7 +1,7 @@
 # Cluster-specific overlay for us103-talos01 (Talos + MetalLB + Cilium CNI)
 ingress:
   enabled: true
-  className: nginx
+  className: nginx-public
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
@@ -26,6 +26,10 @@ resources:
 
 # PostgreSQL storage
 postgresql:
+  auth:
+    # Fixed passwords to prevent ArgoCD secret regeneration issues
+    postgresPassword: "NetboxAdminPass2024!"
+    password: "NetboxDBPass2024!"
   primary:
     persistence:
       storageClass: local-path
