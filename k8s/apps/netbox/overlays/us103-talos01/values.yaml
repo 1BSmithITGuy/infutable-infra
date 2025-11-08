@@ -14,6 +14,7 @@ ingress:
 
 persistence:
   enabled: true
+  storageClass: local-path
 
 resources:
   requests:
@@ -22,3 +23,21 @@ resources:
   limits:
     cpu: 1
     memory: 1Gi
+
+# PostgreSQL storage
+postgresql:
+  primary:
+    persistence:
+      storageClass: local-path
+      size: 8Gi
+
+# Valkey (Redis) storage
+valkey:
+  master:
+    persistence:
+      storageClass: local-path
+      size: 1Gi
+  replica:
+    persistence:
+      storageClass: local-path
+      size: 1Gi
