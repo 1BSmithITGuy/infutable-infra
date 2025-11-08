@@ -1,0 +1,62 @@
+# -----------------------------------------------------------------------------
+# ArgoCD Application - Local Path Provisioner on us103-talos01
+#
+# Bryan Smith
+# BSmithITGuy@gmail.com
+#
+# Purpose: Deploy local-path storage provisioner to Talos cluster
+# Date: 11/08/2025
+# -----------------------------------------------------------------------------
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: local-path-provisioner-us103-talos01
+  namespace: argocd
+  labels:
+    # Site and cluster identification
+    site: us103
+    cluster: us103-talos01
+    cluster-type: talos
+
+    # Application classification
+    app.kubernetes.io/name: local-path-provisioner
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/part-of: platform
+
+    # Management
+    managed-by: argocd
+    environment: production
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  # Source: Official Rancher local-path-provisioner
+  source:
+    repoURL: https://github.com/rancher/local-path-provisioner
+    targetRevision: v0.0.30  # Latest stable as of Nov 2025
+    path: deploy/chart/local-path-provisioner
+
+  # Destination: Talos cluster
+  destination:
+    name: us103-talos01
+    namespace: local-path-storage
+
+  # Sync policy
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  # Health check
+  ignoreDifferences: []

@@ -5,8 +5,7 @@
 # BSmithITGuy@gmail.com
 # Last modified:  10/29/2025
 
-# Purpose: Deploys the MetalLB controller & speaker components.
-# Managed by: ArgoCD (future)
+# Purpose: Deploy NGINX for ingress.
 # -----------------------------------------------------------------------------
 
 apiVersion: v1

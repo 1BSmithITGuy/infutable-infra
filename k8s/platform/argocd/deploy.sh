@@ -197,7 +197,7 @@ echo "✓ All managed clusters registered"
 # Deploy ArgoCD Applications
 echo ""
 echo "[9/10] Deploying ArgoCD Applications..."
-kubectl apply -f applications/
+kubectl apply -f applications/ --recursive
 echo "✓ Applications deployed"
 
 # Verify cluster registration
