@@ -37,6 +37,10 @@ spec:
     repoURL: https://github.com/rancher/local-path-provisioner
     targetRevision: v0.0.30  # Latest stable as of Nov 2025
     path: deploy/chart/local-path-provisioner
+    helm:
+      values: |
+        storageClass:
+          defaultClass: true
 
   # Destination: Talos cluster
   destination:
