@@ -1,0 +1,97 @@
+# -----------------------------------------------------------------------------
+# NGINX LB services - us103-kubeadm01
+# Bryan Smith
+# BSmithITGuy@gmail.com
+# Last modified: 11/04/2025
+# Purpose: LB config
+# -----------------------------------------------------------------------------
+
+---
+# LoadBalancer Service for nginx-infra controller
+# L2 VIP on VLAN200 - RESTRICTED ACCESS
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-infra-loadbalancer
+  namespace: ingress-nginx
+  labels:
+    io.cilium/l2-announce: "true"
+    io.cilium/lb-pool: "infra-l2-pool"
+  annotations:
+    io.cilium/lb-ipam-ips: "10.0.0.16"
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    protocol: TCP
+  - name: https
+    port: 443
+    targetPort: 443
+    protocol: TCP
+  selector:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: nginx-infra
+    app.kubernetes.io/component: controller
+  
+---
+# LoadBalancer Service 1: Public Infrastructure
+# BGP VIP for infrastructure services
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-public-infra-lb
+  namespace: ingress-nginx
+  labels:
+    io.cilium/bgp-announce: "bgp"
+    io.cilium/lb-pool: "public-infra-bgp-pool"
+  annotations:
+    io.cilium/lb-ipam-ips: "172.25.200.96"
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    protocol: TCP
+  - name: https
+    port: 443
+    targetPort: 443
+    protocol: TCP
+  selector:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: nginx-public
+    app.kubernetes.io/component: controller
+
+---
+# LoadBalancer Service 2: Public Applications
+# BGP VIP for application workloads
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-public-app-lb
+  namespace: ingress-nginx
+  labels:
+    io.cilium/bgp-announce: "bgp"
+    io.cilium/lb-pool: "public-app-bgp-pool"
+  annotations:
+    io.cilium/lb-ipam-ips: "172.25.250.96"
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    protocol: TCP
+  - name: https
+    port: 443
+    targetPort: 443
+    protocol: TCP
+  selector:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/instance: nginx-public
+    app.kubernetes.io/component: controller

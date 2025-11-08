@@ -1,0 +1,87 @@
+# -----------------------------------------------------------------------------
+# NGINX LB services - us103-kubeadm01
+# Bryan Smith
+# BSmithITGuy@gmail.com
+# Last modified: 11/04/2025
+# Purpose: LB config
+# -----------------------------------------------------------------------------
+
+# Service 1: Critical Infrastructure (L2 on VLAN200)
+# For: Internal management tools (Rancher, ArgoCD)
+apiVersion: v1
+kind: Service
+metadata:
+  name: ingress-nginx-critical
+  namespace: ingress-nginx
+  labels:
+    io.cilium/l2-announce: "true"
+    io.cilium/lb-pool: "infra-l2-pool"
+  annotations:
+    io.cilium/lb-ipam-ips: "10.0.0.16"
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  - name: https
+    port: 443
+    targetPort: 443
+  selector:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/component: controller
+
+---
+# Service 2: Public Infrastructure (BGP)
+# For: Public-facing infrastructure services
+apiVersion: v1
+kind: Service
+metadata:
+  name: ingress-nginx-public
+  namespace: ingress-nginx
+  labels:
+    io.cilium/bgp-announce: "bgp"
+    io.cilium/lb-pool: "infra-bgp-pool"
+  annotations:
+    io.cilium/lb-ipam-ips: "172.25.200.96"
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  - name: https
+    port: 443
+    targetPort: 443
+  selector:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/component: controller
+
+---
+# Service 3: User Applications (BGP - Default)
+# For: General application workloads
+apiVersion: v1
+kind: Service
+metadata:
+  name: ingress-nginx-apps
+  namespace: ingress-nginx
+  labels:
+    io.cilium/bgp-announce: "bgp"
+    io.cilium/lb-pool: "app-pool"
+  annotations:
+    io.cilium/lb-ipam-ips: "172.25.250.96"
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  - name: https
+    port: 443
+    targetPort: 443
+  selector:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/component: controller

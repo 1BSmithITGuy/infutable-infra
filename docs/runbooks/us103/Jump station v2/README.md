@@ -104,7 +104,7 @@ autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 ## 🔧 Essential Software Setup
 
 ```bash
-sudo apt install -y tree git curl jq htop unzip build-essential   nodejs npm vim code remmina gimp
+sudo apt install -y tree git curl jq htop unzip build-essential   nodejs npm vim code remmina gimp yq
 ```
 
 **Visual Studio Code (manual install steps):**
@@ -228,6 +228,10 @@ current-context: us103-k3s01
 ```bash
 sudo /srv/repos/Homelab/US103/prod/orchestration/bin/us103-update-orcserver-hostsfile.sh
 ```
+Install claude code:
+```bash
+brew install --cask claude-code
+```
 
 ---
 
@@ -239,6 +243,8 @@ sudo /srv/repos/Homelab/US103/prod/orchestration/bin/us103-update-orcserver-host
 - [ ] Add automated backup routine for `/srv/repos`
 - [ ] Create template from this VM (remove keys, history, temp files)
 - [ ] Credential/key management
+- [ ] brew install
+- [ ] talosctl install (via brew)
 ---
 
 ## 🗓️ Setup Timeline

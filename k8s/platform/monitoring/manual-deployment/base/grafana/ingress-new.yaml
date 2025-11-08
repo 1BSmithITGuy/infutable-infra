@@ -4,6 +4,7 @@ metadata:
   name: grafana
   namespace: monitoring
   annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   ingressClassName: nginx-public
@@ -15,6 +16,8 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: grafana
+            # ← Use the real Service name here
+            name: monitoring-grafana
+            # ← Ingress must use the Service port (usually 80), not the container port
             port:
-              number: 3000
+              number: 80

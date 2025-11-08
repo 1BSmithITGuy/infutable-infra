@@ -1,0 +1,24 @@
+#  Created the file:
+# /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg with the following:
+# network: {config: disabled}
+# Set loose reverse path filtering.
+
+network:
+  version: 2
+  ethernets:
+    eth0:               # VLAN20 - East/West
+      addresses:
+        - 10.0.2.22/27
+      dhcp4: false
+      gateway4: 10.0.2.1
+      nameservers:
+        addresses: [10.0.1.2, 10.0.1.3]
+        search: [ad.infutable.com]
+    eth1:               # VLAN30 - North/South (BGP)
+        addresses:
+          - 10.250.3.22/27
+        dhcp4: false
+    eth2:               # VLAN200 - North/South (L2)
+        addresses:
+          - 10.0.0.22/26
+        dhcp4: false

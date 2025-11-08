@@ -1,0 +1,15 @@
+machine:
+  network:
+    hostname: bsus103tal-k8w02
+    interfaces:
+      - interface: enX0
+        dhcp: false
+        addresses: [10.0.2.4/27]
+        routes:
+          - network: 0.0.0.0/0
+            gateway: 10.0.2.1
+    nameservers: [10.0.1.2, 10.0.1.3]
+    searchDomains: [k8s.infutable.com, infutable.com]
+  kubelet:
+    extraArgs:
+      node-ip: 10.0.2.4

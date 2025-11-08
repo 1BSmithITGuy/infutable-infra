@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-ingress
+  namespace: argocd
+  annotations:
+  # Bind ONLY to the infra controller
+    kubernetes.io/ingress.class: "nginx-infra"
+  # Argo CD server is running HTTP (insecure)
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+  # Keep CLI/WebSocket sessions happy
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+  # Optional: restrict who can reach it (adjust CIDRs)
+    #  nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/26"
+    #  would need to do a daemonset maybe?  doesn't work with cluster traffic policy on nginx
+spec:
+  ingressClassName: nginx-infra
+  rules:
+    - host: argocd.infra.infutable.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: argocd-server
+                port:
+                  number: 80

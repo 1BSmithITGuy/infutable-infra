@@ -56,7 +56,7 @@ else
     
     echo ""
     echo "=== Access Information ==="
-    echo "Grafana URL: http://grafana.us103kubeadm01.infutable.com"
+    echo "Grafana URL: http://grafana.infra.infutable.com"
     echo "Default credentials: admin / infutable-admin"
     echo ""
     echo "Prometheus URL (internal): http://prometheus.monitoring.svc.cluster.local:9090"
