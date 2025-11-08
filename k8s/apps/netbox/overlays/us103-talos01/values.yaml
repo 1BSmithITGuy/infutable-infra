@@ -27,9 +27,12 @@ resources:
 # PostgreSQL storage
 postgresql:
   auth:
-    # Fixed passwords to prevent ArgoCD secret regeneration issues
-    postgresPassword: "NetboxAdminPass2024!"
-    password: "NetboxDBPass2024!"
+    # Use existing secret for credentials (stored in /srv/secrets/netbox/)
+    # Secret must be applied manually: kubectl apply -f /srv/secrets/netbox/postgresql-passwords.yaml
+    existingSecret: netbox-postgresql-credentials
+    secretKeys:
+      adminPasswordKey: postgres-password
+      userPasswordKey: password
   primary:
     persistence:
       storageClass: local-path
