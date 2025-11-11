@@ -110,10 +110,7 @@ spec:
     targetRevision: main
     path: k8s/apps/<app-name>/overlays/<cluster-name>
   destination:
-    # For Talos/K3s (remote clusters):
-    name: <cluster-name>
-    # For Kubeadm (in-cluster):
-    server: https://kubernetes.default.svc
+    name: <cluster-name>  # Use cluster name for all clusters
     namespace: <target-namespace>
   syncPolicy:
     automated:
@@ -127,6 +124,16 @@ spec:
         factor: 2
         maxDuration: 3m
 ```
+
+### Deploying Applications
+
+Apply Application manifests to the **management cluster** (us103-kubeadm01):
+
+```bash
+kubectl --context us103-kubeadm01 apply -f k8s/platform/argocd/applications/<cluster>/<app>.yaml
+```
+
+ArgoCD will deploy to the target cluster based on `spec.destination.name`.
 
 ### Helm-Based Applications
 

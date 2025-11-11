@@ -1,6 +1,9 @@
+# -----------------------------------------------------------------------------
+# ArgoCD Application - Velero on us103-talos01
 #  Bryan Smith
-#  11/11/2025
-#  Velero setup
+#  BSmithITGuy@gmail.com
+#  Last modified: 11/11/2025
+# -----------------------------------------------------------------------------
 
 apiVersion: argoproj.io/v1alpha1
 kind: Application

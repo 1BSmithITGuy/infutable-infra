@@ -26,7 +26,7 @@ spec:
     targetRevision: main
     path: k8s/platform/velero/overlays/us103-kubeadm01
   destination:
-    server: https://kubernetes.default.svc
+    name: us103-kubeadm01
     namespace: velero
   syncPolicy:
     automated:
