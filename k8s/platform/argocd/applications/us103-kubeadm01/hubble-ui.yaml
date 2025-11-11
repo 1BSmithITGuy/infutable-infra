@@ -40,7 +40,7 @@ spec:
 
   # Destination: Kubeadm cluster (in-cluster)
   destination:
-    server: https://kubernetes.default.svc
+    name: us103-kubeadm01
     namespace: kube-system
 
   # Sync policy
