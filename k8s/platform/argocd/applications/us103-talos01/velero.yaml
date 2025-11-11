@@ -1,0 +1,43 @@
+#  Bryan Smith
+#  11/11/2025
+#  Velero setup
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: velero-us103-talos01
+  namespace: argocd
+  labels:
+    site: us103
+    cluster: us103-talos01
+    cluster-type: talos
+    app.kubernetes.io/name: velero
+    app.kubernetes.io/component: backup
+    app.kubernetes.io/part-of: platform
+    managed-by: argocd
+    environment: production
+  #  This will cleanup everything if removed from git
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:1BSmithITGuy/infutable-infra.git
+    targetRevision: main
+    path: k8s/platform/velero/overlays/us103-talos01
+  destination:
+    name: us103-talos01
+    namespace: velero
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

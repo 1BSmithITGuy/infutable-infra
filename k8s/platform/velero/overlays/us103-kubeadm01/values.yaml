@@ -1,0 +1,46 @@
+#  Author:  Bryan Smith
+#  date:    11/11/2025
+#  us103-kubeadm01 velero values overlay
+#  Notes:  uses TrueNAS MinIO for S3:  https://10.0.0.30:9002
+#  172.16.1.0/27 is a private VLAN inside/between hosts (P2P)
+
+configuration:
+  backupStorageLocation:
+  - name: default
+    provider: aws
+    bucket: velero-kubeadm01
+    default: true
+    config:
+      region: us-east-1
+      s3ForcePathStyle: "true"
+      s3Url: http://172.16.1.30:9000
+
+  volumeSnapshotLocation:
+  - name: default
+    provider: aws
+    config:
+      region: us-east-1
+
+schedules:
+  daily-full-kubeadm:
+    disabled: false
+    schedule: "0 2 * * *"  # 2 AM daily (offset from Talos)
+    useOwnerReferencesInBackup: false
+    template:
+      ttl: "168h"  # 7 days
+      includedNamespaces:
+      - "*"
+      defaultVolumesToFsBackup: true
+      snapshotVolumes: false
+
+  hourly-monitoring:
+    disabled: false
+    schedule: "30 */6 * * *"  # Every 6 hours, offset 30min
+    useOwnerReferencesInBackup: false
+    template:
+      ttl: "72h"  # 3 days
+      includedNamespaces:
+      - monitoring
+      - argocd
+      defaultVolumesToFsBackup: true
+      snapshotVolumes: false
