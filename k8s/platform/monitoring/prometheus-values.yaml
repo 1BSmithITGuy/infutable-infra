@@ -9,19 +9,8 @@ grafana:
   # Password auto-generated if not set
   # adminPassword: ""
   
-  # Auto-provision dashboards on deployment
-  dashboardProviders:
-    dashboardproviders.yaml:
-      apiVersion: 1
-      providers:
-      - name: 'default'
-        orgId: 1
-        folder: 'infUtable'
-        type: file
-        disableDeletion: false
-        updateIntervalSeconds: 10
-        options:
-          path: /var/lib/grafana/dashboards/default
+  # Dashboards are stored in persistent volume (grafana.db)
+  # Dashboard auto-provisioning disabled to prevent duplicates
   persistence:
     enabled: true
     type: pvc
@@ -30,23 +19,10 @@ grafana:
     accessModes:
       - ReadWriteOnce
 
-  dashboards:
-    default:
-      # Multi-cluster overview
-      kubernetes-cluster-monitoring:
-        gnetId: 315
-        revision: 3
-        datasource: Prometheus
-      # Node-level deep dive  
-      node-exporter-full:
-        gnetId: 1860
-        revision: 33
-        datasource: Prometheus
-      # Cluster resources
-      kubernetes-cluster-prometheus:
-        gnetId: 6417
-        revision: 1
-        datasource: Prometheus
+  # Disable init container that tries to chown directories
+  # Not needed since files are already owned by grafana user (472)
+  initChownData:
+    enabled: false
 
 # ===================== Prometheus Configuration =====================
 prometheus:
