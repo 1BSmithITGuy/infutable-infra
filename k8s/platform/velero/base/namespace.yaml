@@ -9,3 +9,7 @@ metadata:
     app.kubernetes.io/name: velero
     app.kubernetes.io/component: backup
     app.kubernetes.io/part-of: platform
+    # Pod Security Standards - velero node-agent requires hostPath volumes
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/audit: privileged
+    pod-security.kubernetes.io/warn: privileged
