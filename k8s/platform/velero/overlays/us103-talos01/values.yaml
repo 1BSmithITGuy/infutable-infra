@@ -4,6 +4,11 @@
 #  Notes:  uses TrueNAS MinIO for S3:  https://10.0.0.30:9002
 #  172.16.1.0/27 is a private VLAN inside/between hosts (P2P)
 
+# Kubectl image version matching this cluster's K8s version (1.34.0)
+kubectl:
+  image:
+    tag: "1.34.0"
+
 configuration:
   backupStorageLocation:
   - name: default

@@ -2,6 +2,12 @@
 #  date:    11/10/2025
 #  Base velero config - all clusters
 
+# Override kubectl image - use modern bitnami repo (not bitnamilegacy)
+# Specific versions are set in overlay files to match each cluster's K8s version
+kubectl:
+  image:
+    repository: bitnami/kubectl
+
 deployNodeAgent: true
 
 nodeAgent:
