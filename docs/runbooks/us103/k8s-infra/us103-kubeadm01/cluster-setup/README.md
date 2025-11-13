@@ -1,7 +1,11 @@
 # Kubernetes Cluster Deployment (kubeadm, Ubuntu 22.04)
+# notes:  
+-  11/10/2025 update:  This guide is now an archive.  This is the original setup doc and my first k8s cluster.  
+    - Cilium is now the CNI and using BGP as well as L2 annoucements.
+    - Multiple NICs have been added to seperate traffic.
 
 **Purpose**  
-Living runbook for deploying a kubeadm-based Kubernetes cluster on Ubuntu 22.04 images (`Template-Ubuntu_2204_Srv_Base_v4`). These are working notes intended for lab use and future automation.
+Deploy kubeadm-based Kubernetes cluster on Ubuntu 22.04.
 
 **Scope**  
 - 1× control-plane node, 2× worker nodes
@@ -14,7 +18,7 @@ Living runbook for deploying a kubeadm-based Kubernetes cluster on Ubuntu 22.04 
 ---
 
 ## 1) Prepare Base Image
-All nodes were created from `Template-Ubuntu_2204_Srv_Base_v4` in Xen Orchestra.
+All nodes were created from `Template-Ubuntu_2204_Srv_Base_v4` in Xen Orchestra (see docs/runbooks/xen-orchestra/Template-Ubuntu_2204_Srv_Base_v4).
 
 ---
 
@@ -25,13 +29,9 @@ sudo apt-get update
 sudo apt-get install -y apt-transport-https ca-certificates curl gpg
 ```
 
-> Note: `apt-transport-https` may be obsolete on newer releases; safe to skip if unavailable.
-
 ---
 
 ## 3) Install kubeadm, kubelet, kubectl
-
-Follow upstream docs for the current stable. Example below used v1.33 at the time of these notes.
 
 ```bash
 # Keyring dir
@@ -71,7 +71,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 ---
 
-## 6) CNI (Flannel example)
+## 6) CNI
 
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
