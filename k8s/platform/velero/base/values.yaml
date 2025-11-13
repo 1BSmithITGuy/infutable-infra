@@ -3,11 +3,12 @@
 #  Base velero config - all clusters
 
 # Override kubectl image - Helm chart defaults to bitnamilegacy (outdated)
-# Using official K8s registry since bitnami is behind on recent versions
-# Specific versions are set in overlay files to match each cluster's K8s version
+# Using bitnami/kubectl:1.31 (has shell, needed for init containers)
+# kubectl version skew allows +/- 1 minor version from K8s server
 kubectl:
   image:
-    repository: registry.k8s.io/kubectl
+    repository: bitnami/kubectl
+    tag: "1.31"
 
 deployNodeAgent: true
 
