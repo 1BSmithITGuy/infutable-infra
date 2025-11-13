@@ -5,9 +5,11 @@
 #  172.16.1.0/27 is a private VLAN inside/between hosts (P2P)
 
 # Kubectl image version matching this cluster's K8s version (1.34.0)
+# Using official K8s registry since bitnami doesn't have 1.34.0 yet
 kubectl:
   image:
-    tag: "1.34.0"
+    repository: registry.k8s.io/kubectl
+    tag: "v1.34.0"
 
 configuration:
   backupStorageLocation:
