@@ -2,11 +2,12 @@
 #  date:    11/10/2025
 #  Base velero config - all clusters
 
-# Override kubectl image - use modern bitnami repo (not bitnamilegacy)
+# Override kubectl image - Helm chart defaults to bitnamilegacy (outdated)
+# Using official K8s registry since bitnami is behind on recent versions
 # Specific versions are set in overlay files to match each cluster's K8s version
 kubectl:
   image:
-    repository: bitnami/kubectl
+    repository: registry.k8s.io/kubectl
 
 deployNodeAgent: true
 
