@@ -2,8 +2,13 @@
 #  date:    11/10/2025
 #  Base velero config - all clusters
 
-# Note: Using Helm chart default kubectl image (bitnamilegacy)
-# Bitnami/bitnami doesn't have recent kubectl versions available
+# Override kubectl image - use Bitnami's AWS ECR repo (has recent versions)
+# Docker Hub bitnami/kubectl is outdated, but ECR has current releases
+# Reference: https://github.com/vmware-tanzu/helm-charts/issues/698
+kubectl:
+  image:
+    repository: public.ecr.aws/bitnami/kubectl
+    tag: "1.31"
 
 deployNodeAgent: true
 
