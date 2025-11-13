@@ -4,13 +4,6 @@
 #  Notes:  uses TrueNAS MinIO for S3:  https://10.0.0.30:9002
 #  172.16.1.0/27 is a private VLAN inside/between hosts (P2P)
 
-# Kubectl image version matching this cluster's K8s version (1.33.2)
-# Using official K8s registry since bitnami doesn't have 1.33.2 yet
-kubectl:
-  image:
-    repository: registry.k8s.io/kubectl
-    tag: "v1.33.2"
-
 configuration:
   backupStorageLocation:
   - name: default
