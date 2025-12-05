@@ -5,9 +5,32 @@
 *.bak
 *.log
 
+# IDE directories
+.vscode/
+.idea/
+*.iml
+
 # Kubeconfigs & secrets
 # ops/jumpstation-v2/kubeconfigs/*
 # *.vars
+.env
+.env.*
+*.pem
+*.key
+
+# Terraform
+*.tfstate
+*.tfstate.*
+*.tfvars
+.terraform/
+.terraform.lock.hcl
+crash.log
+override.tf
+override.tf.json
+
+# Helm
+charts/*/charts/
+*.tgz
 
 # Node modules (if you later have JS tooling)
 node_modules/
