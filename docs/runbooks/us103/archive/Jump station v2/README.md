@@ -1,3 +1,6 @@
+NOTE:  no longer in use.  see ../jump-station for new setup.
+
+
 # 🖥️ Jump Station Setup
 
 > Setup and configuration notes for `bsus103jump01`, the Ubuntu jump station used to manage the homelab infrastructure.  
