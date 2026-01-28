@@ -9,10 +9,15 @@ This document provides an overview of the physical infrastructure at site US103 
 The infrastructure is split across two racks:
 
 - **Telco Rack** - Network equipment (firewall host, switches, REOlink NVR)
+![alt text](<images/telco-rack.png>)
+
 - **Server Rack** - Compute infrastructure (2xLenovo P520 servers, Cisco catalyst 3750x)
 	**NOTE:** The Cisco 3750 Catalyst is not currently in use due to power consumption; the TP-Link switches provide sufficient  L2 functionality. If it gets too cold in my office, I'll brush up on Cisco :)
+![alt text](images/server-rack.png)
 
-*(Rack photos: see `images/` subdirectory)*
+- **Overall Site View / Physical Environment**
+![alt text](images/site-view.png)
+
 
 ## Hardware Summary
 
