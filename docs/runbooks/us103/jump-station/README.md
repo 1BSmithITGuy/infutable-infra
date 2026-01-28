@@ -7,11 +7,12 @@ Date:  01/27/2026
 
 **Background:** I previously used RDP from a Windows laptop to access a Linux jump station. After finding myself working exclusively in the Linux environment for infrastructure tasks, I migrated to a native Linux workstation/laptop with a jump station as the backend; the laptop is essentially just the interface, and the data is on the jump station (virtual machine on a Proxmox host). Ubuntu Desktop 24.04 LTS was chosen as the jump station instead of Ubuntu Server so I can retain the option of RDP/GUI, which allows for a fallback if the laptop/workstation crashes as well as fallback access from my Windows laptop when needed (e.g., video conferencing demos).
 
-## NOTE:
+## NOTES:
 * This workflow is designed for a personal lab environment to demonstrate architecture patterns, operational discipline, and automation techniques.
 
 * In a production environment, this design would be adapted to include centralized identity management, managed secrets, formal monitoring and alerting, immutable backups, and change-control processes. The core patterns remain the same; the controls and tooling would differ.
 
+* The notes are detailed to provide a map for future automation.
 
 ---
 
@@ -20,7 +21,7 @@ Date:  01/27/2026
 | Component | Description |
 |-----------|-------------|
 | [Server Setup](server-setup/) | Jump station VM configuration (Proxmox, Ubuntu, software, kubectl, SSH) |
-| [Workstation Setup](workstation-setup/) | Laptop integration (VS Code Remote-SSH, rsync backups, Obsidian sync) |
+| [Workstation Setup](workstation-setup/) | Laptop integration (Ubuntu 24.04 LTS, VS Code Remote-SSH, rsync backups, Obsidian sync) |
 
 ---
 
@@ -31,7 +32,6 @@ Date:  01/27/2026
 **Design goals:**
 - Avoid RDP for daily work, but retain the option
 - Keep credentials, files, and backups centralized on the jump station
-
 
 ---
 
@@ -92,7 +92,7 @@ VS Code runs locally on the laptop, connects via SSH to the jump station. All fi
 
 ### Obsidian Vault + Syncthing
 
-Obsidian runs locally on the laptop for performance. Syncthing replicates the vault (send-only from laptop, receive-only on jump station). Git metadata stays on the jump station only.
+Obsidian runs locally on the laptop for performance. Syncthing replicates the vault (bidirectional sync, file versioning). Git metadata stays on the jump station only.
 
 ### Git Snapshots
 

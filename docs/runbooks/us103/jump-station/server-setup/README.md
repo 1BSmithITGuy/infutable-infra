@@ -10,6 +10,8 @@ Date:  01/25/2026
 
 * In a production environment, this design would be adapted to include centralized identity management, managed secrets, formal monitoring and alerting, immutable backups, and change-control processes. The core patterns remain the same; the controls and tooling would differ.
 
+* The notes are detailed to provide a map for future automation.
+
 ---
 
 ## Base Installation

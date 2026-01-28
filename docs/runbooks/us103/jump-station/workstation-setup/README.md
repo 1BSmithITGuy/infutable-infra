@@ -3,13 +3,14 @@ Date:  01/26/2026
 
 # Workstation Setup
 
-> Laptop configuration for integration with the jump station. See the [parent README](../README.md) for architecture overview.
+> Laptop client configuration for integration with the jump station. See the [parent README](../README.md) for architecture overview.
 
-## NOTE:
+## NOTES:
 * This workflow is designed for a personal lab environment to demonstrate architecture patterns, operational discipline, and automation techniques.
 
 * In a production environment, this design would be adapted to include centralized identity management, managed secrets, formal monitoring and alerting, immutable backups, and change-control processes. The core patterns remain the same; the controls and tooling would differ.
 
+* The notes are detailed to provide a map for future automation.
 ---
 
 ## Step 1 — Workstation Foundations
@@ -144,7 +145,7 @@ Used explicitly by rsync (not via agent or config).
 See [ltub-backup.sh](ltub-backup.sh) for the full script.
 
 **Behavior:**
-- Sets pessimistic FAIL status before starting
+- Sets FAIL status before starting
 - Backs up Documents, Pictures, Desktop
 - Marks OK only after all backups complete
 - Logs to `~/log/rsync/`
@@ -214,12 +215,12 @@ Only the `vault/` directory is synchronized. Git metadata (`.git/`, `.gitignore`
 
 ### Syncthing Configuration
 
-- Folder Type:
-  - Laptop: **Send Only**
-  - Jump station: **Receive Only**
-- Device pairing occurs explicitly
-- No bidirectional conflict resolution
-- Deletions propagate intentionally
+- Advanced - Folder Type:  **Send & Receive**
+- File Versioning: **Simple File Versioning**
+    -  **Keep Versions:** 3
+    -  **Clean out after:** 1 day
+    -  **Ceanup interval:**  3600 seconds
+
 
 Syncthing is used strictly for **live transport**, not backups.
 
@@ -281,14 +282,32 @@ Scheduled every 30 minutes.
 - Laptop never runs Git for this repo
 - Jump station authenticates using a deploy key (no passphrase)
 
----
+**.gitignore (on jump station):**
 
-### Snapshot Semantics
+```bash 
+# Obsidian workspace settings
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
 
-- Snapshot whatever state exists at runtime
-- No attempt to coordinate with Syncthing
-- Missed runs are acceptable
-- Git is archival, not transactional
+# Cache
+.obsidian/cache/
+.obsidian/plugins/*/data.json
+
+#  syncthing history
+.stversions/
+# Don't sync attachments if too large
+
+```
+
+**ssh config entry (on jump station):**
+```
+Host github-obsidian
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/obsidian_deploy_ed25519
+  IdentitiesOnly yes
+```
+* **Note**:  This is not the whole config file; just an entry.
 
 ---
 
@@ -353,7 +372,9 @@ Used exclusively by the login status banner.
 ## Login Status Banner
 
 ### Purpose
-Provide immediate, human-readable operational status on login.
+Provide immediate, human-readable operational status on login. 
+
+![alt text](images/SS-login-banner.png)
 
 ### Implementation
 Ubuntu dynamic MOTD script:
@@ -371,6 +392,4 @@ Ubuntu dynamic MOTD script:
 ### Design Properties
 
 - Read-only
-- No side effects
-- Timestamp-based truth
-- Safe to extend
+- Timestamp-based
