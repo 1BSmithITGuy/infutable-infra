@@ -1,4 +1,4 @@
-Author:  Bryan Smith
+Author:  Bryan Smith  
 Date:  01/27/2026
 
 # Jump Station
@@ -21,7 +21,8 @@ Date:  01/27/2026
 | Component | Description |
 |-----------|-------------|
 | [Server Setup](server-setup/) | Jump station VM configuration (Proxmox, Ubuntu, software, kubectl, SSH) |
-| [Workstation Setup](workstation-setup/) | Laptop integration (Ubuntu 24.04 LTS, VS Code Remote-SSH, rsync backups, Obsidian sync) |
+| [Base workstation configuration](workstation-setup/base-setup.md) | Post Ubuntu installation steps |
+| [Jumpstation client (workstation) configuration](workstation-setup/README.md) | Workstation integration with Jump station
 
 ---
 
@@ -31,7 +32,7 @@ Date:  01/27/2026
 
 **Design goals:**
 - Avoid RDP for daily work, but retain the option
-- Keep credentials, files, and backups centralized on the jump station
+- Keep important credentials, files, and backups centralized on the jump station
 
 ---
 
@@ -59,7 +60,7 @@ Jump Station (server)
 
 ## Design Principles
 
-- Laptop is practically a thin client; files stored on jump station
+- Laptop is practically a thin client; files are stored on jump station
 - Jump station is the source of truth:
   - Infrastructure repositories
   - Workstation backups
@@ -68,6 +69,7 @@ Jump Station (server)
 - Least-privilege automation:
   - `bryan` for interactive admin
   - `ltubbackup` for rsync only
+  -  Production git repo (infutable-infra) requires passphrase
 - Each tool has one job:
   - SSH: access and control
   - rsync: one-way workstation backup
@@ -101,9 +103,11 @@ Daily automated commits and pushes from the jump station. Captures whatever stat
 ### Login Status Banner
 
 Ubuntu dynamic MOTD displays health status on SSH login:
-- Backup status (rsync): OK if within 72 hours
-- Syncthing status: OK if heartbeat within 24 hours
-- Git snapshot status: OK/FAIL
+- **Workstation docs, pictures, desktop (rsync):** OK if within 72 hours
+- **Syncthing status:** OK if heartbeat within 24 hours
+- **Obsidian git repo push status:** OK/FAIL Within 72 hours
+
+![alt text](workstation-setup/images/SS-login-banner.png)
 
 ---
 
@@ -111,9 +115,11 @@ Ubuntu dynamic MOTD displays health status on SSH login:
 
 | Date       | Event                                           |
 |------------|-------------------------------------------------|
-| 2026-01-24 | Ubuntu installed, disk layout configured        |
-| 2026-01-24 | Bootstrap script run, base software installed   |
-| 2026-01-24 | SSH keys configured, kubectl/ArgoCD migrated    |
-| 2026-01-24 | GitHub SSH key created, infra repo cloned       |
-| 2026-01-25 | Continued with workstation integration setup    |
-| 2026-01-26 | Continued with workstation integration setup    |
+| 01-24-2026 | Ubuntu installed on test laptop, disk layout configured        |
+| 01-24-2026 | Bootstrap script run, base software installed   |
+| 01-24-2026 | SSH keys configured, kubectl/ArgoCD migrated    |
+| 01-24-2026 | GitHub SSH key created, infra repo cloned       |
+| 01-25-2026 | Continued with workstation integration setup    |
+| 01-26-2026 | Continued with workstation integration setup    |
+| 02-02-2026 | setup T490 production laptop - dual boot windows/Ubuntu |
+| 02-02-2026 | Configured T490 to access the jump station |

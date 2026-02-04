@@ -1,5 +1,5 @@
 Author:  Bryan Smith  
-Date:  01/26/2026
+Date:  02/04/2026
 
 # Workstation Setup
 
@@ -12,42 +12,75 @@ Date:  01/26/2026
 
 * The notes are detailed to provide a map for future automation.
 ---
+### Prerequisites
+* Base laptop setup is already complete (See [base-setup.md](base-setup.md))
+* Hostnames are **lowercase**
+
+---
 
 ## Step 1 — Workstation Foundations
 
-### Objectives
+### Objectives\notes
 - Passwordless SSH access
 - Stable VS Code Remote-SSH workflow
 - Clear separation of identities and responsibilities
+- SSH keys are **per laptop** (no more shared “one laptop” identity).
+- Backups are **hostname-based destinations** : `<hostname>_backup`.
 
-### SSH Configuration (Laptop)
+### Host Identity (Laptop)
+
+Set hostname **before** creating keys:
+
+```bash
+sudo hostnamectl set-hostname <hostname>
+hostnamectl
+```
+
+### SSH Configuration (Laptop → Jump Station as `bryan`)
 
 **Key created (no passphrase):**
 ```
-~/.ssh/infutable_jump_bryan_ed25519
+~/.ssh/infutable_jump_<hostname>_ed25519
 ```
 
-**SSH config entry:**
+Generate:
+```bash
+ssh-keygen -t ed25519 -f ~/.ssh/infutable_jump_<hostname>_ed25519 -N "" -C "infutable-jump:<hostname>"
+```
+
+**SSH config entry (laptop):**
 ```
 Host infutable-jump
     HostName bsus103jump02
     User bryan
-    IdentityFile ~/.ssh/infutable_jump_bryan_ed25519
+    IdentityFile ~/.ssh/infutable_jump_<hostname>_ed25519
     IdentitiesOnly yes
     PreferredAuthentications publickey
 ```
 
-### VS Code
-- Uses SSH host alias `infutable-jump`
-- No password prompts
+Verify:
+```bash
+ssh infutable-jump
+```
+
+### VS Code (Laptop)
+
+Extension required:
+- **Remote – SSH**
+
+Workflow:
+- Connect to host alias `infutable-jump`
 - Workspace stored remotely on jump station
-- Material Icon Theme enabled
+- Open folder on jump station (example):
+  ```
+  /srv/repos/infutable-infra
+  ```
 
 **Result:** Opening VS Code connects to jump station, ready to work.
 
 ---
 
-## Step 2 — Laptop to Jump Station Backup Pipeline
+## Step 2 — Laptop to Jump Station Backup Pipeline (Hostname-based)
 
 ### Design Principles
 - Push-based backups (laptop initiates)
@@ -60,52 +93,15 @@ Host infutable-jump
 
 ### Service Account (Jump Station)
 
-**Account:** `ltubbackup`
+**Account:** `ltubbackup`  
+**Group:** `backups` (members: `bryan`, `ltubbackup`)
 
-**Purpose:** Receive rsync backups only
-
-**Group setup:**
-```
-group: backups
-members: bryan, ltubbackup
-```
-
-Create the account:
+Create (one-time):
 ```bash
 sudo useradd -m -s /bin/bash ltubbackup
 sudo groupadd backups
 sudo usermod -aG backups bryan
 sudo usermod -aG backups ltubbackup
-```
-
----
-
-### Backup Directories (Jump Station)
-
-```
-/home/bryan/Documents/LTUB1234_backup
-/home/bryan/Pictures/LTUB1234_backup
-/home/bryan/Desktop/LTUB1234_backup
-```
-
-**Permissions:**
-- Owner: ltubbackup
-- Group: backups
-- Mode: 2770 (setgid, group-readable)
-
-Create the directories:
-```bash
-sudo mkdir -p /home/bryan/Documents/LTUB1234_backup
-sudo mkdir -p /home/bryan/Pictures/LTUB1234_backup
-sudo mkdir -p /home/bryan/Desktop/LTUB1234_backup
-
-sudo chown ltubbackup:backups /home/bryan/Documents/LTUB1234_backup
-sudo chown ltubbackup:backups /home/bryan/Pictures/LTUB1234_backup
-sudo chown ltubbackup:backups /home/bryan/Desktop/LTUB1234_backup
-
-sudo chmod 2770 /home/bryan/Documents/LTUB1234_backup
-sudo chmod 2770 /home/bryan/Pictures/LTUB1234_backup
-sudo chmod 2770 /home/bryan/Desktop/LTUB1234_backup
 ```
 
 Create log directory (writable by ltubbackup):
@@ -117,72 +113,104 @@ sudo chmod 2770 /home/bryan/log/rsync
 
 ---
 
-### SSH Key for Backups (Laptop)
+### Backup Directories (Jump Station) — Per Laptop
 
-**Key:**
+Destinations are hostname-based:
+
 ```
-~/.ssh/ltubbackup_ed25519
+/home/bryan/Documents/<hostname>_backup
+/home/bryan/Pictures/<hostname>_backup
+/home/bryan/Desktop/<hostname>_backup
+```
+
+Create (one-time per laptop):
+```bash
+sudo mkdir -p /home/bryan/Documents/<hostname>_backup
+sudo mkdir -p /home/bryan/Pictures/<hostname>_backup
+sudo mkdir -p /home/bryan/Desktop/<hostname>_backup
+
+sudo chown ltubbackup:backups /home/bryan/Documents/<hostname>_backup
+sudo chown ltubbackup:backups /home/bryan/Pictures/<hostname>_backup
+sudo chown ltubbackup:backups /home/bryan/Desktop/<hostname>_backup
+
+sudo chmod 2770 /home/bryan/Documents/<hostname>_backup
+sudo chmod 2770 /home/bryan/Pictures/<hostname>_backup
+sudo chmod 2770 /home/bryan/Desktop/<hostname>_backup
+```
+
+---
+
+### SSH Key for Backups (Laptop → ltubbackup)
+
+**Key (per laptop):**
+```
+~/.ssh/ltubbackup_<hostname>_ed25519
 ```
 
 Generate on the laptop:
 ```bash
-ssh-keygen -t ed25519 -f ~/.ssh/ltubbackup_ed25519 -N ""
+ssh-keygen -t ed25519 -f ~/.ssh/ltubbackup_<hostname>_ed25519 -N "" -C "ltubbackup:<hostname>"
 ```
 
-Copy to jump station:
+**Add the key to jump station (`ltubbackup`)**
+
+If `ssh-copy-id` fails with `Permission denied (publickey)`, add it manually from an account that can SSH to the jump station:
+
+1) On the laptop:
 ```bash
-ssh-copy-id -i ~/.ssh/ltubbackup_ed25519.pub ltubbackup@bsus103jump02
+cat ~/.ssh/ltubbackup_<hostname>_ed25519.pub
 ```
 
-Used explicitly by rsync (not via agent or config).
+2) On the jump station (as bryan):
+```bash
+sudo -u ltubbackup mkdir -p ~ltubbackup/.ssh
+sudo -u ltubbackup touch ~ltubbackup/.ssh/authorized_keys
+sudo chmod 700 ~ltubbackup/.ssh
+sudo chmod 600 ~ltubbackup/.ssh/authorized_keys
+sudo -u ltubbackup bash -c 'cat >> ~ltubbackup/.ssh/authorized_keys'
+```
+Paste the public key line, press Enter, then Ctrl-D.
+
+Verify from laptop:
+```bash
+ssh -i ~/.ssh/ltubbackup_<hostname>_ed25519 -o IdentitiesOnly=yes ltubbackup@bsus103jump02 'echo OK'
+```
 
 ---
 
 ### Backup Script (Laptop)
 
-**Location:** `~/bin/ltub-backup.sh`
-
-See [ltub-backup.sh](ltub-backup.sh) for the full script.
+**Location:** `~/bin/ltub-backup.sh`  
+See: `ltub-backup.sh` in this repo.
 
 **Behavior:**
-- Sets FAIL status before starting
+- Writes FAIL status before starting
 - Backs up Documents, Pictures, Desktop
 - Marks OK only after all backups complete
-- Logs to `~/log/rsync/`
+- Logs locally to `~/log/rsync/`
+- Writes status remotely to jump station per-host file
 
----
-
-### Backup Status File (Jump Station)
-
-**Location:**
+**Remote status file (Jump Station):**
 ```
-/home/bryan/log/rsync/backup-status.txt
+/home/bryan/log/rsync/<hostname>-backup-status.txt
 ```
 
-**Format (single line):**
+**Format:**
 ```
 <ISO-8601 timestamp> <OK|FAIL>
 ```
-
-Example:
-```
-2026-01-26T12:00:01-05:00 OK
-```
-
-This file represents ground truth for backup state.
 
 ---
 
 ### Cron Scheduling (Laptop)
 
-**Crontab entry:**
-```
-0 12 * * * /home/bryan/bin/ltub-backup.sh
+```bash
+crontab -e
 ```
 
-- Runs daily at noon
-- No dependency on laptop uptime guarantees
-- No cron policy logic
+```cron
+0 12 * * * /home/bryan/bin/ltub-backup.sh
+```
 
 ---
 
@@ -198,31 +226,49 @@ This file represents ground truth for backup state.
 
 ### Vault Layout
 
-**Laptop (Syncthing source):**
+**Laptop (Syncthing path):**
 ```
 /srv/syncthing/obsidian/vault
 ```
 
-**Jump Station (Syncthing target, inside Git repo):**
+**Jump Station (inside Git repo):**
 ```
-/srv/repos/obsidian/
-└── vault/
+/srv/repos/obsidian/vault
 ```
 
-Only the `vault/` directory is synchronized. Git metadata (`.git/`, `.gitignore`) is explicitly outside the sync boundary.
+Only the `vault/` directory is synchronized.
 
 ---
 
-### Syncthing Configuration
+### Syncthing Configuration (Steady-state)
 
-- Advanced - Folder Type:  **Send & Receive**
+- Folder Type: **Send & Receive**
 - File Versioning: **Simple File Versioning**
-    -  **Keep Versions:** 3
-    -  **Clean out after:** 1 day
-    -  **Ceanup interval:**  3600 seconds
-
+  - Keep Versions: 3
+  - Clean out after: 1 day
+  - Cleanup interval: 3600 seconds
 
 Syncthing is used strictly for **live transport**, not backups.
+
+---
+
+### Safe Onboarding for a New Laptop
+
+1) **Jump station**
+- Edit the existing Obsidian folder in the Syncthing console
+- Share it with the new laptop device
+
+2) **Laptop**
+- Accept the shared folder
+- Set local path:
+  ```
+  /srv/syncthing/obsidian/vault
+  ```
+- Set folder type to **Receive Only** initially
+
+3) Allow full sync to complete (file counts match, no warnings)
+
+4) Flip laptop folder to **Send & Receive**
 
 ---
 
@@ -235,161 +281,48 @@ A lightweight heartbeat file confirms laptop participation:
 vault/.syncstamp
 ```
 
-**Writer:** Laptop cron job writes ISO-8601 timestamp only
-
+**Writer:** Laptop cron writes ISO-8601 timestamp only  
 **Reader:** Jump station login status script evaluates freshness (24-hour threshold)
-
-This answers one question: "Has the laptop synced recently?"
 
 ---
 
 ### Laptop Heartbeat Script
 
-**Location:** `~/bin/obsidian-syncstamp.sh`
+**Location:** `~/bin/obsidian-syncstamp.sh`  
+See: `obsidian-syncstamp.sh` in this repo.
 
-See [obsidian-syncstamp.sh](obsidian-syncstamp.sh) for the full script.
-
-**Behavior:**
-- Writes timestamp to `vault/.syncstamp`
-- No networking logic
-- No error suppression
-
-**Crontab entry:**
-```
+Crontab entry:
+```cron
 */30 * * * * /home/bryan/bin/obsidian-syncstamp.sh
 ```
 
-Scheduled every 30 minutes.
-
 ---
 
-## Step 4 — Obsidian Git Snapshots
+## Step 4 — Obsidian Git Snapshots (Jump Station)
 
-### Objectives
-- Maintain off-site, versioned history of notes
-- Decouple Git from live editing
-- Avoid Git credentials on the laptop
-- Accept partial or mid-edit snapshots
+(Git runs only on the jump station, status file is consumed by the login banner)
 
----
-
-### Git Model
-
-- Git repository exists only on the jump station:
-  ```
-  /srv/repos/obsidian
-  ```
-- Laptop never runs Git for this repo
-- Jump station authenticates using a deploy key (no passphrase)
-
-**.gitignore (on jump station):**
-
-```bash 
-# Obsidian workspace settings
-.obsidian/workspace.json
-.obsidian/workspace-mobile.json
-
-# Cache
-.obsidian/cache/
-.obsidian/plugins/*/data.json
-
-#  syncthing history
-.stversions/
-# Don't sync attachments if too large
-
+Status file:
+```
+~/log/obsidian-git/obsidian-git-status.txt
 ```
 
-**ssh config entry (on jump station):**
-```
-Host github-obsidian
-  HostName github.com
-  User git
-  IdentityFile ~/.ssh/obsidian_deploy_ed25519
-  IdentitiesOnly yes
-```
-* **Note**:  This is not the whole config file; just an entry.
-
----
-
-### Snapshot Script (Jump Station)
-
-**Location:** `~/bin/obsidian-git-snapshot.sh`
-
-**Behavior:**
-- `git add -A`
-- Commit if changes exist
-- Push to GitHub
-- Write single-line status file
-
-```bash
-#!/usr/bin/env bash
-set -euo pipefail
-
-REPO="/srv/repos/obsidian"
-STATUS_FILE="$HOME/log/obsidian-git/obsidian-git-status.txt"
-LOGDIR="$HOME/log/obsidian-git"
-
-mkdir -p "$LOGDIR"
-
-cd "$REPO"
-
-# Check for changes
-if git diff --quiet && git diff --cached --quiet; then
-    echo "$(date -Is) OK (no changes)" > "$STATUS_FILE"
-    exit 0
-fi
-
-git add -A
-git commit -m "Snapshot $(date +%F_%H%M)"
-git push
-
-echo "$(date -Is) OK" > "$STATUS_FILE"
-```
-
-**Crontab entry (Jump Station):**
-```
+Crontab entry (example):
+```cron
 0 13 * * * /home/bryan/bin/obsidian-git-snapshot.sh
 ```
 
 ---
 
-### Snapshot Status File (Jump Station)
+## Login Status Banner (Jump Station)
 
-**Location:**
-```
-~/log/obsidian-git/obsidian-git-status.txt
-```
-
-**Format:**
-```
-<ISO-8601 timestamp> <OK|FAIL>
-```
-
-Used exclusively by the login status banner.
-
----
-
-## Login Status Banner
-
-### Purpose
-Provide immediate, human-readable operational status on login. 
-
-![alt text](images/SS-login-banner.png)
-
-### Implementation
 Ubuntu dynamic MOTD script:
-
 ```
 /etc/update-motd.d/50-infutable-status
 ```
 
-### Displayed Signals
+THis should display on login to the jump station:
 
-- Workstation backup (rsync)
-- Obsidian sync heartbeat (Syncthing)
-- Obsidian Git snapshot status
+![alt text](images/SS-login-banner.png)
 
-### Design Properties
-
-- Read-only
-- Timestamp-based
+---
