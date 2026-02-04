@@ -11,7 +11,7 @@ The infrastructure is split across two racks:
 - **Telco Rack** - Network equipment (firewall host, switches, REOlink NVR)
 ![alt text](<images/telco-rack.png>)
 
-- **Server Rack** - Compute infrastructure (2xLenovo P520 servers, Cisco catalyst 3750x)
+- **Server Rack** - Compute infrastructure (2xLenovo P520 servers, Cisco catalyst 3750x)  
 	**NOTE:** The Cisco 3750 Catalyst is not currently in use due to power consumption; the TP-Link switches provide sufficient  L2 functionality. If it gets too cold in my office, I'll brush up on Cisco :)
 ![alt text](images/server-rack.png)
 
@@ -25,7 +25,7 @@ The infrastructure is split across two racks:
 
 | Hostname | Role | Hardware | CPU | RAM | Location |
 |----------|------|----------|-----|-----|----------|
-| BSUS103VM01 | XCP-ng Host (Firewall) | Mini PC | AMD Ryzen 5 5500U (4C/4T) | 32 GB | Telco Rack |
+| BSUS103VM01 | XCP-ng Host (Firewall, k3s) | Mini PC | AMD Ryzen 5 5500U (4C/4T) | 32 GB | Telco Rack |
 | BSUS103VM02 | XCP-ng Host (Workloads) | Lenovo P520 | Intel Xeon W-2135 (6C/12T) | 48 GB | Server Rack |
 | BSUS103PX01 | Proxmox Host | Lenovo P520 | Intel Xeon W-2135 (6C/12T) | 48 GB | Server Rack |
 
@@ -43,9 +43,11 @@ The infrastructure is split across two racks:
 | Hostname | Role | Hardware | IP Address |
 |----------|------|----------|------------|
 | BSUS103XO01 | Xen Orchestra | VM on XCP-ng | 10.0.0.50 |
-| bsus103jump02 | Jump Station | Ubuntu 24.04 VM | VLAN 200 |
+| bsus103jump02 | Jump Station | Ubuntu 24.04 VM | 10.0.0.15 |
 
 ## Network Architecture
+**Note:** This ASCII diagram is best viewed on desktop. Mobile GitHub clients may wrap or scale code blocks in a way that distorts alignment.
+
 
 ```
                                     ┌─────────────────┐
@@ -60,7 +62,7 @@ The infrastructure is split across two racks:
                                              │
                               ┌──────────────▼──────────────┐
                               │       BSUS103SW0801         │
-                              │   Core Switch (TL-SG108PE)  │
+                              │  Collapsed core/edge switch │
                               │         10.0.0.60           │
                               └──────────────┬──────────────┘
                                              │
@@ -68,17 +70,17 @@ The infrastructure is split across two racks:
                     │                        │                        │
            ┌────────▼────────┐      ┌────────▼────────┐      ┌────────▼────────┐
            │  BSUS103WAP01   │      │  BSUS103SW1601  │      │   BSUS103VM01   │
-           │   (EAP610)      │      │   Access Switch │      │(XCP-ng/firewall)│
+           │  (Wireless AP)  │      │   Access Switch │      │(XCP-ng/firewall)│
            │   10.0.0.61     │      │    10.0.0.59    │      │    10.0.0.51    │
            └─────────────────┘      └────────┬────────┘      └─────────────────┘
                                              │
                               ┌──────────────┼──────────────┐
-                              │              │              │
-                     ┌────────▼───────┐ ┌────▼────┐ ┌───────▼────────┐
-                     │  BSUS103VM02   │ │   ...   │ │  BSUS103PX01   │
-                     │   (XCP-ng)     │ │ misc/IoT│ │   (Proxmox)    │
-                     │   10.0.0.52    │ │         │ │   10.0.0.41    │
-                     └────────────────┘ └─────────┘ └────────────────┘
+                              │                             │
+                     ┌────────▼───────┐             ┌───────▼────────┐
+                     │  BSUS103VM02   │             │  BSUS103PX01   │
+                     │   (XCP-ng)     │             │   (Proxmox)    │
+                     │   10.0.0.52    │             │   10.0.0.41    │
+                     └────────────────┘             └────────────────┘
 
 ```
 
@@ -147,7 +149,7 @@ See [firewall/README.md](firewall/README.md) for full BGP configuration.
 | 10.0.0.41 | BSUS103PX01 | Proxmox host |
 | 10.0.0.50 | BSUS103XO01 | Xen Orchestra |
 | 10.0.0.59 | BSUS103SW1601 | Access switch |
-| 10.0.0.60 | BSUS103SW0801 | Core switch |
+| 10.0.0.60 | BSUS103SW0801 | Collapsed Core / Edge Switch |
 | 10.0.0.61 | BSUS103WAP01 | Wireless AP |
 
 ### VLAN 10 - Srv-ADC (10.0.1.0/29)

@@ -4,7 +4,7 @@
 
 | Hostname | Model | Role | IP Address | Location |
 |----------|-------|------|------------|----------|
-| BSUS103SW0801 | TP-Link TL-SG108PE | Core Switch | 10.0.0.60 | Telco Rack |
+| BSUS103SW0801 | TP-Link TL-SG108PE | Collapsed Core / Edge Switch | 10.0.0.60 | Telco Rack |
 | BSUS103SW1601 | TP-Link TL-SG1016DE | Access Switch | 10.0.0.59 | Server Rack |
 
 Both switches are managed via web interface on VLAN 200 (MGT).
@@ -23,7 +23,7 @@ Both switches are managed via web interface on VLAN 200 (MGT).
 
 ---
 
-## BSUS103SW0801 - Core Switch
+## BSUS103SW0801 - Collapsed Core / Edge Switch
 
 **Model:** TP-Link TL-SG108PE (8-port managed PoE)
 **Firmware:** 1.0.0 Build 20210819

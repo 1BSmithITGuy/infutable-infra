@@ -260,10 +260,22 @@ git clone git@github.com:1BSmithITGuy/infutable-infra.git
 
 ---
 
+## vim setup
+
+Copy .vimrc ([.vimrc](.vimrc)) and run:
+
+```bash
+mkdir -p ~/.vim/autoload
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  vim +PlugInstall +qall
+```
+
+
 ## TODO
 
 - [ ] Deploy SSH keys to infrastructure nodes
-- [ ] Copy .vimrc configuration
+- [x] Copy .vimrc configuration
 - [ ] Update /etc/hosts with infrastructure nodes
 - [x] ~~Set up SSH keys and configure GitHub~~
 - [x] ~~Clone Git repositories to /srv/repos~~
