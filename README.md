@@ -19,11 +19,10 @@ The core of the environment runs in an on-premises datacenter (a homelab). It is
 
 | Area | Description |
 |------|-------------|
-| [Base Infrastructure](docs/runbooks/us103/base-infra/) | Network architecture, firewall, switches, VLANs, IP allocations |
+| [Base Infrastructure](docs/infra/sites/us103/) | Network architecture, firewall, switches, VLANs, IP allocations |
 | [Kubernetes Standards](docs/standards/kubernetes.md) | DNS conventions, IngressClass, deployment patterns, storage |
 | [Cilium on Talos](k8s/platform/clusters/us103-talos01/docs/cilium-talos-readme.md) | Cilium CNI installation guide for Talos Linux |
 | [Jump Station](docs/runbooks/us103/jump-station/) | Management workstation, backups, tooling |
-| [Proxmox Setup](docs/runbooks/us103/base-infra/proxmox/) | Proxmox VE hypervisor deployment |
 | [Orchestration Scripts](orchestration/us103/) | Lab environment startup/shutdown automation |
 
 ## Recent Projects
@@ -32,9 +31,9 @@ Highlighted work demonstrating infrastructure build-out and operational practice
 
 | Project | Description | Dates | Documentation |
 |---------|-------------|-------|---------------|
-| Proxmox Server | Deployed Proxmox VE hypervisor with ZFS mirror as foundation for lab infrastructure | 01/21/2026 – 01/22/2026 | [docs/runbooks/us103/base-infra/proxmox/](docs/runbooks/us103/base-infra/proxmox/) |
+| Proxmox Server | Deployed Proxmox VE hypervisor with ZFS mirror as foundation for lab infrastructure | 01/21/2026 – 01/22/2026 | [docs/infra/sites/us103/proxmox/](docs/infra/sites/us103/proxmox/) |
 | Jump Station | Ubuntu jump station with workstation integration, automated backups, and Obsidian sync via Syncthing/Git | 01/24/2026 – 01/26/2026 | [docs/runbooks/us103/jump-station/](docs/runbooks/us103/jump-station/) |
-| Base Infra Docs | Documented XCP-ng environment, firewall VM, and VLAN architecture | 01/27/2026 | [docs/runbooks/us103/base-infra/](docs/runbooks/us103/base-infra/) |
+| Base Infra Docs | Documented XCP-ng environment, firewall VM, and VLAN architecture | 01/27/2026 | [docs/infra/sites/us103/](docs/infra/sites/us103/) |
 | Update docs | Update documentation | 01/28/2026 – | *in progress* |
 | Lab refresh | planning stage | 01/28/2026 – | *in progress* |
 

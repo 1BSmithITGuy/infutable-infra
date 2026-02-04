@@ -1,6 +1,4 @@
 
-# updated 10/29/2025: Added NIC to BGP VLAN, installed metallb (see files in platform directory), 
-
 
 
 helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
@@ -101,3 +99,5 @@ Install cert-manager:
 ```bash
 helm upgrade --install cert-manager jetstack/cert-manager   --namespace cert-manager --create-namespace   --set crds.enabled=true
 ```
+
+### updated 10/29/2025: Added NIC to BGP VLAN, installed metallb (see [/infutable-infra/k8s/platform/clusters/us103-k3s01/networking/](../../../../../../k8s/platform/clusters/us103-k3s01/networking/))

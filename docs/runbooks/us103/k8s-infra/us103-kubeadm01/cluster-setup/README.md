@@ -18,7 +18,7 @@ Deploy kubeadm-based Kubernetes cluster on Ubuntu 22.04.
 ---
 
 ## 1) Prepare Base Image
-All nodes were created from `Template-Ubuntu_2204_Srv_Base_v4` in Xen Orchestra (see docs/runbooks/xen-orchestra/Template-Ubuntu_2204_Srv_Base_v4).
+All nodes were created from `Template-Ubuntu_2204_Srv_Base_v4` in Xen Orchestra (see [Template-Ubuntu_2204_Srv_Base_v4](../../../../xcp-ng/xen-orchestra/Template-Ubuntu_2204_Srv_Base_v4/)).
 
 ---
 

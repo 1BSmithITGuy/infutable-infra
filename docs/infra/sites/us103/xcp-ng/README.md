@@ -62,8 +62,8 @@ OPNsense/pfSense firewall running on FreeBSD 14.2.
 | VLAN | Name | Purpose |
 |------|------|---------|
 | 6 | User-IOT | IoT devices |
-| 10 | Srv-ADC | Server - AD Connected |
-| 15 | Srv-ADS | Server - AD Standalone |
+| 10 | Srv-ADC | AD Domain controllers |
+| 15 | Srv-ADS | AD Services |
 | 20 | k8s-mgt | Kubernetes management |
 | 30 | k8s-bgp | Kubernetes BGP peering |
 | 200 | MGT | Infrastructure management |
