@@ -32,10 +32,8 @@ Highlighted work demonstrating infrastructure build-out and operational practice
 | Project | Description | Dates | Documentation |
 |---------|-------------|-------|---------------|
 | Proxmox Server | Deployed Proxmox VE hypervisor with ZFS mirror as foundation for lab infrastructure | 01/21/2026 – 01/22/2026 | [docs/infra/sites/us103/proxmox/](docs/infra/sites/us103/proxmox/) |
-| Jump Station | Ubuntu jump station with workstation integration, automated backups, and Obsidian sync via Syncthing/Git | 01/24/2026 – 01/26/2026 | [docs/runbooks/us103/jump-station/](docs/runbooks/us103/jump-station/) |
-| Base Infra Docs | Documented XCP-ng environment, firewall VM, and VLAN architecture | 01/27/2026 | [docs/infra/sites/us103/](docs/infra/sites/us103/) |
-| Update docs and organized repo | Update documentation | 01/28/2026 – | *in progress* |
-| Workstation setup | Setup prod Linux workstation (dual boot ubuntu/windows, jump station integration)  | 02/04/2026 | [Workstation Setup](docs/runbooks/us103/jump-station/workstation-setup/README.md)
+| Jump Station | Ubuntu jump station with workstation integration, automated backups, and Obsidian sync via Syncthing/Git | 01/24/2026 – 02/04/2026 | [docs/runbooks/us103/jump-station/](docs/runbooks/us103/jump-station/) |
+| Update docs and organized repo | Update docs and organized repo | 01/28/2026 – 02/04/2026 | 
 | Lab refresh | planning stage | 01/28/2026 – *in progress* |  |
 
 ## Repo Layout
