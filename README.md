@@ -37,5 +37,16 @@ This repository contains Infrastructure-as-Code, automation, and configuration a
 | [Jump Station](./jump-station) | Management workstation, tooling, backups, and operator workflows |
 | [Orchestration Scripts](./orchestration) | Environment startup/shutdown automation and dependency sequencing |
 
-
 ---
+
+## Active and Recent Work
+
+High-level view of recent and ongoing infrastructure projects. 
+
+| Project | Focus | Status | Documentation |
+|--------|-------|--------|---------------|
+| Proxmox Server | Hypervisor deployment with ZFS-backed storage | Completed | docs/infra/sites/us103/proxmox/ |
+| Jump Station | Management workstation, backups, tooling | Completed | docs/runbooks/us103/jump-station/ |
+| Repo organization | Documentation cleanup and structure | Completed | — |
+| Lab refresh and standardization | Platform and tooling refresh | In progress | — |
+
