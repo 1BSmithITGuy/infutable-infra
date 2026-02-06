@@ -52,7 +52,7 @@ ForEach ($pARTYgIVER in $VMHViewData){
             @{N='LicenseName';E={$_.AssignedLicense.Name}},
             @{N='ExpirationDate';E={$_.AssignedLicense.Properties.where{$_.Key -eq 'expirationDate'}.Value }}
         } 
-    <#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Start: Build-VMHostObject----->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#>
+    <#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Start: Build-VMHostObject (pARTYgIVER)----->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#>
     #  NOTE: 
         #  "$pARTYgIVER" is a host object ("Party-giver" was a listted synonym for host).
         #  Powershell and PowerCLI use the word "host" in cmdlets; "$pARTYgIVER" is easier to see and search.
@@ -91,7 +91,7 @@ ForEach ($pARTYgIVER in $VMHViewData){
                                                 'Country' = $null 
     
                     }
-    <#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<End: Build-VMHostObject----->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#>
+    <#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<End: Build-VMHostObject (pARTYgIVER)----->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#>
             
             #-----------Get-LicenseInfo-----------------------------------------------------------------------------------------------------#   
             Foreach ($License in $Licenses) {
