@@ -1,7 +1,7 @@
 
 ## General
 
-This directory contains a focused VMware example from an archived lab repository.
+This directory contains a focused VMware example from an archived lab repository (see [Get-InfutableVMWInventory.ps1](Get-InfutableVMWInventory.ps1)).
 
 The script included here was intentionally chosen because it represents a broad, environment-wide use case rather than a narrow, one-off task. It scales well, iterates across multiple layers of the vSphere inventory, constructs structured host-level objects from multiple data sources, and produces output suitable for operational review and future automation.
 
