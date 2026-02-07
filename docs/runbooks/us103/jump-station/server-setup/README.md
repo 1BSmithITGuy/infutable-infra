@@ -272,12 +272,18 @@ curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
 ```
 
 
-## TODO
+## Updates:
 
-- [ ] Deploy SSH keys to infrastructure nodes
-- [x] Copy .vimrc configuration
-- [ ] Update /etc/hosts with infrastructure nodes
-- [x] ~~Set up SSH keys and configure GitHub~~
-- [x] ~~Clone Git repositories to /srv/repos~~
-- [x] ~~Configure kubectl contexts for clusters~~
-- [x] ~~Set up /srv/repos directory structure with proper permissions~~
+**02/06/2026:**
+
+Install powershell:
+
+```bash
+sudo apt-get update
+
+wget "https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb"
+
+sudo apt-get update && sudo apt-get install powershell
+
+```
+
