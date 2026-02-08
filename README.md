@@ -12,29 +12,29 @@ A highlighted example of this work can be found in the **[VMware](./VMware)** di
 
 InfUtable is a fictional company created to demonstrate:
 
-- **Immutable infrastructure design** — treating servers, clusters, and workloads as replaceable, versioned artifacts rather than pets.
-- **Kubernetes platform engineering** — multi-cluster deployments with GitOps (Argo CD) and standardized operational patterns.
-- **Active Directory integration** — centralized authentication, RBAC, DNS, and enterprise identity concepts.
-- **Infrastructure automation** — scripted orchestration for VM lifecycle management, cluster bootstrap, and environment control.
-- **Enterprise-grade patterns** — namespaces, RBAC, network policies, monitoring, logging, and backup strategies.
+- **Immutable infrastructure design** — Treating servers, clusters, and workloads as replaceable and avoid vendor lock-in where possible.
+- **Kubernetes platform engineering** — Standardize deployments with GitOps (Argo CD).
+- **Active Directory integration** — Centralized RBAC and DNS.
+- **Infrastructure automation** — Scripted orchestration for VM lifecycle management, cluster bootstrap, and environment control.
+- **Enterprise-grade patterns** — RBAC, network policies, monitoring, logging, and backup strategies.
 
-The core of the environment runs in an on-premises datacenter (a homelab), intentionally designed to mirror real enterprise constraints and operational models rather than idealized cloud-only examples.
+The core of the environment runs in an on-prem datacenter designed to mirror real enterprise constraints and operational models with planned cloud expansion.
 
 ---
 
 ## Repository Structure
 
-This repository contains Infrastructure-as-Code, automation, and configuration artifacts for running InfUtable’s multi-site Kubernetes platform and supporting enterprise systems.
+This repository contains Infrastructure-as-Code, automation, and configuration artifacts for running InfUtable’s Kubernetes platform and supporting enterprise systems.
 
 ### Documentation quick links
 
 | Area | Description |
 |-----|------------|
 | **[VMware](./VMware)** | **Archived production-style PowerCLI inventory and automation example** |
-| [Base Infrastructure](./base-infrastructure) | Network architecture, firewalls, switches, VLANs, IP allocation |
-| [Kubernetes Standards](./kubernetes-standards) | DNS conventions, IngressClass, deployment patterns, storage |
-| [Cilium on Talos](./cilium-on-talos) | Cilium CNI installation and configuration for Talos Linux |
-| [Jump Station](./jump-station) | Management workstation, tooling, backups, and operator workflows |
+| [On-prem Infrastructure](./docs/infra/sites/us103) | Hardware, Network architecture |
+| [Kubernetes Standards](./docs/standards/kubernetes.md) | DNS conventions, IngressClass, deployment patterns, storage |
+| [Cilium on Talos](./docs/runbooks/us103/k8s-infra/us103-talos01/cilium-talos-runbook.md) | Cilium CNI installation and configuration for Talos Linux |
+| [Jump Station\Workstation](./docs/runbooks/us103/jump-station) | jump station\server, engineering workstation, tooling, backups, and workflow |
 | [Orchestration Scripts](./orchestration) | Environment startup/shutdown automation and dependency sequencing |
 
 ---
@@ -45,8 +45,8 @@ High-level view of recent and ongoing infrastructure projects.
 
 | Project | Focus | Status | Documentation |
 |--------|-------|--------|---------------|
-| Proxmox Server | Hypervisor deployment with ZFS-backed storage | Completed | docs/infra/sites/us103/proxmox/ |
-| Jump Station | Management workstation, backups, tooling | Completed | docs/runbooks/us103/jump-station/ |
+| Proxmox Server | Hypervisor deployment with ZFS-backed storage | Completed | [docs/infra/sites/us103/proxmox/](./docs/infra/sites/us103/proxmox/) |
+| Jump Station | Jump station, engineering workstation config | Completed | [docs/runbooks/us103/jump-station/](./docs/runbooks/us103/jump-station/) |
 | Repo organization | Documentation cleanup and structure | Completed | — |
 | Lab refresh and standardization | Platform and tooling refresh | In progress | — |
 
