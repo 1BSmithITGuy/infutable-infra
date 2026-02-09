@@ -22,9 +22,10 @@ ZFS mirror on NVMe drives with 4.6GB ARC cache. ZFS RAID1 is first-class in Prox
 
 | Interface | Purpose |
 |-----------|---------|
-| NIC 1 | Management - VLAN 200 |
-| NIC 2 | Trunked VLANs (10, 15, 20, 30) |
-| NIC 3 | Trunked VLANs (10, 15, 20, 30) |
+| nic0 | Trunked VLANs (10, 15, 20, 30) |
+| nic1 | Trunked VLANs (10, 15, 20, 30) |
+| nic4 | Management - VLAN 200 |
+
 | 10GbE | Point-to-point link to XCP-ng host |
 
 VLANs configured as needed. Management VLAN operational, others added on demand.
@@ -40,6 +41,25 @@ VLANs configured as needed. Management VLAN operational, others added on demand.
 
 - TrueNAS VM with SATA controller passthrough
 - Replication to existing TrueNAS on XCP-ng cluster
+
+## configuration
+
+After installation:
+
+### set NICs as up:
+
+ssh in and run:
+
+``` bash
+#  Bring up NICs
+ip link set nic0 up
+ip link set nic1 up
+
+# Verify - look for "Link detected: Yes"
+ethtool nic0
+ethtool nic1
+
+```
 
 ---
 
