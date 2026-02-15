@@ -132,7 +132,7 @@ msiexec.exe /package managementagentx64.msi /quiet /norestart
 
 ---
 
-## Appendix A — Adjust XO VM Memory via `xe`
+## Adjust XO VM Memory via `xe`
 
 1. SSH to the **XCP-ng host** running the XO VM.
 2. Find the XO VM **UUID**:

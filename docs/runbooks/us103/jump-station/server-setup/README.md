@@ -1,6 +1,12 @@
 Author:  Bryan Smith  
 Date:  01/25/2026
 
+## Document Revision History
+
+| Date       | Author | Change Summary                          |
+|------------|--------|------------------------------------------|
+| 2026-02-15 | Bryan  | Added Nemo + SSHFS |
+
 # Server Setup
 
 > Configuration steps for `bsus103jump02`, the Ubuntu jump station VM.
@@ -287,3 +293,26 @@ sudo apt-get update && sudo apt-get install powershell
 
 ```
 
+## Nemo + SSHFS Mount
+
+### notes
+- Replace Nautilus with Nemo
+
+---
+
+### Install Required Packages
+```bash
+sudo apt update
+sudo apt install -y nemo
+```
+
+---
+
+### Set Nemo as Default File Manager
+```bash
+xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search
+nautilus -q
+nemo &
+```
+
+---

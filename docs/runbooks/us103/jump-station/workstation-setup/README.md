@@ -1,5 +1,11 @@
 Author:  Bryan Smith  
-Date:  02/04/2026
+Date:  02/04/2026  
+
+## Document Revision History
+
+| Date       | Author | Change Summary                          |
+|------------|--------|------------------------------------------|
+| 2026-02-15 | Bryan  | Added Step 5: Nemo + SSHFS |
 
 # Workstation Setup
 
@@ -324,5 +330,51 @@ Ubuntu dynamic MOTD script:
 THis should display on login to the jump station:
 
 ![alt text](images/SS-login-banner.png)
+
+---
+---
+
+## Step 5 — Nemo + SSHFS Mount
+
+### notes
+- Replace Nautilus with Nemo
+- Mount jump station `/srv` via SSHFS to workstation
+
+---
+
+### Install Required Packages (workstation)
+```bash
+sudo apt update
+sudo apt install -y nemo sshfs
+```
+
+---
+
+### Set Nemo as Default File Manager
+```bash
+xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search
+nautilus -q
+nemo &
+```
+
+---
+
+### Create Local Mount Namespace
+```bash
+mkdir -p ~/mnt/bsus103jump02/srv
+chmod 700 ~/mnt
+```
+
+---
+
+### Mount Jump Station `/srv` via SSHFS
+SSH identity and hostname are defined via `~/.ssh/config` (Host: `infutable-jump`).
+
+```bash
+sshfs infutable-jump:/srv ~/mnt/bsus103jump02/srv \
+  -o reconnect,ServerAliveInterval=15,ServerAliveCountMax=3 \
+  -o StrictHostKeyChecking=accept-new \
+  -o cache=no
+```
 
 ---
