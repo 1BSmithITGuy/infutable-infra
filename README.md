@@ -26,7 +26,7 @@ infutable-infra/
 
 ### VMware
 
-Production-style [PowerCLI inventory engine](./VMware) built for environment-wide vSphere reporting. Uses direct API access (`Get-View`) with external data correlation for warranty, site, and lifecycle tracking. This is archived enterprise work, not lab content.
+Production-style [PowerCLI inventory engine](./VMware) built for environment-wide vSphere reporting. Uses direct API access (`Get-View`) with external data correlation for warranty, site, and lifecycle tracking. This is an archive and not in production.
 
 ### Phase 1: Exploration
 
@@ -46,12 +46,6 @@ Platform rebuild with established standards and a focused toolset:
 - **Backup:** TrueNAS with offsite replication
 
 All phase 2 documentation follows the project [documentation standards](./phase-2-refinement/docs/standards/documentation.md).
-
----
-
-## Documentation Standards
-
-Phase 2 work follows a defined standard for headers, formatting, and runbook structure. See [documentation.md](./phase-2-refinement/docs/standards/documentation.md).
 
 ---
 
