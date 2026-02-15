@@ -1,52 +1,71 @@
 # InfUtable Infrastructure
 
-**InfUtable** — from **immUTABLE** and **INFRAstructure** — is a production-style, end-to-end enterprise environment designed to demonstrate how infrastructure can be built, operated, and evolved using immutable and automation-first principles.
+**InfUtable** (from **immUTABLE** + **INFRAstructure**) is a production-style enterprise environment designed to demonstrate infrastructure automation, platform engineering, and operational discipline.
 
-This repository serves as a **technical portfolio maintained by Bryan Smith**, showcasing real-world infrastructure design, platform engineering patterns, and automation techniques used in enterprise environments.
-
-A highlighted example of this work can be found in the **[VMware](./VMware)** directory, which contains a production-style PowerCLI inventory engine demonstrating environment-wide API traversal, external data correlation, and automation-ready output.
-
----
-
-## Overview
-
-InfUtable is a fictional company created to demonstrate:
-
-- **Immutable infrastructure design** — Treating servers, clusters, and workloads as replaceable and avoid vendor lock-in where possible.
-- **Kubernetes platform engineering** — Standardize deployments with GitOps (Argo CD).
-- **Active Directory integration** — Centralized RBAC and DNS.
-- **Infrastructure automation** — Scripted orchestration for VM lifecycle management, cluster bootstrap, and environment control.
-- **Enterprise-grade patterns** — RBAC, network policies, monitoring, logging, and backup strategies.
-
-The core of the environment runs in an on-prem datacenter designed to mirror real enterprise constraints and operational models with planned cloud expansion.
+This repository is a technical portfolio maintained by Bryan Smith.
 
 ---
 
 ## Repository Structure
 
-This repository contains Infrastructure-as-Code, automation, and configuration artifacts for running InfUtable’s Kubernetes platform and supporting enterprise systems.
+```
+infutable-infra/
+├── VMware/                    # Enterprise PowerCLI inventory tooling (archived)
+├── phase-1-exploration/       # Initial lab buildout and platform evaluation
+├── phase-2-refinement/        # Current: production-style k3s platform on Rocky Linux
+│   ├── docs/
+│   │   ├── standards/
+│   │   ├── templates/
+│   │   └── runbooks/
+│   │       └── us103/
+│   ├── k8s/
+│   ├── terraform/
+│   └── orchestration/
+└── README.md
+```
 
-### Documentation quick links
+### VMware
 
-| Area | Description |
-|-----|------------|
-| **[VMware](./VMware)** | **Archived production-style PowerCLI inventory and automation example** |
-| [On-prem Infrastructure](./docs/infra/sites/us103) | Hardware, Network architecture |
-| [Kubernetes Standards](./docs/standards/kubernetes.md) | DNS conventions, IngressClass, deployment patterns, storage |
-| [Cilium on Talos](./docs/runbooks/us103/k8s-infra/us103-talos01/cilium-talos-runbook.md) | Cilium CNI installation and configuration for Talos Linux |
-| [Jump Station\Workstation](./docs/runbooks/us103/jump-station) | jump station\server, engineering workstation, tooling, backups, and workflow |
-| [Orchestration Scripts](./orchestration) | Environment startup/shutdown automation and dependency sequencing |
+Production-style [PowerCLI inventory engine](./VMware) built for environment-wide vSphere reporting. Uses direct API access (`Get-View`) with external data correlation for warranty, site, and lifecycle tracking. This is archived enterprise work, not lab content.
+
+### Phase 1: Exploration
+
+Initial lab infrastructure built to evaluate tooling and establish baseline patterns. Includes work across k3s, kubeadm, Talos, XCP-ng, Cilium, and ArgoCD. Documentation standards were developed iteratively during this phase.
+
+See [phase-1-exploration/](./phase-1-exploration/) for details.
+
+### Phase 2: Refinement (Current)
+
+Platform rebuild with established standards and a focused toolset:
+
+- **OS:** Rocky Linux (RHEL ecosystem)
+- **Kubernetes:** k3s (3-node cluster)
+- **GitOps:** ArgoCD
+- **Identity:** Active Directory with LDAPS
+- **Observability:** Prometheus + Grafana
+- **Backup:** TrueNAS with offsite replication
+
+All phase 2 documentation follows the project [documentation standards](./phase-2-refinement/docs/standards/documentation.md).
 
 ---
 
-## Active and Recent Work
+## Documentation Standards
 
-High-level view of recent and ongoing infrastructure projects. 
+Phase 2 work follows a defined standard for headers, formatting, and runbook structure. See [documentation.md](./phase-2-refinement/docs/standards/documentation.md).
 
-| Project | Focus | Status | Documentation |
-|--------|-------|--------|---------------|
-| Proxmox Server | Hypervisor deployment with ZFS-backed storage | Completed | [docs/infra/sites/us103/proxmox/](./docs/infra/sites/us103/proxmox/) |
-| Jump Station | Jump station, engineering workstation config | Completed | [docs/runbooks/us103/jump-station/](./docs/runbooks/us103/jump-station/) |
-| Repo organization | Documentation cleanup and structure | Completed | — |
-| Lab refresh and standardization | Platform and tooling refresh | In progress | — |
+---
 
+## Tools
+
+| Domain             | Tool                          |
+|--------------------|-------------------------------|
+| Hypervisor         | Proxmox                       |
+| VM Provisioning    | Terraform                     |
+| Kubernetes         | k3s on Rocky Linux            |
+| GitOps             | ArgoCD                        |
+| Ingress            | NGINX Ingress Controller      |
+| TLS (Kubernetes)   | cert-manager                  |
+| TLS (AD/LDAPS)     | AD CS (Enterprise Root CA)    |
+| Monitoring         | Prometheus + Grafana           |
+| Backup Storage     | TrueNAS                       |
+| Identity           | Active Directory + LDAPS       |

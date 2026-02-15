@@ -1,6 +1,12 @@
 Author:  Bryan Smith  
 Date:  01/25/2026
 
+## Document Revision History
+
+| Date       | Author | Change Summary                          |
+|------------|--------|------------------------------------------|
+| 2026-02-15 | Bryan  | Added Nemo + SSHFS |
+
 # Server Setup
 
 > Configuration steps for `bsus103jump02`, the Ubuntu jump station VM.
@@ -272,12 +278,41 @@ curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
 ```
 
 
-## TODO
+## Updates:
 
-- [ ] Deploy SSH keys to infrastructure nodes
-- [x] Copy .vimrc configuration
-- [ ] Update /etc/hosts with infrastructure nodes
-- [x] ~~Set up SSH keys and configure GitHub~~
-- [x] ~~Clone Git repositories to /srv/repos~~
-- [x] ~~Configure kubectl contexts for clusters~~
-- [x] ~~Set up /srv/repos directory structure with proper permissions~~
+**02/06/2026:**
+
+Install powershell:
+
+```bash
+sudo apt-get update
+
+wget "https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb"
+
+sudo apt-get update && sudo apt-get install powershell
+
+```
+
+## Nemo + SSHFS Mount
+
+### notes
+- Replace Nautilus with Nemo
+
+---
+
+### Install Required Packages
+```bash
+sudo apt update
+sudo apt install -y nemo
+```
+
+---
+
+### Set Nemo as Default File Manager
+```bash
+xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search
+nautilus -q
+nemo &
+```
+
+---
