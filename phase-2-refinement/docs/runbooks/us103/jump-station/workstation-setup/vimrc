@@ -17,7 +17,7 @@ filetype plugin indent on
 " Editor behavior & readability
 " ---------------------------------------------------------------------------
 
-" Show line numbers 
+" Show line numbers
 set number
 " Highlight the current cursor line
 set cursorline
@@ -69,7 +69,7 @@ colorscheme gruvbox
 " ---------------------------------------------------------------------------
 
 " Automatically run `terraform fmt` when saving *.tf files
-" Uses the plugin’s internal implementation (safe + reload-aware)
+" Uses the plugin's internal implementation (safe + reload-aware)
 let g:terraform_fmt_on_save = 1
 
 " Align equals signs for readability (best-effort)
@@ -108,3 +108,13 @@ autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 
 " Re-enable full highlighting when leaving insert mode
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
+
+
+" ---------------------------------------------------------------------------
+" Session persistence (used with tmux-resurrect)
+" :SessionSave / :SessionLoad for capturing open files across restarts
+" ---------------------------------------------------------------------------
+set sessionoptions+=globals
+
+command! SessionSave execute 'mksession! ~/.vim/sessions/default.vim'
+command! SessionLoad execute 'source ~/.vim/sessions/default.vim'

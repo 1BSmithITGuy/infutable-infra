@@ -1,5 +1,5 @@
 # [Title]
-
+**(The Below 3 lines need 2 spaces at the end of each line)**  
 Author: Bryan Smith  
 Created: YYYY-MM-DD  
 Last Updated: YYYY-MM-DD  

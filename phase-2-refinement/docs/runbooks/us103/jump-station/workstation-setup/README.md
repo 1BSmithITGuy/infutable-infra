@@ -1,22 +1,29 @@
+# Workstation Setup
+
 Author: Bryan Smith  
 Created: 2026-02-04  
-Last Updated: 2026-02-15 
+Last Updated: 2026-02-16  
 
 ## Revision History
 
-| Date       | Author | Change Summary                          |
-|------------|--------|------------------------------------------|
-| 2026-02-15 | Bryan  | Added Step 5: Nemo + SSHFS |
+| Date       | Author | Change Summary                                    |
+|------------|--------|---------------------------------------------------|
+| 2026-02-16 | Bryan  | Renumbered steps for consistency                  |
+| 2026-02-15 | Bryan  | Added Step 5: Nemo + SSHFS                        |
+| 2026-02-15 | Bryan  | Migrated to phase 2 documentation standards       |
 
-# Workstation Setup
+---
 
-> Laptop client configuration for integration with the jump station. See the [parent README](../README.md) for architecture overview.
+## Purpose
+
+Laptop client configuration for integration with the jump station. See the [parent README](../README.md) for architecture overview.
 
 > **Note:** This workflow is designed for a personal lab environment to demonstrate architecture patterns, operational discipline, and automation techniques. In a production environment, this design would include centralized identity management, managed secrets, formal monitoring and alerting, immutable backups, and change-control processes. The core patterns remain the same; the controls and tooling would differ.
----
+
 ## Prerequisites
-* Base laptop setup is already complete (See [base-setup.md](base-setup.md))
-* Hostnames are **lowercase**
+
+- Base laptop setup is already complete (See [base-setup.md](base-setup.md))
+- Hostnames are **lowercase**
 
 ---
 
@@ -26,7 +33,7 @@ Last Updated: 2026-02-15
 - Passwordless SSH access
 - Stable VS Code Remote-SSH workflow
 - Clear separation of identities and responsibilities
-- SSH keys are **per laptop** (no more shared “one laptop” identity).
+- SSH keys are **per laptop** (no more shared "one laptop" identity).
 - Backups are **hostname-based destinations** : `<hostname>_backup`.
 
 ### Host Identity (Laptop)
@@ -41,7 +48,7 @@ hostnamectl
 ### SSH Configuration (Laptop → Jump Station as `bryan`)
 
 **Key created (no passphrase):**
-```
+```text
 ~/.ssh/infutable_jump_<hostname>_ed25519
 ```
 
@@ -51,7 +58,7 @@ ssh-keygen -t ed25519 -f ~/.ssh/infutable_jump_<hostname>_ed25519 -N "" -C "infu
 ```
 
 **SSH config entry (laptop):**
-```
+```text
 Host infutable-jump
     HostName bsus103jump02
     User bryan
@@ -74,28 +81,26 @@ Workflow:
 - Connect to host alias `infutable-jump`
 - Workspace stored remotely on jump station
 - Open folder on jump station (example):
-  ```
+  ```text
   /srv/repos/infutable-infra
   ```
 
-**Result:** Opening VS Code connects to jump station, ready to work.
+**Result:** Opening VS Code connects to jump station.
 
 ---
 
-## Step 2 — Laptop to Jump Station Backup Pipeline (Hostname-based)
+## Step 2: Laptop to Jump Station Backup Pipeline
 
 ### Design Principles
 - Push-based backups (laptop initiates)
 - Least-privilege service account
-- Deterministic permissions
-- Human-readable status signal
-- No policy baked into backup scripts
+- Clear status signal
 
 ---
 
 ### Service Account (Jump Station)
 
-**Account:** `ltubbackup`  
+**Account:** `ltubbackup`
 **Group:** `backups` (members: `bryan`, `ltubbackup`)
 
 Create (one-time):
@@ -119,7 +124,7 @@ sudo chmod 2770 /home/bryan/log/rsync
 
 Destinations are hostname-based:
 
-```
+```text
 /home/bryan/Documents/<hostname>_backup
 /home/bryan/Pictures/<hostname>_backup
 /home/bryan/Desktop/<hostname>_backup
@@ -145,7 +150,7 @@ sudo chmod 2770 /home/bryan/Desktop/<hostname>_backup
 ### SSH Key for Backups (Laptop → ltubbackup)
 
 **Key (per laptop):**
-```
+```text
 ~/.ssh/ltubbackup_<hostname>_ed25519
 ```
 
@@ -182,7 +187,7 @@ ssh -i ~/.ssh/ltubbackup_<hostname>_ed25519 -o IdentitiesOnly=yes ltubbackup@bsu
 
 ### Backup Script (Laptop)
 
-**Location:** `~/bin/ltub-backup.sh`  
+**Location:** `~/bin/ltub-backup.sh`
 See: `ltub-backup.sh` in this repo.
 
 **Behavior:**
@@ -193,12 +198,12 @@ See: `ltub-backup.sh` in this repo.
 - Writes status remotely to jump station per-host file
 
 **Remote status file (Jump Station):**
-```
+```text
 /home/bryan/log/rsync/<hostname>-backup-status.txt
 ```
 
 **Format:**
-```
+```text
 <ISO-8601 timestamp> <OK|FAIL>
 ```
 
@@ -216,7 +221,7 @@ crontab -e
 
 ---
 
-## Step 3 — Obsidian Vault Sync + Health Signal
+## Step 3: Obsidian Vault Sync + Health Signal
 
 ### Objectives
 - Keep Obsidian fast and local on the laptop
@@ -229,12 +234,12 @@ crontab -e
 ### Vault Layout
 
 **Laptop (Syncthing path):**
-```
+```text
 /srv/syncthing/obsidian/vault
 ```
 
 **Jump Station (inside Git repo):**
-```
+```text
 /srv/repos/obsidian/vault
 ```
 
@@ -263,7 +268,7 @@ Syncthing is used strictly for **live transport**, not backups.
 2) **Laptop**
 - Accept the shared folder
 - Set local path:
-  ```
+  ```text
   /srv/syncthing/obsidian/vault
   ```
 - Set folder type to **Receive Only** initially
@@ -279,18 +284,18 @@ Syncthing is used strictly for **live transport**, not backups.
 A lightweight heartbeat file confirms laptop participation:
 
 **File:**
-```
+```text
 vault/.syncstamp
 ```
 
-**Writer:** Laptop cron writes ISO-8601 timestamp only  
+**Writer:** Laptop cron writes ISO-8601 timestamp only
 **Reader:** Jump station login status script evaluates freshness (24-hour threshold)
 
 ---
 
 ### Laptop Heartbeat Script
 
-**Location:** `~/bin/obsidian-syncstamp.sh`  
+**Location:** `~/bin/obsidian-syncstamp.sh`
 See: `obsidian-syncstamp.sh` in this repo.
 
 Crontab entry:
@@ -300,70 +305,63 @@ Crontab entry:
 
 ---
 
-## Step 4 — Obsidian Git Snapshots (Jump Station)
+## Step 4: Obsidian Git Snapshots (Jump Station)
 
-(Git runs only on the jump station, status file is consumed by the login banner)
+Git runs only on the jump station. Status file is consumed by the login banner.
 
 Status file:
-```
+```text
 ~/log/obsidian-git/obsidian-git-status.txt
 ```
 
-Crontab entry (example):
+Crontab entry:
 ```cron
 0 13 * * * /home/bryan/bin/obsidian-git-snapshot.sh
 ```
 
 ---
 
-## Login Status Banner (Jump Station)
+## Step 5: Login Status Banner
 
-Ubuntu dynamic MOTD script:
-```
+Ubuntu dynamic MOTD script on the jump station:
+```text
 /etc/update-motd.d/50-infutable-status
 ```
 
-THis should display on login to the jump station:
+This displays on login to the jump station:
 
-![alt text](images/SS-login-banner.png)
-
----
----
-
-## Step 5 — Nemo + SSHFS Mount
-
-### notes
-- Replace Nautilus with Nemo
-- Mount jump station `/srv` via SSHFS to workstation
+![Login status banner](images/SS-login-banner.png)
 
 ---
 
-### Install Required Packages (workstation)
+## Step 6: Nemo + SSHFS Mount
+
+Replace Nautilus with Nemo and mount jump station `/srv` via SSHFS.
+
+### Install Required Packages (Workstation)
+
 ```bash
 sudo apt update
 sudo apt install -y nemo sshfs
 ```
 
----
-
 ### Set Nemo as Default File Manager
+
 ```bash
 xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search
 nautilus -q
 nemo &
 ```
 
----
-
 ### Create Local Mount Namespace
+
 ```bash
 mkdir -p ~/mnt/bsus103jump02/srv
 chmod 700 ~/mnt
 ```
 
----
-
 ### Mount Jump Station `/srv` via SSHFS
+
 SSH identity and hostname are defined via `~/.ssh/config` (Host: `infutable-jump`).
 
 ```bash
@@ -374,3 +372,11 @@ sshfs infutable-jump:/srv ~/mnt/bsus103jump02/srv \
 ```
 
 ---
+
+## Validation
+
+- SSH to jump station via `ssh infutable-jump` — confirms key and config
+- Run `ls ~/mnt/bsus103jump02/srv/repos` — confirms SSHFS mount
+- Check backup status: `cat /home/bryan/log/rsync/<hostname>-backup-status.txt` on jump station
+- Open Syncthing UI on both laptop and jump station — confirm vault folder is in sync
+- SSH into jump station and verify login banner displays backup/sync status

@@ -1,8 +1,8 @@
 # Documentation Standards
 
-Author: Bryan Smith
-Created: 2026-02-15
-Last Updated: 2026-02-15
+Author: Bryan Smith  
+Created: 2026-02-15  
+Last Updated: 2026-02-15  
 
 ## Revision History
 

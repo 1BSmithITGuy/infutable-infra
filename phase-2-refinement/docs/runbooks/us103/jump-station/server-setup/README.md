@@ -1,3 +1,5 @@
+# Jump Station — Server Setup
+
 Author: Bryan Smith  
 Created: 2026-01-25  
 Last Updated: 2026-02-15  
@@ -8,6 +10,8 @@ Last Updated: 2026-02-15
 |------------|--------|---------------------------------------------------|
 | 2026-02-15 | Bryan  | Added Nemo + SSHFS                                |
 | 2026-02-15 | Bryan  | Migrated to phase 2 documentation standards       |
+
+---
 
 ## Purpose
 
@@ -55,7 +59,7 @@ sudo hostnamectl set-hostname bsus103jump02
 ```
 
 Update `/etc/hosts` to include the FQDN:
-```
+```text
 127.0.1.1    bsus103jump02.infra.infutable.com bsus103jump02
 ```
 </details>
@@ -80,7 +84,7 @@ sudo mkdir /home
 ```
 
 Add to `/etc/fstab` (use your actual UUID from `blkid`):
-```
+```text
 UUID="<uuid-from-blkid>" /home ext4 defaults 0 2
 ```
 
@@ -101,7 +105,7 @@ sudo mkfs.ext4 -L srv /dev/sdc1
 ```
 
 Add to `/etc/fstab`:
-```
+```text
 UUID="<uuid-from-blkid>" /srv ext4 defaults 0 2
 ```
 </details>
@@ -263,49 +267,42 @@ git clone git@github.com:1BSmithITGuy/infutable-infra.git
 
 ---
 
-## Step 10: vim setup
+## Step 10: Vim Setup
 
-Copy .vimrc ([.vimrc](.vimrc)) and run:
+Copy [.vimrc](.vimrc) and run:
 
 ```bash
 mkdir -p ~/.vim/autoload
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
   https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  vim +PlugInstall +qall
+vim +PlugInstall +qall
 ```
-
-
-## Step 11: Updates:
-
-**02/06/2026:**
-
-Install powershell:
-
-```bash
-sudo apt-get update
-
-wget "https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb"
-
-sudo apt-get update && sudo apt-get install powershell
-
-```
-
-## Step 12: Nemo
-
-### notes
-- Replace Nautilus with Nemo
 
 ---
 
-### Install Required Packages
+## Step 11: PowerShell Installation
+
+Added 2026-02-06.
+
+```bash
+sudo apt-get update
+wget "https://packages.microsoft.com/config/ubuntu/24.04/packages-microsoft-prod.deb"
+sudo dpkg -i packages-microsoft-prod.deb
+sudo apt-get update && sudo apt-get install -y powershell
+```
+
+---
+
+## Step 12: Nemo File Manager
+
+Replace Nautilus with Nemo for the jump station desktop.
+
 ```bash
 sudo apt update
 sudo apt install -y nemo
 ```
 
----
-
-### Set Nemo as Default File Manager
+Set Nemo as default file manager:
 ```bash
 xdg-mime default nemo.desktop inode/directory application/x-gnome-saved-search
 nautilus -q
@@ -313,3 +310,10 @@ nemo &
 ```
 
 ---
+
+## Validation
+
+- SSH into `bsus103jump02` and confirm the login banner displays
+- Run `kubectl config get-contexts` to verify cluster access
+- Run `git -C /srv/repos/infutable-infra status` to confirm repo access
+- Open VS Code Remote-SSH from a workstation to confirm connectivity

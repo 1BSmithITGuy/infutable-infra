@@ -1,15 +1,30 @@
-Author:  Bryan Smith  
-Date:  02/03/2026
+# Base Workstation Setup
 
-# Base engineer laptop workstation setup
+Author: Bryan Smith  
+Created: 2026-02-03  
+Last Updated: 2026-02-16  
 
-> Prerequisite:  Installation of Ubuntu 24.04
+## Revision History
 
-
+| Date       | Author | Change Summary                              |
+|------------|--------|---------------------------------------------|
+| 2026-02-16 | Bryan  | Added tmux + vim session persistence        |
+| 2026-02-16 | Bryan  | Migrated to phase 2 documentation standards |
+| 2026-02-03 | Bryan  | Initial document                            |
 
 ---
 
-## Initial System Update
+## Purpose
+
+Post-installation setup for Ubuntu 24.04 engineer workstation laptops. Covers system hardening, desktop preferences, core packages, and developer tooling.
+
+## Prerequisites
+
+- Fresh installation of Ubuntu 24.04
+
+---
+
+## Step 1: Initial System Update
 
 ```bash
 sudo apt update
@@ -18,7 +33,7 @@ sudo apt upgrade
 
 ---
 
-## Disable Unnecessary Services
+## Step 2: Disable Unnecessary Services
 
 ```bash
 # Printing
@@ -52,7 +67,7 @@ tracker3 reset
 
 ---
 
-## GNOME Desktop Settings
+## Step 3: GNOME Desktop Settings
 
 ```bash
 # Disable animations
@@ -88,7 +103,7 @@ gnome-extensions disable ding@rastersoft.com
 
 Edit `~/.config/user-dirs.dirs` and redirect unused directories to `$HOME`:
 
-```
+```text
 XDG_DESKTOP_DIR="$HOME"
 XDG_MUSIC_DIR="$HOME"
 XDG_VIDEOS_DIR="$HOME"
@@ -100,10 +115,9 @@ Then apply:
 xdg-user-dirs-update
 ```
 
-
 ---
 
-## Install Packages
+## Step 4: Install Packages
 
 ```bash
 sudo apt install -y vim tmux htop curl wireguard xclip gimp remmina
@@ -111,7 +125,7 @@ sudo apt install -y vim tmux htop curl wireguard xclip gimp remmina
 
 ---
 
-## Install Applications
+## Step 5: Install Applications
 
 ### Google Chrome
 
@@ -145,7 +159,7 @@ sudo apt install -y nodejs npm
 
 ---
 
-## Shell Configuration
+## Step 6: Shell Configuration
 
 Copy [bashrc](bashrc) to `~/.bashrc`.
 
@@ -157,7 +171,7 @@ Highlights:
 
 ---
 
-## Vim Setup
+## Step 7: Vim Setup
 
 Copy [vimrc](vimrc) to `~/.vimrc`, then install vim-plug and plugins:
 
@@ -174,8 +188,73 @@ Plugins installed:
 
 ---
 
-## Claude Code CLI
+## Step 8: Tmux + Vim Session Persistence
+
+Tmux-resurrect saves and restores tmux pane layouts (and running programs) across reboots. Tmux-continuum automates the save/restore cycle.
+
+### Install TPM (Tmux Plugin Manager)
+
+```bash
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+```
+
+### Configure Tmux
+
+Copy [tmux.conf](tmux.conf) to `~/.tmux.conf`.
+
+If tmux is already running, reload the config:
+
+```bash
+tmux source-file ~/.tmux.conf
+```
+
+Install plugins from inside tmux:
+
+```text
+Ctrl-b I
+```
+
+TPM will clone tmux-resurrect and tmux-continuum into `~/.tmux/plugins/`.
+
+### Vim Session Commands
+
+The `.vimrc` includes two custom commands for session persistence:
+
+- `:SessionSave` — saves all open buffers/tabs to `~/.vim/sessions/default.vim`
+- `:SessionLoad` — restores the saved session
+
+Create the sessions directory:
+
+```bash
+mkdir -p ~/.vim/sessions
+```
+
+### Usage
+
+**Save your workspace:**
+1. In Vim, run `:SessionSave` to capture open files
+2. In tmux, press `Ctrl-b Ctrl-s` to save the pane layout
+
+**Restore after reboot:**
+- With `@continuum-restore` enabled, starting tmux auto-restores the last saved layout
+- In Vim, run `:SessionLoad` to reopen files
+
+Resurrect data is stored in `~/.tmux/resurrect/`.
+
+---
+
+## Step 9: Claude Code CLI
 
 ```bash
 curl -fsSL https://claude.ai/install.sh | bash
 ```
+
+---
+
+## Validation
+
+- Open a terminal and confirm the custom prompt renders correctly
+- Run `vim` and confirm gruvbox theme loads with no errors
+- Run `tmux` and confirm the status bar appears (plugins load on first `Ctrl-b I`)
+- Run `code --version` to verify VS Code installed
+- Open Chrome, Obsidian — confirm they launch
