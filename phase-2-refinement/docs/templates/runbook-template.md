@@ -1,8 +1,8 @@
 # [Title]
 
-Author: Bryan Smith
-Created: YYYY-MM-DD
-Last Updated: YYYY-MM-DD
+Author: Bryan Smith  
+Created: YYYY-MM-DD  
+Last Updated: YYYY-MM-DD  
 
 ## Revision History
 
@@ -16,6 +16,8 @@ Last Updated: YYYY-MM-DD
 
 [One or two sentences: what this runbook accomplishes and when to use it.]
 
+> **Note:** Notes here
+
 ## Prerequisites
 
 - [Requirement 1]
@@ -24,6 +26,9 @@ Last Updated: YYYY-MM-DD
 ---
 
 ## Step 1: [Description]
+
+### Objectives
+-  objectives here
 
 [Explanation and commands.]
 

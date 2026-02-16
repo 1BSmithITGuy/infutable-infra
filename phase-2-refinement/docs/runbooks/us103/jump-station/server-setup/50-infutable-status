@@ -1,0 +1,266 @@
+#!/usr/bin/env bash
+set -u
+
+# ============================================================
+# Infutable Status MOTD
+#
+# Purpose:
+# - Display a clean, readable status panel at login
+# - Consume simple "fact" files (timestamp + status)
+# - Apply policy (age checks) ONLY here
+# ============================================================
+
+
+# ------------------------------------------------------------
+# Configuration
+# ------------------------------------------------------------
+
+# Step 2: rsync workstation backup status (already implemented)
+BACKUP_STATUS_FILE="/home/bryan/log/rsync/backup-status.txt"
+MAX_HOURS_OK=72
+
+# Step 3: Syncthing heartbeat for Obsidian vault
+# The laptop updates .syncstamp inside the vault; Syncthing replicates it.
+OBSIDIAN_SYNCSTAMP="/srv/repos/obsidian/vault/.syncstamp"
+MAX_HOURS_OBSIDIAN_SYNC_OK=24
+
+# Step 4 (next): Obsidian Git snapshot status (jump station writes this)
+# Expected format:
+#   <ISO-8601 timestamp> <OK|FAIL>
+OBSIDIAN_GIT_STATUS_FILE="/home/bryan/log/obsidian-git/obsidian-git-status.txt"
+MAX_HOURS_OBSIDIAN_GIT_OK=48
+
+
+# ------------------------------------------------------------
+# Color handling (safe + portable)
+#
+# Enable colors only if:
+# - tput exists AND
+# - stdout is a TTY OR we're in SSH AND
+# - tput actually works (TERM can be weird during PAM login)
+# ------------------------------------------------------------
+
+# TERM can be missing/odd during SSH login when PAM runs update-motd.
+export TERM="${TERM:-xterm-256color}"
+
+# Decide whether we should even try colors
+CAN_COLOR=0
+if [[ -t 1 ]] || [[ -n "${SSH_CONNECTION:-}" ]]; then
+  CAN_COLOR=1
+fi
+
+# Only enable colors if tput exists AND can produce a sane reset sequence
+if (( CAN_COLOR )) && command -v tput >/dev/null 2>&1 && tput sgr0 >/dev/null 2>&1; then
+  BOLD="$(tput bold 2>/dev/null || true)"
+  RESET="$(tput sgr0 2>/dev/null || true)"
+
+  RED="$(tput setaf 1 2>/dev/null || true)"
+  GREEN="$(tput setaf 2 2>/dev/null || true)"
+  YELLOW="$(tput setaf 3 2>/dev/null || true)"
+
+  BG_DARK="$(tput setab 0 2>/dev/null || true)"
+else
+  BOLD=""; RESET=""
+  RED=""; GREEN=""; YELLOW=""
+  BG_DARK=""
+fi
+
+
+# ------------------------------------------------------------
+# Helper functions
+# ------------------------------------------------------------
+
+# Print a normal line (no padding)
+line() {
+  printf "%s\n" "$*"
+}
+
+# Print a line with background color padded to terminal width
+# This creates a full-width "panel" effect.
+panel_line() {
+  local msg="$1"
+  local cols=80
+
+  # Determine terminal width if possible
+  if command -v tput >/dev/null 2>&1 && [[ -t 1 ]]; then
+    cols="$(tput cols 2>/dev/null || echo 80)"
+  fi
+
+  # Strip ANSI escape codes to calculate visible length
+  local plain
+  plain="$(printf "%s" "$msg" | sed -r 's/\x1B\[[0-9;]*[mK]//g')"
+  local len="${#plain}"
+
+  local pad=$(( cols - len ))
+  (( pad < 0 )) && pad=0
+
+  # Print message + padding so background reaches right edge
+  printf "%s%*s\n" "$msg" "$pad" ""
+}
+
+# Convert ISO-8601 timestamp to epoch seconds, safely.
+# Echoes epoch seconds on success, empty string on failure.
+iso_to_epoch() {
+  local iso="$1"
+  date -d "$iso" +%s 2>/dev/null || true
+}
+
+# Read "<timestamp> <status>" from a file, validate, compute age in hours.
+# Outputs three values via echo: "<status> <age_hours> <reason>"
+# - If OK and fresh enough: reason is "${age}h ago"
+# - If missing/malformed/bad timestamp: status=FAIL and reason explains why
+read_fact_status() {
+  local file="$1"
+
+  if [[ ! -f "$file" ]]; then
+    echo "FAIL 0 no status file"
+    return 0
+  fi
+
+  local ts status
+  read -r ts status < "$file" || true
+
+  if [[ -z "${ts:-}" || -z "${status:-}" ]]; then
+    echo "FAIL 0 malformed status"
+    return 0
+  fi
+
+  local ts_epoch now_epoch
+  ts_epoch="$(iso_to_epoch "$ts")"
+  now_epoch="$(date +%s)"
+
+  if [[ -z "${ts_epoch:-}" ]]; then
+    echo "FAIL 0 bad timestamp"
+    return 0
+  fi
+
+  local age_hours
+  age_hours=$(( (now_epoch - ts_epoch) / 3600 ))
+
+  echo "$status $age_hours ${age_hours}h ago"
+}
+
+# Read a timestamp-only file (like .syncstamp), validate, compute age in hours.
+# Outputs: "<ok_or_fail> <age_hours> <reason>"
+read_timestamp_only() {
+  local file="$1"
+
+  if [[ ! -f "$file" ]]; then
+    echo "FAIL 0 missing stamp"
+    return 0
+  fi
+
+  local ts
+  ts="$(head -n 1 "$file" 2>/dev/null || true)"
+
+  if [[ -z "${ts:-}" ]]; then
+    echo "FAIL 0 empty stamp"
+    return 0
+  fi
+
+  local ts_epoch now_epoch
+  ts_epoch="$(iso_to_epoch "$ts")"
+  now_epoch="$(date +%s)"
+
+  if [[ -z "${ts_epoch:-}" ]]; then
+    echo "FAIL 0 bad timestamp"
+    return 0
+  fi
+
+  local age_hours
+  age_hours=$(( (now_epoch - ts_epoch) / 3600 ))
+
+  echo "OK $age_hours ${age_hours}h ago"
+}
+
+
+# ------------------------------------------------------------
+# Header panel
+# ------------------------------------------------------------
+
+panel_line "${BG_DARK}----------------${RESET}"
+panel_line "${BG_DARK}${BOLD}${RED}Infutable${RESET}${BG_DARK}${BOLD} Status:${RESET}"
+panel_line "${BG_DARK}----------------${RESET}"
+
+
+# ------------------------------------------------------------
+# Workstation backup status (rsync)
+#
+# Expected file format (single line):
+#   <ISO-8601 timestamp> <OK|FAIL>
+# Example:
+#   2026-01-25T18:14:03-05:00 OK
+# ------------------------------------------------------------
+
+{
+  read -r status age_hours reason < <(read_fact_status "$BACKUP_STATUS_FILE")
+
+  if [[ "$status" == "OK" && "$age_hours" -le "$MAX_HOURS_OK" ]]; then
+    panel_line "${BG_DARK}Workstation backup: ${BOLD}${GREEN}OK${RESET}${BG_DARK} (${reason})${RESET}"
+  else
+    # If status is OK but stale, clarify why it's failing.
+    if [[ "$status" == "OK" && "$age_hours" -gt "$MAX_HOURS_OK" ]]; then
+      panel_line "${BG_DARK}Workstation backup: ${BOLD}${RED}FAIL${RESET}${BG_DARK} (stale: ${age_hours}h > ${MAX_HOURS_OK}h)${RESET}"
+    else
+      panel_line "${BG_DARK}Workstation backup: ${BOLD}${RED}FAIL${RESET}${BG_DARK} (${reason})${RESET}"
+    fi
+  fi
+}
+
+
+# ------------------------------------------------------------
+# Obsidian Syncthing heartbeat
+#
+# Expected file format (single line, timestamp only):
+#   <ISO-8601 timestamp>
+# Example:
+#   2026-01-26T12:00:01-05:00
+#
+# Policy:
+# - OK if updated within MAX_HOURS_OBSIDIAN_SYNC_OK hours
+# - FAIL if missing or stale
+# ------------------------------------------------------------
+
+{
+  read -r status age_hours reason < <(read_timestamp_only "$OBSIDIAN_SYNCSTAMP")
+
+  if [[ "$status" == "OK" && "$age_hours" -le "$MAX_HOURS_OBSIDIAN_SYNC_OK" ]]; then
+    panel_line "${BG_DARK}Obsidian sync:      ${BOLD}${GREEN}OK${RESET}${BG_DARK} (${reason})${RESET}"
+  else
+    if [[ "$status" == "OK" && "$age_hours" -gt "$MAX_HOURS_OBSIDIAN_SYNC_OK" ]]; then
+      panel_line "${BG_DARK}Obsidian sync:      ${BOLD}${RED}FAIL${RESET}${BG_DARK} (stale: ${age_hours}h > ${MAX_HOURS_OBSIDIAN_SYNC_OK}h)${RESET}"
+    else
+      panel_line "${BG_DARK}Obsidian sync:      ${BOLD}${RED}FAIL${RESET}${BG_DARK} (${reason})${RESET}"
+    fi
+  fi
+}
+
+
+# ------------------------------------------------------------
+# Obsidian Git snapshots (Step 4)
+#
+# Expected file format:
+#   <ISO-8601 timestamp> <OK|FAIL>
+#
+# Policy:
+# - OK if last run is OK and within MAX_HOURS_OBSIDIAN_GIT_OK hours
+# - FAIL otherwise
+#
+# Note: This will show FAIL until Step 4 creates the status file.
+# ------------------------------------------------------------
+
+{
+  read -r status age_hours reason < <(read_fact_status "$OBSIDIAN_GIT_STATUS_FILE")
+
+  if [[ "$status" == "OK" && "$age_hours" -le "$MAX_HOURS_OBSIDIAN_GIT_OK" ]]; then
+    panel_line "${BG_DARK}Obsidian git:       ${BOLD}${GREEN}OK${RESET}${BG_DARK} (${reason})${RESET}"
+  else
+    if [[ "$status" == "OK" && "$age_hours" -gt "$MAX_HOURS_OBSIDIAN_GIT_OK" ]]; then
+      panel_line "${BG_DARK}Obsidian git:       ${BOLD}${RED}FAIL${RESET}${BG_DARK} (stale: ${age_hours}h > ${MAX_HOURS_OBSIDIAN_GIT_OK}h)${RESET}"
+    else
+      panel_line "${BG_DARK}Obsidian git:       ${BOLD}${RED}FAIL${RESET}${BG_DARK} (${reason})${RESET}"
+    fi
+  fi
+}
+
+# End

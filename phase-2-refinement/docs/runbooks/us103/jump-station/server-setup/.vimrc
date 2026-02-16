@@ -1,0 +1,110 @@
+" ============================================================================
+" Vim configuration — practical, minimal, predictable
+" Target use: Terraform, YAML, general ops work over SSH
+" ============================================================================
+
+" ---------------------------------------------------------------------------
+" (nocompatible disables ancient vi quirks that break plugins and mappings)
+" ---------------------------------------------------------------------------
+set nocompatible
+
+" Enable syntax highlighting and filetype detection
+syntax on
+filetype plugin indent on
+
+
+" ---------------------------------------------------------------------------
+" Editor behavior & readability
+" ---------------------------------------------------------------------------
+
+" Show line numbers 
+set number
+" Highlight the current cursor line
+set cursorline
+
+" Highlight matching brackets/parentheses
+set showmatch
+
+" Indentation behavior
+set autoindent           " New lines inherit indentation
+set tabstop=2            " A tab visually equals 2 spaces
+set shiftwidth=2         " Indent/outdent operations use 2 spaces
+set expandtab            " Always insert spaces instead of tabs
+
+
+" ---------------------------------------------------------------------------
+" Plugin management — vim-plug
+" Plugins live under ~/.vim/plugged
+" ---------------------------------------------------------------------------
+call plug#begin('~/.vim/plugged')
+
+  " Terraform support:
+  " - Syntax highlighting
+  " - Formatting helpers
+  " - Filetype detection
+  Plug 'hashivim/vim-terraform'
+
+  " Color theme chosen for readability over long sessions
+  Plug 'morhetz/gruvbox'
+
+call plug#end()
+
+
+" ---------------------------------------------------------------------------
+" Color / theme configuration
+" ---------------------------------------------------------------------------
+
+" 24-bit color support
+set termguicolors
+
+" Assume a dark terminal background
+set background=dark
+
+" Load the theme AFTER plugins are initialized
+colorscheme gruvbox
+
+
+" ---------------------------------------------------------------------------
+" Terraform-specific behavior
+" ---------------------------------------------------------------------------
+
+" Automatically run `terraform fmt` when saving *.tf files
+" Uses the plugin’s internal implementation (safe + reload-aware)
+let g:terraform_fmt_on_save = 1
+
+" Align equals signs for readability (best-effort)
+let g:terraform_align = 1
+
+" Optional: enable folding by Terraform block sections
+" Disabled by default because folds can be annoying over SSH
+" let g:terraform_fold_sections = 1
+
+
+" ---------------------------------------------------------------------------
+" YAML formatting
+" YAML is whitespace-sensitive, so force consistent indentation
+" ---------------------------------------------------------------------------
+
+" Enforce 2-space indentation for YAML
+autocmd FileType yaml,yml setlocal ts=2 sts=2 sw=2 expandtab
+
+" Indent-based folding for YAML (can be useful for large manifests)
+autocmd FileType yaml,yml setlocal foldmethod=indent
+
+
+" ---------------------------------------------------------------------------
+" Whitespace hygiene
+" Trailing whitespace causes noise in git diffs and CI failures
+" ---------------------------------------------------------------------------
+
+" Define a highlight group for trailing spaces
+highlight ExtraWhitespace ctermbg=red guibg=red
+
+" Highlight trailing whitespace in normal mode
+autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+
+" Avoid highlighting while actively typing at the cursor position
+autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+
+" Re-enable full highlighting when leaving insert mode
+autocmd InsertLeave * match ExtraWhitespace /\s\+$/
