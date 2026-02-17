@@ -2,15 +2,16 @@
 
 Author: Bryan Smith  
 Created: 2026-01-25  
-Last Updated: 2026-02-15  
+Last Updated: 2026-02-17
 
 ## Revision History
 
-| Date       | Author | Change Summary                                    |
-|------------|--------|---------------------------------------------------|
-| 2026-02-15 | Bryan  | Added Nemo + SSHFS                                |
-| 2026-02-15 | Bryan  | Migrated to phase 2 documentation standards       |
-
+| Date       | Author | Change Summary                                     |
+|------------|--------|--------------------------------------------------- |
+| 2026-01-25 | Bryan  | Initial document                                   |
+| 2026-02-15 | Bryan  | Added Nemo + SSHFS                                 |
+| 2026-02-15 | Bryan  | Migrated to phase 2 documentation standards        |
+| 2026-02-17 | Bryan  | added logs,references                              |
 ---
 
 ## Purpose
@@ -18,6 +19,13 @@ Last Updated: 2026-02-15
 Configuration steps for `bsus103jump02`, the Ubuntu jump station VM.
 
 > **Note:** This workflow is designed for a personal lab environment to demonstrate architecture patterns, operational discipline, and automation techniques. In a production environment, this design would be adapted to include centralized identity management, managed secrets, formal monitoring and alerting, immutable backups, and change-control processes. The core patterns remain the same; the controls and tooling would differ.
+
+## Relevant Logs
+
+- `journalctl -b` -- system boot messages
+- `/var/log/syslog` -- general system log
+- `systemctl status qemu-guest-agent` -- Proxmox guest agent status
+- `journalctl -u ssh` -- SSH service logs
 
 ---
 
@@ -317,3 +325,7 @@ nemo &
 - Run `kubectl config get-contexts` to verify cluster access
 - Run `git -C /srv/repos/infutable-infra status` to confirm repo access
 - Open VS Code Remote-SSH from a workstation to confirm connectivity
+
+## References
+
+- [Ubuntu Desktop](https://documentation.ubuntu.com/desktop/en/latest/)

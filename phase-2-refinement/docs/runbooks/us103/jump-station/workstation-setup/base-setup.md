@@ -2,16 +2,16 @@
 
 Author: Bryan Smith  
 Created: 2026-02-03  
-Last Updated: 2026-02-16  
+Last Updated: 2026-02-17
 
 ## Revision History
 
 | Date       | Author | Change Summary                              |
 |------------|--------|---------------------------------------------|
+| 2026-02-03 | Bryan  | Initial document                            |
 | 2026-02-16 | Bryan  | Added tmux + vim session persistence        |
 | 2026-02-16 | Bryan  | Migrated to phase 2 documentation standards |
-| 2026-02-03 | Bryan  | Initial document                            |
-
+| 2026-02-17 | Bryan  | Added logs, references                       |
 ---
 
 ## Purpose
@@ -21,6 +21,11 @@ Post-installation setup for Ubuntu 24.04 engineer workstation laptops. Covers sy
 ## Prerequisites
 
 - Fresh installation of Ubuntu 24.04
+
+## Relevant Logs
+
+- `journalctl -b` -- system boot messages
+- `/var/log/syslog` -- general system log
 
 ---
 
@@ -258,3 +263,7 @@ curl -fsSL https://claude.ai/install.sh | bash
 - Run `tmux` and confirm the status bar appears (plugins load on first `Ctrl-b I`)
 - Run `code --version` to verify VS Code installed
 - Open Chrome, Obsidian — confirm they launch
+
+## References
+
+- [Ubuntu Desktop Guide](https://help.ubuntu.com/stable/ubuntu-help/)

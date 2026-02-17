@@ -1,14 +1,14 @@
 # [Title]
-**(The Below 3 lines need 2 spaces at the end of each line)**  
+
 Author: Bryan Smith  
 Created: YYYY-MM-DD  
 Last Updated: YYYY-MM-DD  
 
 ## Revision History
 
-| Date       | Author | Change Summary        |
-|------------|--------|-----------------------|
-| YYYY-MM-DD | Bryan  | Initial document      |
+| Date       | Author | Change Summary              |
+|------------|--------|-----------------------------|
+| YYYY-MM-DD | Bryan  | Initial document            |
 
 ---
 
@@ -22,6 +22,8 @@ Last Updated: YYYY-MM-DD
 
 - [Requirement 1]
 - [Requirement 2]
+
+## Relevant Logs
 
 ---
 
@@ -55,3 +57,5 @@ Last Updated: YYYY-MM-DD
 ```bash
 # verification command
 ```
+
+## References

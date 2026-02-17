@@ -2,15 +2,17 @@
 
 Author: Bryan Smith  
 Created: 2026-02-04  
-Last Updated: 2026-02-16  
+Last Updated: 2026-02-17  
 
 ## Revision History
 
 | Date       | Author | Change Summary                                    |
 |------------|--------|---------------------------------------------------|
-| 2026-02-16 | Bryan  | Renumbered steps for consistency                  |
+| 2026-02-04 | Bryan  | Initial Document                                  |
 | 2026-02-15 | Bryan  | Added Step 5: Nemo + SSHFS                        |
 | 2026-02-15 | Bryan  | Migrated to phase 2 documentation standards       |
+| 2026-02-16 | Bryan  | Renumbered steps for consistency                  |
+| 2026-02-17 | Bryan  | Added logs, references                            |
 
 ---
 
@@ -24,6 +26,13 @@ Laptop client configuration for integration with the jump station. See the [pare
 
 - Base laptop setup is already complete (See [base-setup.md](base-setup.md))
 - Hostnames are **lowercase**
+
+## Relevant Logs
+
+- `~/log/rsync/` -- backup script logs (per-run)
+- `/home/bryan/log/rsync/<hostname>-backup-status.txt` -- backup status (on jump station)
+- `systemctl --user status syncthing` -- Syncthing service status (if running as user service)
+- `journalctl -u ssh` -- SSH connection logs (on jump station)
 
 ---
 
@@ -380,3 +389,7 @@ sshfs infutable-jump:/srv ~/mnt/bsus103jump02/srv \
 - Check backup status: `cat /home/bryan/log/rsync/<hostname>-backup-status.txt` on jump station
 - Open Syncthing UI on both laptop and jump station — confirm vault folder is in sync
 - SSH into jump station and verify login banner displays backup/sync status
+
+## References
+
+- [Syncthing Documentation](https://docs.syncthing.net/)

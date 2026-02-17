@@ -2,13 +2,14 @@
 
 Author: Bryan Smith  
 Created: 2026-02-15  
-Last Updated: 2026-02-15  
+Last Updated: 2026-02-17
 
 ## Revision History
 
-| Date       | Author | Change Summary     |
-|------------|--------|--------------------|
-| 2026-02-15 | Bryan  | Initial document   |
+| Date       | Author | Change Summary              |
+|------------|--------|-----------------------------|
+| 2026-02-15 | Bryan  | Initial document            |
+| 2026-02-17 | Bryan  | added  logs, references     |
 
 ---
 
@@ -29,9 +30,9 @@ Every document starts with plain metadata lines, then a revision history table:
 ```markdown
 # Document Title
 
-Author: Bryan Smith
-Created: YYYY-MM-DD
-Last Updated: YYYY-MM-DD
+Author: Bryan Smith  (2 spaces)
+Created: YYYY-MM-DD  (2 spaces)
+Last Updated: YYYY-MM-DD 
 
 ## Revision History
 
@@ -49,8 +50,10 @@ Runbooks follow this section order:
 3. **Revision history**
 4. **Purpose** (one or two sentences)
 5. **Prerequisites** (what must be in place before starting)
-6. **Steps** (numbered: `## Step 1: Description`, `## Step 2: Description`, etc.)
-7. **Validation** (how to confirm it worked)
+6. **Relevant logs**
+7. **Steps** (numbered: `## Step 1: Description`, `## Step 2: Description`, etc.)
+8. **Validation** (how to confirm it worked)
+9. **References** (Don't go crazy here)
 
 See `docs/templates/runbook-template.md` for a ready-to-copy starting point.
 
