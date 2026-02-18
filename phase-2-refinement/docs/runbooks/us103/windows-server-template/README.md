@@ -112,5 +112,5 @@ In Proxmox UI:
 ## References
 
 - [Proxmox VM Templates](https://pve.proxmox.com/wiki/VM_Templates_and_Clones)
-- [VirtIO Windows Drivers](https://github.com/virtio-win/virtio-win-pkg-scripts/blob/master/README.md)
+- [VirtIO Windows Drivers](https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/)
 - [Microsoft Sysprep Reference](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/sysprep-command-line-options)
