@@ -45,6 +45,8 @@ Platform rebuild with established standards and a focused toolset:
 - **Observability:** Prometheus + Grafana
 - **Backup:** TrueNAS with offsite replication
 
+See [phase-2-refinement/](./phase-2-refinement/) for details.
+
 All phase 2 documentation follows the project [documentation standards](./phase-2-refinement/docs/standards/documentation.md).
 
 ---
