@@ -8,8 +8,9 @@ Last Updated: 2026-02-16
 
 | Date       | Author | Change Summary                              |
 |------------|--------|---------------------------------------------|
-| 2026-02-16 | Bryan  | Addeded Current Content                     |
 | 2026-02-15 | Bryan  | Initial document                            |
+| 2026-02-16 | Bryan  | Addeded Current Content                     |
+
 
 ## Purpose
 
@@ -22,7 +23,10 @@ Full plan and details to follow as implementation progresses.
 ## Current Content
 
 | Area | Description |
-|------|-------------|
-| [Documentation Standards](./docs/standards/documentation.md) | Header format, file naming, runbook structure |
-| [Runbook Template](./docs/templates/runbook-template.md) | Ready-to-copy starting point for new runbooks |
-| [Jump Station](./docs/runbooks/us103/jump-station/) | Server and workstation setup for bsus103jump02 |
+  |------|-------------|
+  | [Documentation Standards](./docs/standards/documentation.md) | Header format, file naming, runbook structure |
+  | [Runbook Template](./docs/templates/runbook-template.md) | Ready-to-copy starting point for new runbooks |
+  | [Proxmox Host](./docs/infra/sites/us103/proxmox/) | BSUS103PX01 hardware, networking, Terraform API setup |
+  | [Jump Station](./docs/runbooks/us103/jump-station/) | Server and workstation setup for bsus103jump02 |
+  | [Windows Server Template](./docs/runbooks/us103/windows-server-template/) | Sysprepped Server 2022 Datacenter Core template for Proxmox |
+
