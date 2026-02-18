@@ -23,10 +23,15 @@ Full plan and details to follow as implementation progresses.
 ## Current Content
 
 | Area | Description |
-  |------|-------------|
-  | [Documentation Standards](./docs/standards/documentation.md) | Header format, file naming, runbook structure |
-  | [Runbook Template](./docs/templates/runbook-template.md) | Ready-to-copy starting point for new runbooks |
-  | [Proxmox Host](./docs/infra/sites/us103/proxmox/) | BSUS103PX01 hardware, networking, Terraform API setup |
-  | [Jump Station](./docs/runbooks/us103/jump-station/) | Server and workstation setup for bsus103jump02 |
-  | [Windows Server Template](./docs/runbooks/us103/windows-server-template/) | Sysprepped Server 2022 Datacenter Core template for Proxmox |
-
+|------|-------------|
+| [Documentation Standards](./docs/standards/documentation.md) | Header format, file naming, runbook structure |
+| [Runbook Template](./docs/templates/runbook-template.md) | Ready-to-copy starting point for new runbooks |
+| **Site Infrastructure** | |
+| [US103 Site Overview](./docs/infra/sites/us103/) | Hardware, VLANs, address plan, network architecture |
+| [Hypervisors](./docs/infra/sites/us103/hypervisors/) | XCP-ng and Proxmox hosts, Terraform API setup |
+| [Firewall](./docs/infra/sites/us103/firewall/) | OPNsense interfaces, BGP configuration |
+| [Switches](./docs/infra/sites/us103/switches/) | VLAN port assignments for both switches |
+| [Wireless](./docs/infra/sites/us103/wireless/) | Access point and SSID configuration |
+| **Runbooks** | |
+| [Jump Station](./docs/runbooks/us103/jump-station/) | Server and workstation setup for bsus103jump02 |
+| [Windows Server Template](./docs/runbooks/us103/windows-server-template/) | Sysprepped Server 2022 Datacenter Core template for Proxmox |
