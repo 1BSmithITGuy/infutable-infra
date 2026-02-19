@@ -28,7 +28,7 @@ infutable-infra/
 
 Production-style [PowerCLI inventory engine](./VMware) built for environment-wide vSphere reporting. Uses direct API access (`Get-View`) with external data correlation for warranty, site, and lifecycle tracking. This is an archive and not in production.
 
-### Phase 1: Exploration
+### Phase 1: Exploration (Archive)
 
 Initial lab infrastructure built to evaluate tooling and establish baseline patterns. Includes work across k3s, kubeadm, Talos, XCP-ng, Cilium, and ArgoCD. Documentation standards were developed iteratively during this phase.
 

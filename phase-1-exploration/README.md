@@ -1,4 +1,4 @@
-  # Phase 1: Exploration
+  # Phase 1: Exploration (archive)
 
   Initial lab buildout covering platform evaluation, tooling experiments,
   and baseline infrastructure. Documentation standards were developed
