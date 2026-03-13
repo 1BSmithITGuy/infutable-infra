@@ -14,7 +14,6 @@ Last Updated: YYYY-MM-DD
 
 ## Purpose
 
-[One or two sentences: what this runbook accomplishes and when to use it.]
 
 > **Note:** Notes here
 
@@ -24,6 +23,8 @@ Last Updated: YYYY-MM-DD
 - [Requirement 2]
 
 ## Relevant Logs
+
+> All tooling logs follow the standard defined in `docs/standards/logging.md`. 
 
 ---
 

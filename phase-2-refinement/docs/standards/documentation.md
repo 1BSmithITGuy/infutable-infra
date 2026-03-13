@@ -10,6 +10,7 @@ Last Updated: 2026-02-17
 |------------|--------|-----------------------------|
 | 2026-02-15 | Bryan  | Initial document            |
 | 2026-02-17 | Bryan  | added  logs, references     |
+| 2026-03-09 | Bryan  | added  notes regarding tooling logs     |
 
 ---
 
@@ -48,30 +49,15 @@ Runbooks follow this section order:
 1. **Title** (`# Title`)
 2. **Metadata lines**
 3. **Revision history**
-4. **Purpose** (one or two sentences)
-5. **Prerequisites** (what must be in place before starting)
+4. **Purpose** 
+5. **Prerequisites** 
 6. **Relevant logs**
 7. **Steps** (numbered: `## Step 1: Description`, `## Step 2: Description`, etc.)
-8. **Validation** (how to confirm it worked)
-9. **References** (Don't go crazy here)
+8. **Validation** 
+9. **References** 
 
 See `docs/templates/runbook-template.md` for a ready-to-copy starting point.
 
-## Code Blocks
-
-Always specify the language tag:
-
-````markdown
-```bash
-sudo systemctl restart kubelet
-```
-````
-
-Common tags: `bash`, `yaml`, `powershell`, `json`, `text`
-
-## General Guidelines
-
-- Write for someone who knows the technology but not your environment
-- Include actual hostnames, IPs, and paths where relevant
-- Keep it factual. If a step has a prerequisite, state it. If there is a known issue, note it.
-- One README per directory. If a directory needs more than one doc, use separate `.md` files alongside the README.
+## Logging
+* All tooling logs follow the standard defined in `docs/standards/logging.md`. 
+* Runbooks should reference relevant log paths in their **Relevant logs** section.

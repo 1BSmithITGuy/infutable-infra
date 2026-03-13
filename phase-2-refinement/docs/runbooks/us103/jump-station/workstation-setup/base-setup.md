@@ -188,8 +188,8 @@ vim +PlugInstall +qall
 ```
 
 Plugins installed:
-- `hashivim/vim-terraform` — Terraform syntax + auto-format on save
-- `morhetz/gruvbox` — color theme
+- `hashivim/vim-terraform` - Terraform syntax + auto-format on save
+- `morhetz/gruvbox` - color theme
 
 ---
 
@@ -225,8 +225,8 @@ TPM will clone tmux-resurrect and tmux-continuum into `~/.tmux/plugins/`.
 
 The `.vimrc` includes two custom commands for session persistence:
 
-- `:SessionSave` — saves all open buffers/tabs to `~/.vim/sessions/default.vim`
-- `:SessionLoad` — restores the saved session
+- `:SessionSave` - saves all open buffers/tabs to `~/.vim/sessions/default.vim`
+- `:SessionLoad` - restores the saved session
 
 Create the sessions directory:
 
@@ -262,7 +262,7 @@ curl -fsSL https://claude.ai/install.sh | bash
 - Run `vim` and confirm gruvbox theme loads with no errors
 - Run `tmux` and confirm the status bar appears (plugins load on first `Ctrl-b I`)
 - Run `code --version` to verify VS Code installed
-- Open Chrome, Obsidian — confirm they launch
+- Open Chrome, Obsidian - confirm they launch
 
 ## References
 

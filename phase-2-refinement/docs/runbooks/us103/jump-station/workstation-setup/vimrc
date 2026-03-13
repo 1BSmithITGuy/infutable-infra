@@ -1,5 +1,5 @@
 " ============================================================================
-" Vim configuration — practical, minimal, predictable
+" Vim configuration - practical, minimal, predictable
 " Target use: Terraform, YAML, general ops work over SSH
 " ============================================================================
 
@@ -33,7 +33,7 @@ set expandtab            " Always insert spaces instead of tabs
 
 
 " ---------------------------------------------------------------------------
-" Plugin management — vim-plug
+" Plugin management - vim-plug
 " Plugins live under ~/.vim/plugged
 " ---------------------------------------------------------------------------
 call plug#begin('~/.vim/plugged')

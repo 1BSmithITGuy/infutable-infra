@@ -1,4 +1,4 @@
-# Hypervisors — US103
+# Hypervisors - US103
 
 Author: Bryan Smith  
 Created: 2026-01-27  
@@ -111,10 +111,10 @@ ZFS mirror on NVMe drives with 4.6GB ARC cache.
 |-----------|------|---------|
 | nic0 | Trunk | VLANs 10, 15, 20, 30 |
 | nic1 | Trunk | VLANs 10, 15, 20, 30 |
-| nic4 (onboard) | Access | VLAN 200 — Management |
-| 10GbE | — | Point-to-point link to BSUS103VM02 |
+| nic4 (onboard) | Access | VLAN 200 - Management |
+| 10GbE | N/A | Point-to-point link to BSUS103VM02 |
 
-Management traffic is physically separated from VM traffic — nic4 is on an untagged access port (VLAN 200) while nic0/nic1 carry tagged VM VLANs. NIC0 and NIC1 are bonded (active/standby) behind bridge vmbr1. See [proxmox-setup.md](proxmox-setup.md) for configuration details.
+Management traffic is physically separated from VM traffic - nic4 is on an untagged access port (VLAN 200) while nic0/nic1 carry tagged VM VLANs. NIC0 and NIC1 are bonded (active/standby) behind bridge vmbr1. See [proxmox-setup.md](proxmox-setup.md) for configuration details.
 
 ### Relevant Logs
 
@@ -128,8 +128,8 @@ cat /proc/net/bonding/bond0
 
 ### Setup Documentation
 
-- [proxmox-setup.md](proxmox-setup.md) — Installation, NIC bonding, bridge configuration
-- [terraform-setup.md](terraform-setup.md) — API token and role for Terraform automation
+- [proxmox-setup.md](proxmox-setup.md) - Installation, NIC bonding, bridge configuration
+- [terraform-setup.md](terraform-setup.md) - API token and role for Terraform automation
 
 ---
 

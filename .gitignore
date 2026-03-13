@@ -23,9 +23,17 @@
 *.tfstate.*
 *.tfvars
 .terraform/
+!*.tfvars.example
 crash.log
 override.tf
 override.tf.json
+
+# Packer
+*.pkrvars.hcl
+!*.pkrvars.hcl.example
+autounattend.xml
+!autounattend.xml.example
+packer_cache/
 
 # Helm
 charts/*/charts/

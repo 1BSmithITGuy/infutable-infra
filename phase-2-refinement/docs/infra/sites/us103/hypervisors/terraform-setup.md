@@ -63,7 +63,7 @@ To scope down later, apply ACLs to specific paths instead of `/` (e.g. `/vms/<vm
 pveum user token add terraform@pam terraform --privsep=0 --comment "Terraform API access"
 ```
 
-- `--privsep=0` — Token inherits the user's full permissions (no privilege separation).
+- `--privsep=0` - Token inherits the user's full permissions (no privilege separation).
 - The output shows the token value **once**. Copy it immediately.
 
 ## Step 5: Configure Terraform
@@ -90,4 +90,4 @@ Expected: JSON with Proxmox version info.
 
 - [Proxmox User Management](https://pve.proxmox.com/wiki/User_Management)
 - [Proxmox API Tokens](https://pve.proxmox.com/pve-docs/pveum.1.html)
-- [bpg/proxmox Terraform Provider — Authentication](https://registry.terraform.io/providers/bpg/proxmox/latest/docs#authentication)
+- [bpg/proxmox Terraform Provider - Authentication](https://registry.terraform.io/providers/bpg/proxmox/latest/docs#authentication)

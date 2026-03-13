@@ -36,7 +36,7 @@ curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /etc/a
 echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/hashicorp.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list >/dev/null
 
 sudo apt update
-sudo apt install -y code kubectl terraform nodejs npm
+sudo apt install -y code kubectl terraform packer xorriso nodejs npm
 
 # --- Binaries ---
 curl -fsSL -o /tmp/helm.tar.gz "https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz"

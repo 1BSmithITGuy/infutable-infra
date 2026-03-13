@@ -84,7 +84,7 @@ ssh infutable-jump
 ### VS Code (Laptop)
 
 Extension required:
-- **Remote – SSH**
+- **Remote - SSH**
 
 Workflow:
 - Connect to host alias `infutable-jump`
@@ -129,7 +129,7 @@ sudo chmod 2770 /home/bryan/log/rsync
 
 ---
 
-### Backup Directories (Jump Station) — Per Laptop
+### Backup Directories (Jump Station) - Per Laptop
 
 Destinations are hostname-based:
 
@@ -384,10 +384,10 @@ sshfs infutable-jump:/srv ~/mnt/bsus103jump02/srv \
 
 ## Validation
 
-- SSH to jump station via `ssh infutable-jump` — confirms key and config
-- Run `ls ~/mnt/bsus103jump02/srv/repos` — confirms SSHFS mount
+- SSH to jump station via `ssh infutable-jump` - confirms key and config
+- Run `ls ~/mnt/bsus103jump02/srv/repos` - confirms SSHFS mount
 - Check backup status: `cat /home/bryan/log/rsync/<hostname>-backup-status.txt` on jump station
-- Open Syncthing UI on both laptop and jump station — confirm vault folder is in sync
+- Open Syncthing UI on both laptop and jump station - confirm vault folder is in sync
 - SSH into jump station and verify login banner displays backup/sync status
 
 ## References

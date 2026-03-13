@@ -1,4 +1,4 @@
-# Wireless Access Point — BSUS103WAP01
+# Wireless Access Point - BSUS103WAP01
 
 Author: Bryan Smith  
 Created: 2026-01-27  

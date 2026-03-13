@@ -124,5 +124,5 @@ Ubuntu dynamic MOTD displays health status on SSH login:
 | 2026-01-24 | GitHub SSH key created, infra repo cloned                |
 | 2026-01-25 | Continued with workstation integration setup             |
 | 2026-01-26 | Continued with workstation integration setup             |
-| 2026-02-02 | Setup T490 production laptop — dual boot Windows/Ubuntu  |
+| 2026-02-02 | Setup T490 production laptop - dual boot Windows/Ubuntu  |
 | 2026-02-02 | Configured T490 to access the jump station               |

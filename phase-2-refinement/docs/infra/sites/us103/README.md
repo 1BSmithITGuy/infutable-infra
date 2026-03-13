@@ -23,10 +23,10 @@ Physical infrastructure at site US103 (Easton, PA). Two racks, multi-hypervisor 
 
 The infrastructure is split across two racks:
 
-- **Telco Rack** — Network equipment (firewall host, switches, Reolink NVR)
+- **Telco Rack** - Network equipment (firewall host, switches, Reolink NVR)
 ![Telco rack](images/telco-rack.png)
 
-- **Server Rack** — Compute infrastructure (2x Lenovo P520 servers, Cisco Catalyst 3750x)
+- **Server Rack** - Compute infrastructure (2x Lenovo P520 servers, Cisco Catalyst 3750x)
   The Cisco 3750x is not currently in use due to power consumption; the TP-Link switches provide sufficient L2 functionality.
 ![Server rack](images/server-rack.png)
 
@@ -127,7 +127,7 @@ BFD is enabled for fast failover detection. See [firewall/README.md](firewall/RE
 
 > The BGP peers above reflect the phase 1 cluster deployments. These will be updated when the phase 2 cluster (us103-rockyk3s01) is deployed.
 
-## Address Plan — Supernets
+## Address Plan - Supernets
 
 | Supernet | Scope | Description |
 |----------|-------|-------------|
@@ -149,15 +149,15 @@ BFD is enabled for fast failover detection. See [firewall/README.md](firewall/RE
 
 ## Static IP Allocations
 
-### VLAN 200 — MGT (10.0.0.0/26)
+### VLAN 200 - MGT (10.0.0.0/26)
 
 | IP | Hostname | Role |
 |----|----------|------|
 | 10.0.0.1 | BSUS103FW01 | Firewall/Gateway |
-| 10.0.0.2–10.0.0.3 | *(reserved)* | Talos cluster |
+| 10.0.0.2-10.0.0.3 | *(reserved)* | Talos cluster |
 | 10.0.0.5 | *(reserved)* | K3s prod cluster |
-| 10.0.0.10–10.0.0.15 | *(DHCP pool)* | Management DHCP |
-| 10.0.0.16–10.0.0.20 | *(reserved)* | MetalLB (kubeadm01) |
+| 10.0.0.10-10.0.0.15 | *(DHCP pool)* | Management DHCP |
+| 10.0.0.16-10.0.0.20 | *(reserved)* | MetalLB (kubeadm01) |
 | 10.0.0.22 | BSUS103K-8W01 | Kubeadm worker |
 | 10.0.0.23 | BSUS103K-8W02 | Kubeadm worker |
 | 10.0.0.30 | BSUS103NASV2 | Backup storage |
@@ -168,26 +168,26 @@ BFD is enabled for fast failover detection. See [firewall/README.md](firewall/RE
 | 10.0.0.60 | BSUS103SW0801 | Collapsed core/edge switch |
 | 10.0.0.61 | BSUS103WAP01 | Wireless AP |
 
-### VLAN 10 — Srv-ADC (10.0.1.0/26)
+### VLAN 10 - Srv-ADC (10.0.1.0/26)
 
 | IP | Hostname | Role |
 |----|----------|------|
 | 10.0.1.1 | BSUS103FW01 | Gateway |
-| 10.0.1.2 | *(decommissioned — was INFUS103DC01)* | |
+| 10.0.1.2 | *(decommissioned - was INFUS103DC01)* | |
 | 10.0.1.3 | INFUS103DC02 | Domain Controller |
 | 10.0.1.4 | INFUS103DC03 | Domain Controller (deploying) |
-| 10.0.1.5–10.0.1.62 | *(available)* | |
+| 10.0.1.5-10.0.1.62 | *(available)* | |
 
-### VLAN 15 — Srv-ADS (10.0.1.128/26)
+### VLAN 15 - Srv-ADS (10.0.1.128/26)
 
 | IP | Hostname | Role |
 |----|----------|------|
 | 10.0.1.129 | BSUS103FW01 | Gateway |
 | 10.0.1.130 | INFUS103CA01 | Certificate Authority (planned) |
 | 10.0.1.131 | INFUS103WS01 | WSUS Server |
-| 10.0.1.132–10.0.1.190 | *(available)* | |
+| 10.0.1.132-10.0.1.190 | *(available)* | |
 
-### VLAN 20 — k8s-mgt (10.0.2.0/27)
+### VLAN 20 - k8s-mgt (10.0.2.0/27)
 
 | IP | Hostname | Role |
 |----|----------|------|
@@ -196,11 +196,11 @@ BFD is enabled for fast failover detection. See [firewall/README.md](firewall/RE
 | 10.0.2.3 | bsus103tal-k8w01 | Talos worker |
 | 10.0.2.4 | bsus103tal-k8w02 | Talos worker |
 | 10.0.2.5 | BSUS103KM01 | K3s master |
-| 10.0.2.6–10.0.2.9 | *(available)* | |
-| 10.0.2.10–10.0.2.15 | *(DHCP pool)* | Management DHCP |
-| 10.0.2.16–10.0.2.30 | *(available)* | |
+| 10.0.2.6-10.0.2.9 | *(available)* | |
+| 10.0.2.10-10.0.2.15 | *(DHCP pool)* | Management DHCP |
+| 10.0.2.16-10.0.2.30 | *(available)* | |
 
-### VLAN 30 — k8s-bgp (10.250.3.0/27)
+### VLAN 30 - k8s-bgp (10.250.3.0/27)
 
 | IP | Hostname | Role |
 |----|----------|------|
@@ -213,8 +213,8 @@ BFD is enabled for fast failover detection. See [firewall/README.md](firewall/RE
 
 ## Related Documentation
 
-- [Hypervisors](hypervisors/README.md) — XCP-ng and Proxmox hosts, firewall VM details
-- [Firewall Configuration](firewall/README.md) — OPNsense and BGP details
-- [Switches](switches/README.md) — VLAN port assignments
-- [Wireless](wireless/README.md) — Access point and SSID configuration
-- [Jump Station](../../../runbooks/us103/jump-station/README.md) — Management workstation
+- [Hypervisors](hypervisors/README.md) - XCP-ng and Proxmox hosts, firewall VM details
+- [Firewall Configuration](firewall/README.md) - OPNsense and BGP details
+- [Switches](switches/README.md) - VLAN port assignments
+- [Wireless](wireless/README.md) - Access point and SSID configuration
+- [Jump Station](../../../runbooks/us103/jump-station/README.md) - Management workstation

@@ -6,8 +6,13 @@ Created: 2026-02-17
 | Date | Change |
 |------|--------|
 | 2026-02-17 | Initial creation |
+| 2026-03-12 | Added note for packer template |
 
 ## Purpose
+
+> **Note:**  This process has been automated; please see the following document to create a 2022 Server core template via packer:   [Windows packer template](../../../../packer/windows-server-2022-core/README.md)
+
+
 
 Creates a sysprepped Windows Server 2022 Datacenter Server Core
 
@@ -73,7 +78,7 @@ netsh advfirewall firewall add rule name="WinRM-HTTP" dir=in localport=5985 prot
 Set-Service WinRM -StartupType Automatic
 ```
 
-> **Note:** Basic auth over HTTP is used here for Terraform provisioner access on a management VLAN. In production, I would use HTTPS with a certificate or Kerberos after domain join. Hardening is out of scope for the template — cloned VMs should be locked down post-deployment.
+> **Note:** Basic auth over HTTP is used here for Terraform provisioner access on a management VLAN. In production, I would use HTTPS with a certificate or Kerberos after domain join. Hardening is out of scope for the template - cloned VMs should be locked down post-deployment.
 
 ## Step 6: Run Windows Update
 

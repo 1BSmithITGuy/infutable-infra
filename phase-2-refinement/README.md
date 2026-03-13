@@ -10,6 +10,7 @@ Last Updated: 2026-02-16
 |------------|--------|---------------------------------------------|
 | 2026-02-15 | Bryan  | Initial document                            |
 | 2026-02-16 | Bryan  | Addeded Current Content                     |
+| 2026-03-12 | Bryan  | Added Packer template and logging standards  |
 
 
 ## Purpose
@@ -25,6 +26,7 @@ Full plan and details to follow as implementation progresses.
 | Area | Description |
 |------|-------------|
 | [Documentation Standards](./docs/standards/documentation.md) | Header format, file naming, runbook structure |
+| [Logging Standards](./docs/standards/logging.md) | Log directory structure, naming, and tool-specific notes |
 | [Runbook Template](./docs/templates/runbook-template.md) | Ready-to-copy starting point for new runbooks |
 | **Site Infrastructure** | |
 | [US103 Site Overview](./docs/infra/sites/us103/) | Hardware, VLANs, address plan, network architecture |
@@ -35,3 +37,5 @@ Full plan and details to follow as implementation progresses.
 | **Runbooks** | |
 | [Jump Station](./docs/runbooks/us103/jump-station/) | Server and workstation setup for bsus103jump02 |
 | [Windows Server Template](./docs/runbooks/us103/windows-server-template/) | Sysprepped Server 2022 Datacenter Core template for Proxmox |
+| **Packer** | |
+| [Windows Server 2022 Core Template](./packer/windows-server-2022-core/) | Automated Packer build pipeline for Proxmox templates |

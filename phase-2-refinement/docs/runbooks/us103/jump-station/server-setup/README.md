@@ -1,4 +1,4 @@
-# Jump Station — Server Setup
+# Jump Station - Server Setup
 
 Author: Bryan Smith  
 Created: 2026-01-25  
@@ -12,6 +12,7 @@ Last Updated: 2026-02-17
 | 2026-02-15 | Bryan  | Added Nemo + SSHFS                                 |
 | 2026-02-15 | Bryan  | Migrated to phase 2 documentation standards        |
 | 2026-02-17 | Bryan  | added logs,references                              |
+| 2026-02-22 | Bryan  | Added Packer, xorriso                              |
 ---
 
 ## Purpose
@@ -162,6 +163,7 @@ Software was installed via bootstrap script ([bootstrap-ubuntu-jump-station.sh](
 - argocd CLI (v2.13.3)
 - kustomize (v5.5.0)
 - terraform
+- packer, xorriso
 - talosctl (via Homebrew)
 
 **Development:**

@@ -1,4 +1,4 @@
-# Firewall — BSUS103FW01
+# Firewall - BSUS103FW01
 
 Author: Bryan Smith  
 Created: 2026-01-27  
@@ -28,7 +28,7 @@ The firewall handles routing between all VLANs and provides the default gateway 
 
 | VLAN | Interface | Gateway IP | Subnet |
 |------|-----------|------------|--------|
-| — | WAN | (ISP assigned) | Internet uplink |
+| N/A | WAN | (ISP assigned) | Internet uplink |
 | 6 | User-IOT | 10.0.100.1 | 10.0.100.0/24 |
 | 10 | Srv-ADC | 10.0.1.1 | 10.0.1.0/26 |
 | 15 | Srv-ADS | 10.0.1.129 | 10.0.1.128/26 |

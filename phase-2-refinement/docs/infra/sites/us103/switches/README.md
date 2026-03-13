@@ -36,7 +36,7 @@ Both switches are managed via web interface on VLAN 200 (MGT).
 
 ---
 
-## BSUS103SW0801 — Collapsed Core / Edge Switch
+## BSUS103SW0801 - Collapsed Core / Edge Switch
 
 **Model:** TP-Link TL-SG108PE (8-port managed PoE)
 **Firmware:** 1.0.0 Build 20210819
@@ -58,17 +58,17 @@ This switch serves as the aggregation point between the firewall and the rest of
 
 | VLAN ID | Name | Member Ports | Tagged | Untagged |
 |---------|------|--------------|--------|----------|
-| 1 | Default | 1, 3-4, 6 | — | 1, 3-4, 6 |
-| 6 | User-IOT | 2, 7-8 | 2, 7-8 | — |
-| 10 | ServerADDC | 7-8 | 7-8 | — |
-| 15 | ServerADSV | 7-8 | 7-8 | — |
-| 20 | ServerApp | 7-8 | 7-8 | — |
-| 30 | k8s_bgp | 7-8 | 7-8 | — |
+| 1 | Default | 1, 3-4, 6 | N/A | 1, 3-4, 6 |
+| 6 | User-IOT | 2, 7-8 | 2, 7-8 | N/A |
+| 10 | ServerADDC | 7-8 | 7-8 | N/A |
+| 15 | ServerADSV | 7-8 | 7-8 | N/A |
+| 20 | ServerApp | 7-8 | 7-8 | N/A |
+| 30 | k8s_bgp | 7-8 | 7-8 | N/A |
 | 200 | MGT | 2-3, 5, 7-8 | 2, 7-8 | 3, 5 |
 
 ---
 
-## BSUS103SW1601 — Access Switch
+## BSUS103SW1601 - Access Switch
 
 **Model:** TP-Link TL-SG1016DE (16-port managed)
 **Firmware:** 1.0.1 Build 20240628
@@ -83,8 +83,8 @@ This switch provides connectivity to hypervisors and wired clients.
 |------|------------|-------|
 | 1-8 | Wired clients | Home network, not part of lab |
 | 2 | BSUS103SW0801 (Uplink) | Trunk to core switch |
-| 9 | (Available) | — |
-| 10 | (Available) | — |
+| 9 | (Available) | N/A |
+| 10 | (Available) | N/A |
 | 11-12 | Hypervisor management NICs | Untagged VLAN 200 |
 | 13-16 | Hypervisor trunk NICs | Multi-VLAN trunk (quad NIC cards) |
 
@@ -92,10 +92,10 @@ This switch provides connectivity to hypervisors and wired clients.
 
 | VLAN ID | Name | Member Ports | Tagged | Untagged |
 |---------|------|--------------|--------|----------|
-| 1 | Default | 2, 10-16 | — | 2, 10-16 |
+| 1 | Default | 2, 10-16 | N/A | 2, 10-16 |
 | 6 | User-IOT | 1-8, 10 | 2 | 1, 3-8, 10 |
-| 10 | ServerADDC | 2, 13-16 | 2, 13-16 | — |
-| 15 | ServerADSV | 2, 13-16 | 2, 13-16 | — |
-| 20 | ServerApp | 2, 13-16 | 2, 13-16 | — |
-| 30 | k8s_bgp | 2, 13-16 | 2, 13-16 | — |
+| 10 | ServerADDC | 2, 13-16 | 2, 13-16 | N/A |
+| 15 | ServerADSV | 2, 13-16 | 2, 13-16 | N/A |
+| 20 | ServerApp | 2, 13-16 | 2, 13-16 | N/A |
+| 30 | k8s_bgp | 2, 13-16 | 2, 13-16 | N/A |
 | 200 | MGT | 2, 9, 11-12 | 2 | 9, 11-12 |
