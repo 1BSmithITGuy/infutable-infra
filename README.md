@@ -14,13 +14,7 @@ infutable-infra/
 ├── phase-1-exploration/       # Initial lab buildout and platform evaluation
 ├── phase-2-refinement/        # Current: production-style k3s platform on Rocky Linux
 │   ├── docs/
-│   │   ├── standards/
-│   │   ├── templates/
-│   │   └── runbooks/
-│   │       └── us103/
-│   ├── k8s/
-│   ├── terraform/
-│   └── orchestration/
+│   └── packer/
 └── README.md
 ```
 
