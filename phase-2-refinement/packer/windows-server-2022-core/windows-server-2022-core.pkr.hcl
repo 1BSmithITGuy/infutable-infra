@@ -21,13 +21,15 @@
 #   https://github.com/rgl/packer-plugin-windows-update
 
 packer {
+  required_version = "~> 1.15"
+
   required_plugins {
     proxmox = {
-      version = ">= 1.2.0"
+      version = "~> 1.2.3"
       source  = "github.com/hashicorp/proxmox"
     }
     windows-update = {
-      version = ">= 0.16.0"
+      version = "~> 0.18.0"
       source  = "github.com/rgl/windows-update"
     }
   }

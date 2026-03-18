@@ -24,7 +24,7 @@ variable "proxmox_api_token_secret" {
 variable "proxmox_tls_insecure" {
   type        = bool
   description = "Skip TLS verification (lab with self-signed cert)"
-  default     = true
+  default     = false
 }
 
 variable "proxmox_node" {
