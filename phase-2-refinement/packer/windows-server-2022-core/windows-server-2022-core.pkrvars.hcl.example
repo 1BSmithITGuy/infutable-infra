@@ -1,5 +1,3 @@
-# --- windows-server-2022-core.pkrvars.hcl.example ---
-#
 # Copy to windows-server-2022-core.pkrvars.hcl and fill in real values.
 # The .pkrvars.hcl file is gitignored.
 #
@@ -17,20 +15,11 @@ proxmox_api_token_secret = "<your-token-uuid-here>"
 proxmox_tls_insecure     = true   #  Lab environment - in prod use tls
 proxmox_node             = "<short-hostname>"   # Usually the short hostname of the Proxmox node
 
-# --- Template ---------------------------------------------------------------
-template_name  = "tmpl-ws2022-core"
-template_vm_id = 9000
-
-# --- Storage ----------------------------------------------------------------
-datastore        = "local-zfs"
-iso_storage_pool = "local"
-
 # --- ISO filenames (must exist on Proxmox in iso_storage_pool) --------------
 # List available ISOs: pvesh get /nodes/BSUS103PX01/storage/local/content --content iso
 # Lab:  In prod, should use Packer's built in tools iso_checksum with iso_url to verify checksum
 
 windows_iso_file     = "SERVER_EVAL_x64FRE_en-us.iso"
-build_tools_iso_file = "ws2022-build-tools.iso"   # VirtIO drivers + autounattend.xml + SSU
 
 # --- Build-time admin password ----------------------------------------------
 # Must match the password in autounattend.xml.
