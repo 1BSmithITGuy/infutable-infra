@@ -11,12 +11,15 @@ proxmox_api_token_id     = "<user@realm!tokenname>"
 #  For local proxmox authentication (at the host level), the realm is pam
 #  For next deployment, either use ldap or pve (Proxmox account)
 
-proxmox_api_token_secret = "<your-token-uuid-here>"
-proxmox_tls_insecure     = true   #  Lab environment - in prod use tls
-proxmox_node             = "<short-hostname>"   # Usually the short hostname of the Proxmox node
+proxmox_api_token_secret = "<token-uuid>"
 
-# --- ISO filenames (must exist on Proxmox in iso_storage_pool) --------------
-# List available ISOs: pvesh get /nodes/BSUS103PX01/storage/local/content --content iso
+proxmox_tls_insecure     = true   
+#  Lab environment - in prod use tls
+
+proxmox_node             = "<short-hostname>"   
+# Usually the short hostname of the Proxmox node
+
+# --- ISO filenames ------------------------------------------------------------
 # Lab:  In prod, should use Packer's built in tools iso_checksum with iso_url to verify checksum
 
 windows_iso_file     = "SERVER_EVAL_x64FRE_en-us.iso"
@@ -24,4 +27,6 @@ windows_iso_file     = "SERVER_EVAL_x64FRE_en-us.iso"
 # --- Build-time admin password ----------------------------------------------
 # Must match the password in autounattend.xml.
 # Cloned VMs set their own password via Terraform (winrm_password var).
+# Lab:  production should use something like Hashicorp vault.
+
 admin_password = "<CHANGE_ME>"
