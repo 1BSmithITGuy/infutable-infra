@@ -1,5 +1,5 @@
 # Versions latest as of 2026-04-23
-exclude: ^phase-1-exploration/
+exclude: ^archive/
 repos:
   - repo: https://github.com/antonbabenko/pre-commit-terraform
     rev: v1.105.0
