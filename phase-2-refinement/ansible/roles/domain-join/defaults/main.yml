@@ -1,0 +1,3 @@
+# Defaults for domain-join role
+
+domain_name: ad.infutable.com

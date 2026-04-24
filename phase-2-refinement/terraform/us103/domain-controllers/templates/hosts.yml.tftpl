@@ -1,0 +1,11 @@
+# Domain Controllers -- site US103
+#
+# Managed by Terraform -- DO NOT EDIT
+# Source of truth: terraform.tfvars (domain_controllers map)
+
+domain_controllers:
+  hosts:
+%{ for key, dc in domain_controllers ~}
+    ${dc.hostname}:
+      ansible_host: ${dc.static_ip}
+%{ endfor ~}

@@ -1,0 +1,5 @@
+# Variables for all hosts at site US103
+
+us103_dns_servers:
+  - 10.0.1.3
+  - 10.0.1.4

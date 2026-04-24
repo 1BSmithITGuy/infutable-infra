@@ -1,0 +1,172 @@
+{
+  "name": "Easy (Not the Best!) Glucose-Friendly Sweet Onion Meatballs",
+  "slug": "easy-glucose-friendly-sweet-onion-meatballs",
+  "image": "",
+  "recipeServings": 4,
+  "recipeYieldQuantity": 0,
+  "recipeYield": "",
+  "totalTime": "35 minutes",
+  "prepTime": null,
+  "cookTime": null,
+  "performTime": null,
+  "description": "Originally this recipe called for a small amount of added sugar to balance tomato acidity. Here, sautéed sweet onion is used instead for sweetness without refined sugar. Designed around blood glucose response: protein + fat slow digestion, onion replaces refined sugar, and optional dairy enrichment can further blunt post-meal rise.",
+  "recipeCategory": [],
+  "tags": [
+    {
+      "name": "diabetes",
+      "slug": "diabetes"
+    }
+  ],
+  "tools": [],
+  "rating": 5,
+  "orgURL": "",
+  "recipeIngredient": [
+    {
+      "quantity": 1,
+      "unit": null,
+      "food": null,
+      "note": "1 lb 85% lean ground beef",
+      "isFood": false,
+      "disableAmount": true,
+      "display": "1 lb 85% lean ground beef",
+      "title": "== MEAT ======================",
+      "originalText": null
+    },
+    {
+      "quantity": 1,
+      "unit": null,
+      "food": null,
+      "note": "1 sweet onion",
+      "isFood": false,
+      "disableAmount": true,
+      "display": "1 sweet onion",
+      "title": "== VEGGIES ===================",
+      "originalText": null
+    },
+    {
+      "quantity": 1,
+      "unit": null,
+      "food": null,
+      "note": "1 tbsp olive oil",
+      "isFood": false,
+      "disableAmount": true,
+      "display": "1 tbsp olive oil",
+      "title": "",
+      "originalText": null
+    },
+    {
+      "quantity": 1,
+      "unit": null,
+      "food": null,
+      "note": "½ cup panko breadcrumbs",
+      "isFood": false,
+      "disableAmount": true,
+      "display": "½ cup panko breadcrumbs",
+      "title": "== BINDER ====================",
+      "originalText": null
+    },
+    {
+      "quantity": 1,
+      "unit": null,
+      "food": null,
+      "note": "½ cup milk",
+      "isFood": false,
+      "disableAmount": true,
+      "display": "½ cup milk",
+      "title": "",
+      "originalText": null
+    },
+    {
+      "quantity": 1,
+      "unit": null,
+      "food": null,
+      "note": "½ cup grated parmesan (store-bought OK)",
+      "isFood": false,
+      "disableAmount": true,
+      "display": "½ cup grated parmesan (store-bought OK)",
+      "title": "== DAIRY =====================",
+      "originalText": null
+    },
+    {
+      "quantity": 1,
+      "unit": null,
+      "food": null,
+      "note": "½ tsp garlic powder",
+      "isFood": false,
+      "disableAmount": true,
+      "display": "½ tsp garlic powder",
+      "title": "== SPICES ====================",
+      "originalText": null
+    },
+    {
+      "quantity": 1,
+      "unit": null,
+      "food": null,
+      "note": "½ tsp dried oregano",
+      "isFood": false,
+      "disableAmount": true,
+      "display": "½ tsp dried oregano",
+      "title": "",
+      "originalText": null
+    },
+    {
+      "quantity": 1,
+      "unit": null,
+      "food": null,
+      "note": "1 tsp salt (divided)",
+      "isFood": false,
+      "disableAmount": true,
+      "display": "1 tsp salt (divided)",
+      "title": "",
+      "originalText": null
+    }
+  ],
+  "recipeInstructions": [
+    {
+      "title": "",
+      "summary": "Step 1: Prep",
+      "text": "### A. Sauté Onion\n* Dice onion *(aim for ~½ cup)*\n* Cook in olive oil on *medium (300–325°F)* until soft/translucent with light golden edges *(6–10 min)*\n* Spread on plate to cool\n\n---\n<br>\n\n### B. Make Panade\n* Mix panko + milk\n* Rest 5–10 minutes\n\n---\n<br>\n\n### C. Mix + Form\n* Combine:\n  * beef\n  * cooled onions\n  * panade\n  * parmesan\n  * garlic powder\n  * oregano\n  * ½ tsp salt\n* Mix gently until just combined\n* Form 12 meatballs\n"
+    },
+    {
+      "title": "",
+      "summary": "Step 2: Sear",
+      "text": "* Heat pan on *medium-high (375–400°F)*\n* Brown meatballs on all sides *(5–7 min total)*\n* Do not fully cook through\n\n---\n<br>\n\nRemove to a plate.\n"
+    },
+    {
+      "title": "",
+      "summary": "Step 3: Simmer (Optional Sauce Step)",
+      "text": "* Reduce heat to *medium (300–325°F)*\n* Add sauce\n* Optional: stir in ricotta or cheddar\n* Return meatballs, cover, simmer 15–20 min until 165°F internal\n"
+    }
+  ],
+  "nutrition": {
+    "calories": "410",
+    "carbohydrateContent": "12",
+    "cholesterolContent": "90",
+    "fatContent": "27",
+    "fiberContent": "1",
+    "proteinContent": "29",
+    "saturatedFatContent": "9",
+    "sodiumContent": "580",
+    "sugarContent": "3",
+    "transFatContent": "0",
+    "unsaturatedFatContent": "12"
+  },
+  "settings": {
+    "public": true,
+    "showNutrition": false,
+    "showAssets": false,
+    "landscapeView": false,
+    "disableComments": false,
+    "disableAmount": true,
+    "locked": false
+  },
+  "assets": [],
+  "notes": [
+    {
+      "title": "Prep Ahead:",
+      "text": "* AM prep: sauté onions + cool\n* AM prep: mix panko + milk (panade)\n* AM prep: mix meatball mixture and/or pre-form meatballs\n\nRefrigerate until evening.\n"
+    }
+  ],
+  "extras": {},
+  "comments": []
+}

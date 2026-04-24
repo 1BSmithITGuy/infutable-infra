@@ -1,0 +1,209 @@
+# Deploy a new domain controller
+# Note: This is a lab exercise; production deployments use tighter controls around credentials and promoting DCs.
+#
+# Prerequisites:
+# - VM exists with hostname and static IP
+# - WinRM is reachable
+# - Required collections installed: microsoft.ad, community.windows
+#
+# Usage:
+#   from /srv/repos/infutable-infra/phase-2-refinement/ansible:
+#
+#   ansible-playbook playbooks/windows/deploy-dc.yml \
+#     --limit <hostname-of-new-VM> \
+#     --ask-pass \
+#     -e domain_admin_user='AD\Administrator' \
+#     -e domain_admin_password='<password>' \
+#     -e dsrm_password='<dsrm_password>'
+#
+#     NOTE:  --ask-pass is the local admin password for the template.
+
+---
+# Play 1 - Initializes new disk and promotes the server.
+#  Uses Local admin credentials for Packer template
+- name: "Deploy DC: initialize disk and promote"
+  hosts: domain_controllers
+  gather_facts: false
+
+  pre_tasks:
+    - name: Ensure only one host is targeted
+      ansible.builtin.assert:
+        that:
+          - ansible_play_hosts | length == 1
+        fail_msg: "This playbook must be run against a single host (--limit)."
+
+    # Pre-stage the computer account on an existing DC and force replication before promotion.
+    # This avoids a failure trying to find the computer account during DC promotion task.
+    - name: Add new computer account to AD
+      ansible.windows.win_powershell:
+        script: |
+          $hostname = '{{ inventory_hostname }}'
+
+          # Create account if it doesn't exist
+              if (-not (Get-ADComputer -Filter "Name -eq '$hostname'" -ErrorAction SilentlyContinue))
+                {
+                  New-ADComputer -Name $hostname -Path "OU=Domain Controllers,DC=ad,DC=InfUtable,DC=com" -Enabled $true
+                  Write-Output "Created computer account $hostname"
+              } else
+                  {Write-Output "Computer account $hostname already exists"}
+
+          # Force replication to all DCs
+              repadmin /syncall /AdeP 2>&1 | Out-Null
+
+          # Verify account exists on every DC (retry to 60s)
+              $maxAttempts = 6
+
+              for ($i = 1; $i -le $maxAttempts; $i++)
+                {
+                  $allFound = $true
+                  $results = @()
+
+                  Get-ADDomainController -Filter * |
+                    ForEach-Object {
+                      $found = [bool](Get-ADComputer -Filter "Name -eq '$hostname'" -Server $_.HostName -ErrorAction SilentlyContinue)
+                      $results += [PSCustomObject]@{ DC = $_.Name; Found = $found }
+
+                      if (-not $found)
+                        { $allFound = $false }
+                    }
+                  if ($allFound)
+                      { break }
+                  if ($i -lt $maxAttempts)
+                    { Start-Sleep -Seconds 10 }
+              }
+
+              $results | ForEach-Object { Write-Output "$($_.DC): $($_.Found)" }
+              if (-not $allFound)
+                { throw "Account $hostname not replicated to all DCs after $($maxAttempts * 10)s" }
+      delegate_to: "{{ us103_dns_servers | reject('equalto', ansible_host) | first }}"
+      vars:
+        ansible_user: "{{ domain_admin_user }}"
+        ansible_password: "{{ domain_admin_password }}"
+        ansible_connection: winrm
+        ansible_port: 5985
+        ansible_winrm_transport: ntlm
+
+  tasks:
+    - name: Initialize disks
+      ansible.builtin.include_role:
+        name: initialize-disk
+      vars:
+        data_disk_number: "{{ item.number }}"
+        data_disk_letter: "{{ item.letter }}"
+        data_disk_label: "{{ item.label }}"
+        data_disk_dirs: "{{ item.dirs }}"
+      loop: "{{ dc_data_disks }}"
+      loop_control:
+        label: "{{ item.letter }}:"
+
+    - name: Promote to domain controller
+      ansible.builtin.include_role:
+        name: dc-promotion
+
+# Play 2 - Post promotion tasks
+#  Uses Domain credentials (specified at CLI)
+- name: "Deploy DC: post-promotion setup"
+  hosts: domain_controllers
+  gather_facts: false
+  vars:
+    ansible_user: "{{ domain_admin_user }}"
+    ansible_password: "{{ domain_admin_password }}"
+
+  pre_tasks:
+    - name: Ensure only one host is targeted
+      ansible.builtin.assert:
+        that:
+          - ansible_play_hosts | length == 1
+        fail_msg: "This playbook must be run against a single host using --limit."
+
+  tasks:
+    - name: Wait for reboot and AD services to start
+      ansible.builtin.wait_for_connection:
+        timeout: 900
+        delay: 180
+
+    - name: Gather facts
+      ansible.windows.setup:
+        gather_subset: min
+
+    - name: Verify DC promotion succeeded
+      ansible.builtin.assert:
+        that:
+          - ansible_windows_domain_role is search("domain controller", ignorecase=True)
+        fail_msg: "Not a DC. Role: {{ ansible_windows_domain_role }}"
+        success_msg: "{{ ansible_hostname }} is a {{ ansible_windows_domain_role }} in {{ ansible_windows_domain }}"
+      register: verify_result
+      until: verify_result is not failed
+      retries: 6
+      delay: 30
+
+    - name: Set DNS (replace own IP with loopback)
+      ansible.windows.win_dns_client:
+        adapter_names: '*'
+        dns_servers: "{{ (us103_dns_servers | reject('equalto', ansible_host) | list) + ['127.0.0.1'] }}"
+
+    - name: Wait for AD services to run
+      ansible.windows.win_powershell:
+        script: |
+          $ready = $false
+          $attempts = 0
+
+          while (-not $ready -and $attempts -lt 12) {
+              $attempts++
+              try {
+                  $svc = Get-Service NTDS, ADWS -ErrorAction Stop
+                  if (($svc | Where-Object Status -ne 'Running').Count -eq 0) {
+                      $ready = $true
+                  } else
+                      {Start-Sleep -Seconds 10}
+              } catch
+                  {Start-Sleep -Seconds 10}
+          }
+
+          if (-not $ready)
+              {throw "AD services did not start after 2 minutes"}
+
+    - name: Enable Remote Event Log Management firewall rules
+      ansible.windows.win_powershell:
+        script: |
+          Enable-NetFirewallRule -DisplayGroup "Remote Event Log Management"
+
+    - name: Force AD replication sync
+      ansible.windows.win_powershell:
+        script: |
+          repadmin /syncall /AdeP 2>&1 | Out-String
+
+          if ($LASTEXITCODE -eq 0) {
+              Write-Output "Replication sync completed successfully"
+          } else
+              {Write-Warning "Replication sync - see dcdiag"}
+
+    - name: Run dcdiag
+      ansible.windows.win_powershell:
+        script: |
+          # These tests often fail on a newly promoted DC and clear after replication.
+            $exclude = @(
+                'DFSREvent',
+                'KccEvent',
+                'SystemLog',
+                'KnowsOfRoleHolders',
+                'Replications',
+                'RidManager'
+            )
+
+            $output = dcdiag 2>&1 | Out-String
+            Write-Output $output
+
+            $failures = [regex]::Matches($output, 'failed test (\S+)') |
+                ForEach-Object { $_.Groups[1].Value }
+
+            $realFailures = $failures | Where-Object { $_ -notin $exclude }
+
+            if ($realFailures) {
+                throw "dcdiag failed: $($realFailures -join ', ')"
+            }
+      register: dcdiag_result
+
+    - name: Show dcdiag output
+      ansible.builtin.debug:
+        var: dcdiag_result.output

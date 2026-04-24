@@ -1,0 +1,23 @@
+name: validate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.14.9
+      - uses: hashicorp/setup-packer@main
+        with:
+          version: 1.15.1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pre-commit
+      - run: pre-commit run --all-files

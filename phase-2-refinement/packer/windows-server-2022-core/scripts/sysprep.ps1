@@ -3,6 +3,9 @@
 # Sysprep runs via a scheduled task so this script can exit cleanly.
 
 $ErrorActionPreference = "Stop"
+$bootstrapDir = 'C:\ProgramData\Infutable\bootstrap\packer'
+$jumpStationIP = '10.0.0.15'
+New-Item -Path $bootstrapDir -ItemType Directory -Force | Out-Null
 
 # --- Cleanup ----------------------------------------------------------------
 
@@ -28,7 +31,6 @@ $adapter = Get-NetAdapter | Select-Object -First 1
 if ($adapter) {
     Write-Host "Resetting network adapter '$($adapter.Name)' to DHCP..."
     Remove-NetIPAddress -InterfaceIndex $adapter.ifIndex -Confirm:$false -ErrorAction SilentlyContinue
-    Remove-NetRoute -InterfaceIndex $adapter.ifIndex -Confirm:$false -ErrorAction SilentlyContinue
     Set-NetIPInterface -InterfaceIndex $adapter.ifIndex -Dhcp Enabled
     Set-DnsClientServerAddress -InterfaceIndex $adapter.ifIndex -ResetServerAddresses
 }
@@ -46,6 +48,7 @@ Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
 # The password is sourced from a gitignored variable file.
 # Skips OOBE and sets a bootstrap password.
 # Downstream provisioning (or LAPS, Vault, etc) will rotate or replace this credential.
+# Create with Windows System Image Manager (WSIM)
 
 $password = $env:ADMIN_PASSWORD
 if (-not $password) {
@@ -53,7 +56,7 @@ if (-not $password) {
     exit 1
 }
 
-$unattend = "C:\Windows\Temp\sysprep-unattend.xml"
+$unattend = "$bootstrapDir\sysprep-unattend.xml"
 
 @"
 <?xml version="1.0" encoding="utf-8"?>
@@ -91,8 +94,13 @@ $unattend = "C:\Windows\Temp\sysprep-unattend.xml"
       <FirstLogonCommands>
         <SynchronousCommand wcm:action="add">
           <Order>1</Order>
-          <CommandLine>cmd /c netsh advfirewall firewall set rule name="Windows Remote Management (HTTP-In)" new remoteip=10.0.0.15</CommandLine>
+          <CommandLine>cmd /c netsh advfirewall firewall set rule name="Windows Remote Management (HTTP-In)" new remoteip=$jumpStationIP</CommandLine>
           <Description>Restrict built-in WinRM rules to jump station</Description>
+        </SynchronousCommand>
+        <SynchronousCommand wcm:action="add">
+          <Order>2</Order>
+          <CommandLine>cmd /c rmdir /s /q "C:\ProgramData\Infutable\bootstrap\packer"</CommandLine>
+          <Description>Clean up Packer bootstrap artifacts</Description>
         </SynchronousCommand>
       </FirstLogonCommands>
       <TimeZone>UTC</TimeZone>
@@ -114,10 +122,17 @@ $unattend = "C:\Windows\Temp\sysprep-unattend.xml"
 Write-Host "Sysprep unattend generated - $unattend"
 Write-Host "Scheduling sysprep"
 
-$action = New-ScheduledTaskAction `
-    -Execute "C:\Windows\System32\Sysprep\sysprep.exe" `
-    -Argument "/oobe /generalize /shutdown /mode:vm /unattend:$unattend"
+$wrapperPath = "$bootstrapDir\run-sysprep.ps1"
+
+@"
+Unregister-ScheduledTask -TaskName 'Infutable-Sysprep' -Confirm:`$false
+Remove-Item 'C:\Windows\Temp\packer-*' -Force -ErrorAction SilentlyContinue
+C:\Windows\System32\Sysprep\sysprep.exe /oobe /generalize /shutdown /mode:vm /unattend:$unattend
+"@ | Out-File -FilePath $wrapperPath -Encoding UTF8 -Force
+
+$action = New-ScheduledTaskAction -Execute 'powershell.exe' `
+    -Argument "-NoProfile -ExecutionPolicy Bypass -File $wrapperPath"
 
 $trigger = New-ScheduledTaskTrigger -Once -At ((Get-Date).AddSeconds(15))
 
-Register-ScheduledTask -TaskName "Packer-Sysprep" -Action $action -Trigger $trigger -User "SYSTEM" -RunLevel Highest -Force | Out-Null
+Register-ScheduledTask -TaskName 'Infutable-Sysprep' -Action $action -Trigger $trigger -User 'SYSTEM' -RunLevel Highest -Force | Out-Null

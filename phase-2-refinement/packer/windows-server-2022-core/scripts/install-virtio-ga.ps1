@@ -21,7 +21,8 @@ foreach ($name in $drivers) {
         Write-Host "Installing ${name} driver..."
         pnputil.exe /add-driver $driverPath /install
         } 
-        else {Write-Warning "Driver path not found: $driverPath - skipping"}
+        else 
+            {Write-Warning "Driver path not found: $driverPath - skipping"}
 }
 
 # Install QEMU Guest Agent
@@ -44,4 +45,5 @@ $svc = Get-Service QEMU-GA -ErrorAction SilentlyContinue
 if ($svc -and $svc.Status -eq "Running") {
     Write-Host "QEMU Guest Agent is running."
     } 
-    else {Write-Warning "QEMU Guest Agent service is not running."}
+    else 
+        {Write-Warning "QEMU Guest Agent service is not running."}

@@ -1,0 +1,11 @@
+# Domain Controllers -- site US103
+#
+# Managed by Terraform -- DO NOT EDIT
+# Source of truth: terraform.tfvars (domain_controllers map)
+
+domain_controllers:
+  hosts:
+    INFUS103DC03:
+      ansible_host: 10.0.1.4
+    INFUS103DC04:
+      ansible_host: 10.0.1.5

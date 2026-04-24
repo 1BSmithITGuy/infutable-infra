@@ -1,0 +1,36 @@
+# Windows role:  initialize-disk
+
+# Description: Initialize a raw disk, partition, format, and create directories.
+#
+# Variables:
+#     data_disk_number
+#     data_disk_letter
+#     data_disk_label
+#     data_disk_dirs
+
+---
+- name: "Initialize disk {{ data_disk_number }} as GPT"
+  community.windows.win_initialize_disk:
+    disk_number: "{{ data_disk_number }}"
+    style: gpt
+
+- name: "Create partition on disk {{ data_disk_number }}"
+  community.windows.win_partition:
+    disk_number: "{{ data_disk_number }}"
+    drive_letter: "{{ data_disk_letter }}"
+    partition_size: -1
+
+- name: "Format {{ data_disk_letter }}: as NTFS"
+  community.windows.win_format:
+    drive_letter: "{{ data_disk_letter }}"
+    file_system: NTFS
+    new_label: "{{ data_disk_label }}"
+    full: false
+
+- name: "Create directories on {{ data_disk_letter }}:"
+  ansible.windows.win_file:
+    path: "{{ dir }}"
+    state: directory
+  loop: "{{ data_disk_dirs }}"
+  loop_control:
+    loop_var: dir

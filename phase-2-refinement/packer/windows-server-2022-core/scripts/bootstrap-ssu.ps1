@@ -9,6 +9,8 @@
 # Runs as a Packer provisioner.
 
 $ErrorActionPreference = "Stop"
+$bootstrapDir = 'C:\ProgramData\Infutable\bootstrap\packer'
+New-Item -Path $bootstrapDir -ItemType Directory -Force | Out-Null
 
 # --- Find MSU on build tools ISO -------------------------------------
 $drive = (Get-Volume | Where-Object { $_.FileSystemLabel -like "BUILD*" }).DriveLetter
@@ -28,13 +30,13 @@ if (-not $msuFile) {
 $kbName = $msuFile.BaseName
 
 # --- Copy MSU ---------------------------------------------------------
-$localMsu = "C:\Windows\Temp\$($msuFile.Name)"
+$localMsu = "$bootstrapDir\$($msuFile.Name)"
 
 Copy-Item $msuFile.FullName $localMsu -Force
 Write-Host "Copied MSU to $localMsu"
 
 # --- Install via scheduled task -------------------------------------
-$taskName = "PackerInstallCU"
+$taskName = 'Infutable-InstallCU'
 
 $action  = New-ScheduledTaskAction -Execute "wusa.exe" -Argument "`"$localMsu`" /quiet /norestart"
 

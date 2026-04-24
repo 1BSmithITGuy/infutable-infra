@@ -9,10 +9,13 @@
 #  NOTE:  need to download ansible script to a local file share!  This is high priority in a future refinement plan.  Don't have shares setup yet on domain (do when automating updates)
 
 $ErrorActionPreference = "Stop"
+$bootstrapDir = 'C:\ProgramData\Infutable\bootstrap\packer'
+$jumpStationIP = '10.0.0.15'
+New-Item -Path $bootstrapDir -ItemType Directory -Force | Out-Null
 
 # --- Download/run ConfigureRemotingForAnsible.ps1 -------------------------
 
-$ansibleScript = "C:\Windows\Temp\ConfigureRemotingForAnsible.ps1"
+$ansibleScript = "$bootstrapDir\ConfigureRemotingForAnsible.ps1"
 $url = "https://raw.githubusercontent.com/ansible/ansible-documentation/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
 #  NOTE:  need to download to a local file share!  This is high priority in a future refinement plan.  Don't have windows shares setup yet (do when automating updates)
 
@@ -38,9 +41,9 @@ Disable-NetFirewallRule -DisplayName "Windows Remote Management (HTTP-In)" -Erro
 
 # Allow WinRM from jump station
 New-NetFirewallRule -DisplayName "WinRM-HTTP (Jump station)" `
-    -Direction Inbound -Protocol TCP -LocalPort 5985 -RemoteAddress 10.0.0.15 -Action Allow
+    -Direction Inbound -Protocol TCP -LocalPort 5985 -RemoteAddress $jumpStationIP -Action Allow
 New-NetFirewallRule -DisplayName "WinRM-HTTPS (Jump station)" `
-    -Direction Inbound -Protocol TCP -LocalPort 5986 -RemoteAddress 10.0.0.15 -Action Allow
+    -Direction Inbound -Protocol TCP -LocalPort 5986 -RemoteAddress $jumpStationIP -Action Allow
 
 # Cleanup
 Remove-Item $ansibleScript -Force -ErrorAction SilentlyContinue

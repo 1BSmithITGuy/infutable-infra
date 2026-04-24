@@ -1,0 +1,5 @@
+# Defaults for dc-promotion role
+
+domain_name: ad.infutable.com
+ntds_path: D:\NTDS
+sysvol_path: D:\SYSVOL

@@ -1,0 +1,6 @@
+# Defaults for initialize-disk role
+
+data_disk_number: 1
+data_disk_letter: D
+data_disk_label: Data
+data_disk_dirs: []

@@ -1,0 +1,10 @@
+# Variables for Windows hosts
+
+# --------- WinRM over HTTP with NTLM auth (lab) ---------
+  # Prod: use HTTPS (port 5986) with Kerberos after domain join.
+
+ansible_connection: winrm
+ansible_port: 5985
+ansible_winrm_transport: ntlm
+ansible_winrm_server_cert_validation: ignore
+ansible_user: Administrator
