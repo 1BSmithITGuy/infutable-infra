@@ -5,7 +5,7 @@
 # Prerequisites:
 #   - Windows Server 2022 ISO uploaded to Proxmox ISO storage
 #   - VirtIO drivers ISO uploaded to Proxmox ISO storage 
-#      (See phase-2-refinement/packer/windows-server-2022-core/README.md in infutable repo)
+#      (See packer/windows-server-2022-core/README.md in infutable repo)
 #
 # Usage:
 #  For logged builds, use build.sh (logs to /srv/logs/packer/) 

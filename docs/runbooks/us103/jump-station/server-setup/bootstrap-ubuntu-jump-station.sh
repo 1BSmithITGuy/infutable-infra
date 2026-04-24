@@ -17,7 +17,7 @@ sudo apt install -y \
   build-essential libfuse2t64 \
   openssh-client openssh-server rsync \
   dnsutils iputils-ping traceroute mtr-tiny netcat-openbsd tcpdump nmap \
-  lsof vim \
+  lsof vim pipx \
   remmina xclip wl-clipboard ansible
 
 sudo systemctl enable --now ssh
@@ -54,6 +54,11 @@ sudo npm install -g xo-cli
 
 # --- Ansible collections (Windows management) ---
 ansible-galaxy collection install microsoft.ad community.windows ansible.windows
+
+# --- Pre-commit framework ---
+# pipx isolates each Python tool in its own venv; required on Ubuntu 24.04 (PEP 668).
+pipx ensurepath
+pipx install pre-commit
 
 # --- Desktop apps ---
 wget -q -O /tmp/chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb

@@ -2,7 +2,7 @@
 
 Author: Bryan Smith  
 Created: 2026-01-25  
-Last Updated: 2026-02-17
+Last Updated: 2026-04-24
 
 ## Revision History
 
@@ -14,13 +14,14 @@ Last Updated: 2026-02-17
 | 2026-02-17 | Bryan  | added logs,references                              |
 | 2026-02-22 | Bryan  | Added Packer, xorriso                              |
 | 2026-03-13 | Bryan  | Added Ansible and collections                      |
+| 2026-04-24 | Bryan  | Added pipx and pre-commit for repo linting         |
 ---
 
 ## Purpose
 
-Configuration steps for `bsus103jump02`, the Ubuntu jump station VM.
+Configuration steps for `bsus103jump02`, the Ubuntu jump station VM.  
 
-> **Note:** This workflow is designed for a personal lab environment to demonstrate architecture patterns, operational discipline, and automation techniques. In a production environment, this design would be adapted to include centralized identity management, managed secrets, formal monitoring and alerting, immutable backups, and change-control processes. The core patterns remain the same; the controls and tooling would differ.
+> **Note:** This workflow is designed for a personal lab environment. In a production environment, this design would be adapted to include centralized identity management, managed secrets, formal monitoring and alerting, immutable backups, and change-control processes. 
 
 ## Relevant Logs
 
@@ -167,6 +168,10 @@ Software was installed via bootstrap script ([bootstrap-ubuntu-jump-station.sh](
 - packer, xorriso
 - talosctl (via Homebrew)
 - Ansible (collections: community.windows, ansible.windows, microsoft.ad)
+
+**Linting / pre-commit:**
+- pipx (system package manager for Python CLI tools; required on Ubuntu 24.04 due to PEP 668)
+- pre-commit (installed via pipx; hook definitions and versions live in the repo's `.pre-commit-config.yaml`)
 
 **Development:**
 - VS Code

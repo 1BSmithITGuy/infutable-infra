@@ -198,7 +198,7 @@ Sensitive values are stored in gitignored files and are not committed to the rep
 VMs are cloned from this template using the `proxmox-windows-vm` Terraform module. Each VM gets its own directory under `terraform/us103/`:
 
 ```bash
-cd /srv/repos/infutable-infra/phase-2-refinement/terraform/us103/<vm-name>
+cd /srv/repos/infutable-infra/terraform/us103/<vm-name>
 terraform apply -target=module.<vm-name>
 ```
 

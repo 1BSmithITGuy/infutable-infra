@@ -7,7 +7,7 @@
 # - Required collections installed: microsoft.ad, community.windows
 #
 # Usage:
-#   from /srv/repos/infutable-infra/phase-2-refinement/ansible:
+#   from /srv/repos/infutable-infra/ansible:
 #
 #   ansible-playbook playbooks/windows/deploy-dc.yml \
 #     --limit <hostname-of-new-VM> \

@@ -1,7 +1,7 @@
 Example output from a successful Packer build:
 
 ```bash
-┌─[bryan@bsus103jump02:{us103-k3s01}]─[/srv/repos/infutable-infra/phase-2-refinement/packer/windows-server-2022-core]
+┌─[bryan@bsus103jump02:{us103-k3s01}]─[/srv/repos/infutable-infra/packer/windows-server-2022-core]
 └──╼ $packer build -force -var-file="windows-server-2022-core.pkrvars.hcl" .
 proxmox-iso.windows-server-2022-core: output will be in this color.
 
