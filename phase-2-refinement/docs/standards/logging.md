@@ -14,7 +14,7 @@ Last Updated: 2026-03-09
 
 ## Purpose
 
-Defines logging standards for all infrastructure tooling.
+Defines logging standards for all infrastructure tooling run from the jump host/server.
 
 ## Log Directory Structure
 
@@ -37,7 +37,7 @@ Mirror the repo directory structure where it makes sense. Examples:
 YYYY-MM-DD_HHMMSS_<type>.log
 ```
 
-- Timestamp at the start so logs sort chronologically
+- Timestamp at the start.
 - `<type>` describes the log content: `build`, `debug`, `apply`, `plan`, `playbook`, etc.
 
 Example:
@@ -74,13 +74,11 @@ Ansible logging is configured in `ansible.cfg`:
 log_path = /srv/logs/ansible/ansible.log
 ```
 
-> **Note:** Ansible's built-in `log_path` writes a single rolling log. For per-run logs with timestamps, a wrapper script or callback plugin is better.
+> **Note:** Ansible's built-in `log_path` writes a single rolling log. For per-run logs with timestamps, use a wrapper script (`<playbook-name>.sh`), and put in /ansible/scripts.
 
 ---
 
 ## To Do
 
-- [ ] **Log retention policy** - Define how long logs are kept and automate cleanup (e.g., cron job to remove logs older than 90 days)
-- [ ] **Centralized log management** - Consolidate logs from all hosts into a single platform. Evaluate options like Graylog, OpenSearch (ELK alternative), or Loki + Grafana. See `future-project-ideas.md` for scope.
-- [ ] **Terraform wrapper script** - Similar to the Packer wrapper
-- [ ] **Ansible per-run logging** - Wrapper script or callback plugin
+- [ ] **Log retention policy** - Define how long logs are kept and automate cleanup (cron job), or:
+- [ ] **Centralized log management** (OpenSearch, Loki, etc). 

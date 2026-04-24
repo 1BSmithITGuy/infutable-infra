@@ -1,0 +1,38 @@
+# Windows role:  dc-promotion
+
+# Description:  Install AD DS and DNS features, then promote to a DC.
+
+# Variables:
+#     domain_name
+#     ntds_path
+#     ntds_log_path
+#     sysvol_path
+#     dsrm_password (lab demo - use CLI)
+#     domain_admin_password (lab demo - use CLI)
+#     domain_admin_user (lab demo - use CLI)
+
+---
+- name: Install AD DS feature
+  ansible.windows.win_feature:
+    name: AD-Domain-Services
+    include_management_tools: true
+    state: present
+
+- name: Promote to domain controller
+  microsoft.ad.domain_controller:
+    dns_domain_name: "{{ domain_name }}"
+    domain_admin_user: "{{ domain_admin_user }}"
+    domain_admin_password: "{{ domain_admin_password }}"
+    safe_mode_password: "{{ dsrm_password }}"
+    database_path: "{{ ntds_path }}"
+    domain_log_path: "{{ ntds_log_path }}"
+    sysvol_path: "{{ sysvol_path }}"
+    install_dns: true
+    state: domain_controller
+    reboot: true
+  #  BSS-temp:
+  register: dc_promo_status
+
+  # reboot reconnect fails (local creds gone after DC promotion);
+  #   the next play needs to validate and use domain creds.
+  ignore_errors: true

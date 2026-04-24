@@ -13,6 +13,7 @@ Last Updated: 2026-02-17
 | 2026-02-15 | Bryan  | Migrated to phase 2 documentation standards        |
 | 2026-02-17 | Bryan  | added logs,references                              |
 | 2026-02-22 | Bryan  | Added Packer, xorriso                              |
+| 2026-03-13 | Bryan  | Added Ansible and collections                      |
 ---
 
 ## Purpose
@@ -165,11 +166,13 @@ Software was installed via bootstrap script ([bootstrap-ubuntu-jump-station.sh](
 - terraform
 - packer, xorriso
 - talosctl (via Homebrew)
+- Ansible (collections: community.windows, ansible.windows, microsoft.ad)
 
 **Development:**
 - VS Code
 - nodejs, npm
 - xo-cli
+- Python3-winrm
 
 **Desktop applications:**
 - Google Chrome

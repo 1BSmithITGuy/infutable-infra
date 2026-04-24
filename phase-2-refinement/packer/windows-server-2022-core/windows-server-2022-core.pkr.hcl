@@ -16,6 +16,8 @@
 #     packer build -var-file="windows-server-2022-core.pkrvars.hcl" .
 #         NOTE:  use -force if template exists to overwrite.
 
+# Notes:  Need to download/pin ansible script (lab)
+
 # Reference:  
 #   https://developer.hashicorp.com/packer/integrations/hashicorp/proxmox
 #   https://github.com/rgl/packer-plugin-windows-update
@@ -46,7 +48,7 @@ source "proxmox-iso" "windows-server-2022-core" {
   node                     = var.proxmox_node
   username                 = var.proxmox_api_token_id
   token                    = var.proxmox_api_token_secret
-  insecure_skip_tls_verify = var.proxmox_tls_insecure  #  lab
+  insecure_skip_tls_verify = var.proxmox_tls_insecure #  lab
 
   # --- Template info ---------------------------------------------------------
   vm_name              = var.template_name
@@ -106,12 +108,11 @@ source "proxmox-iso" "windows-server-2022-core" {
     unmount  = true
   }
 
-  # Agent is installed by install-virtio-ga.ps1 during provisioning.
-  # Setting true so clones inherit agent=1 in Proxmox config.
+  # Guest agent, installed via provisioner:
   qemu_agent = true
 
-  boot      = "order=ide2"
-  boot_wait = "5s"
+  boot         = "order=ide2"
+  boot_wait    = "5s"
   boot_command = ["<spacebar>"]
 
   # --- WinRM --------------------------------------------------------------
@@ -159,7 +160,7 @@ build {
 
   # --- Configure WinRM for Ansible ------------------------------------------
   # Downloads the official Ansible WinRM script, sets up HTTPS + CredSSP
-  
+  # Need to download/pin ansible script (lab)
   provisioner "powershell" {
     script = "${path.root}/scripts/configure-ansible.ps1"
   }

@@ -55,6 +55,8 @@ Runbooks follow this section order:
 7. **Steps** (numbered: `## Step 1: Description`, `## Step 2: Description`, etc.)
 8. **Validation** 
 9. **References** 
+    * `### Internal`
+    * `### External`
 
 See `docs/templates/runbook-template.md` for a ready-to-copy starting point.
 

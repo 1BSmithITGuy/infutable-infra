@@ -1,0 +1,55 @@
+# =============================================================================
+# Domain Controllers - Terraform Variables - EXAMPLE
+#
+# Usage:
+#     Add to existing deployment:  Add a new block under domain_controllers in the existing terraform.tfvars
+#        and fill in values.
+#
+#     Example:  The last one in the block below is INFUS103DC04, so to add dc05:
+#           dc05 = {
+#             vm_id     = 113
+#             hostname  = "INFUS103DC05"
+#             static_ip = "10.0.1.6"
+#           }
+#
+# Notes: 
+#     -  This deployment uses a map of objects variable for unique values per DC
+#           while also sharing other vars that apply to all DCs (see variables.tf)
+#     -  Proxmox connection applies to both currently (adding a new Proxmox host in the near future)
+#     -  Prod alternatives to credentials - HashiCorp Vault or similar.
+#           See future-project-ideas.md for Vault integration.
+# =============================================================================
+
+# --- Proxmox connection ----------------------------------------------------
+
+proxmox_api_url   = "https://pve.example.com:8006"
+proxmox_api_token = "<user@realm!tokenid=token-secret>"
+proxmox_node      = "pve"
+
+# --- Domain controllers ------------------------------------------------------
+# Add a new block for each DC.
+
+domain_controllers = {
+  dc03 = {
+    vm_id     = 111
+    hostname  = "INFUS103DC03"
+    static_ip = "10.0.1.4"
+  }
+  dc04 = {
+    vm_id     = 112
+    hostname  = "INFUS103DC04"
+    static_ip = "10.0.1.5"
+  }
+#  New DC/block here ****************
+}
+
+# --- Disk layout (defined in main.tf, lab/org defaults) ------------------------
+# D: 15GB  NTDS database
+# E: 10GB  NTDS transaction logs
+# F: 10GB  SYSVOL
+
+# --- WinRM -----------------------------------------------------------------
+
+# Local admin password on the VM template (for WinRM)
+# Must match the password set in the template
+winrm_password = "<CHANGE_ME>"

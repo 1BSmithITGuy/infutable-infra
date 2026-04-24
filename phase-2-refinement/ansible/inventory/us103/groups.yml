@@ -1,0 +1,11 @@
+# Group hierarchy for site US103
+#
+# Defines parent/child group relationships.
+# Host membership is in separate files (per role) and those are managed by terraform.
+
+all:
+  children:
+
+    windows:
+      children:
+        domain_controllers: {}

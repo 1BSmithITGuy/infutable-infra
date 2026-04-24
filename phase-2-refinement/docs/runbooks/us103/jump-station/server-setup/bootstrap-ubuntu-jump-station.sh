@@ -18,7 +18,7 @@ sudo apt install -y \
   openssh-client openssh-server rsync \
   dnsutils iputils-ping traceroute mtr-tiny netcat-openbsd tcpdump nmap \
   lsof vim \
-  remmina xclip wl-clipboard
+  remmina xclip wl-clipboard ansible
 
 sudo systemctl enable --now ssh
 
@@ -51,6 +51,9 @@ tar -xzf /tmp/kustomize.tgz -C /tmp
 sudo install -m 555 /tmp/kustomize /usr/local/bin/kustomize
 
 sudo npm install -g xo-cli
+
+# --- Ansible collections (Windows management) ---
+ansible-galaxy collection install microsoft.ad community.windows ansible.windows
 
 # --- Desktop apps ---
 wget -q -O /tmp/chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb

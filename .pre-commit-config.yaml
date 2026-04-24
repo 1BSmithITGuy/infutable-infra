@@ -1,0 +1,20 @@
+# Versions latest as of 2026-04-23
+exclude: ^phase-1-exploration/
+repos:
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.105.0
+    hooks:
+      - id: terraform_fmt
+      - id: terraform_validate
+
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.38.0
+    hooks:
+      - id: yamllint
+  - repo: local
+    hooks:
+      - id: packer-fmt
+        name: packer fmt
+        entry: packer fmt
+        language: system
+        files: \.pkr\.hcl$

@@ -1,0 +1,34 @@
+#  DC vars
+
+#  --------- dc-promotion role vars: ---------
+
+domain_name: ad.infutable.com
+domain_netbios: AD
+ntds_path: D:\NTDS
+ntds_log_path: E:\NTDS_Logs
+sysvol_path: F:\SYSVOL
+
+#  --------- initialize-disk role vars: ---------
+#  Disk order must match Terraform additional_disks list.
+#  Windows determines disk number by the SCSI controller order (Disk 1 is scsi1)
+
+#  The 2 modules below are responsible for adding the disks:
+#     root module (disk specs):  terraform/us103/domain-controllers/main.tf
+#     child module (creates VM):  terraform/modules/proxmox/windows-vm/main.tf
+
+dc_data_disks:
+  - number: 1
+    letter: D
+    label: AD-Data
+    dirs:
+      - D:\NTDS
+  - number: 2
+    letter: E
+    label: AD-Logs
+    dirs:
+      - E:\NTDS_Logs
+  - number: 3
+    letter: F
+    label: AD-SYSVOL
+    dirs:
+      - F:\SYSVOL
