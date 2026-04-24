@@ -4,14 +4,14 @@
 
   This file automates the Windows installation for the Packer template build.
   It is embedded at the root of the build tools ISO 
-    (ws2022-build-tools.iso - See phase-2-refinement/packer/windows-server-2022-core/README.md in infutable repo)
+    (ws2022-build-tools.iso - See packer/windows-server-2022-core/README.md in infutable repo)
   so that Windows Setup finds it automatically during install.
 
   Setup:
     1. Copy this file to autounattend.xml
     2. Search for <CHANGE_ME> and replace with a build-time admin password
        (and change admin_password in .pkrvars.hcl to the same PW)
-    3. Repack the build tools ISO (see phase-2-refinement/packer/windows-server-2022-core/README.md)
+    3. Repack the build tools ISO (see packer/windows-server-2022-core/README.md)
 
   Settings:
     1. windowsPE:   Loads VirtIO SCSI + network drivers, partitions disk,

@@ -6,7 +6,7 @@
 # NOTE:  This is a lab; production deployments use tighter controls around credentials and promoting DCs.
 #        Deploying vault for creds is a future project
 # Usage:
-#   cd /srv/repos/infutable-infra/phase-2-refinement/ansible
+#   cd /srv/repos/infutable-infra/ansible
 #   scripts/deploy-dc.sh --limit INFUS103DC03 \
 #     -e domain_admin_user='AD\Administrator' \
 #     -e domain_admin_password='<password>' \

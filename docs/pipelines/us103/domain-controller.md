@@ -16,6 +16,8 @@ Created: 2026-04-13
 End-to-end IaC pipeline that takes a Windows Server 2022 ISO, creates a Server 2022 template, and produces fully promoted, replicating Active Directory domain controller(s) (structured for multiple sites).
 
 1. [Packer](../../../packer/windows-server-2022-core/README.md) builds and configures the Windows 2022 core template from an iso image.  
+    * Installs Windows Updates, VirtIO drivers, and QEMU guest agent
+    * WinRM hardened with firewall rules restricted to the jump host
 2. [Terraform](../../../terraform/README.md) creates and bootstraps the new VM using 2 modules: 
     * **Root module** ([domain-controllers](../../../terraform/us103/domain-controllers)) - calls child module that creates a Windows Server VM and generates an Ansible inventory file ([domain-controllers.yml](../../../ansible/inventory/us103/domain-controllers.yml)).
     * **Child module** ([windows-vm](../../../terraform/modules/proxmox/windows-vm/README.md)) - Generic module that creates Windows VMs from Packer templates.
@@ -134,7 +136,7 @@ Under `scripts/us103` run:
 For `<DC-Number>`, use the 2 digit number of the DC. For example:  
 * For INFUS103DC05, run `./deploy-dc.sh dc05`.
   
-  > See [Naming Conventions](../../../README.md#naming-conventions) for hostname and site code format.
+  > See [Naming Conventions](../../../README.md#naming-and-multi-site-design) for hostname and site code format.
 
 
 ## Validation
