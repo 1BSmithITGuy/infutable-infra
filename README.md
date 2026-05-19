@@ -35,6 +35,8 @@ This repository is a working portfolio and lab to showcase IT and platform engin
 
 [Domain Controller pipeline runbook](./docs/pipelines/us103/domain-controller.md) - end-to-end DC deployment, with diagram, example output, and recovery notes.
 
+[Ubuntu 24.04 server template (Packer)](./packer/ubuntu-24.04-server/README.md) - Linux template (Packer) 
+
 Standards apply to all current work:
 
 - [Documentation standards](./docs/standards/documentation.md) - metadata headers, ISO 8601 dates, kebab-case filenames, runbook structure

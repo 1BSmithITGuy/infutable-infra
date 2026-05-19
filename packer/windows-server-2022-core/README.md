@@ -30,7 +30,7 @@ The template can be rebuilt on demand or scheduled (for example after Patch Tues
 ## Build Pipeline Overview
 
 ```
-Microsoft Server 2022 ISO
+Windows Server 2022 ISO
         │
         ▼
  Packer Build (Proxmox)

@@ -84,23 +84,23 @@ source "proxmox-iso" "windows-server-2022-core" {
     format       = "raw"
     io_thread    = true
     discard      = true
+    ssd          = true
   }
 
   network_adapters {
     model    = "virtio"
-    bridge   = "vmbr1"
-    vlan_tag = 15
+    bridge   = var.network_bridge
+    vlan_tag = var.build_vlan
   }
 
-  # Main OS:
+  # OS:
   boot_iso {
     iso_file = "${var.iso_storage_pool}:iso/${var.windows_iso_file}"
     unmount  = true
   }
 
-  # Build tools ISO -- VirtIO drivers, autounattend.xml, and CU.
+  # Build tools ISO: VirtIO drivers, autounattend.xml, and CU.
   # See README.md for repack instructions.
-
   additional_iso_files {
     type     = "ide"
     index    = 3

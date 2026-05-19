@@ -1,4 +1,4 @@
-# Variable declarations for the Windows Server 2022 Core template build.
+# Variable declarations for the Ubuntu 24.04 Server template build.
 
 # =============================================================================
 # Proxmox connection
@@ -37,13 +37,13 @@ variable "proxmox_node" {
 
 variable "template_name" {
   type    = string
-  default = "tmpl-ws2022-core"
+  default = "tmpl-ubuntu-24-04-server"
 }
 
 variable "template_vm_id" {
   type        = number
   description = "VM ID for the template (must not already exist)"
-  default     = 9000
+  default     = 9001
 }
 
 # =============================================================================
@@ -65,15 +65,9 @@ variable "iso_storage_pool" {
 # ISO names (in var.iso_storage_pool above)
 # =============================================================================
 
-variable "windows_iso_file" {
+variable "ubuntu_iso_file" {
   type        = string
-  description = "Windows Server 2022 ISO filename"
-}
-
-variable "build_tools_iso_file" {
-  type        = string
-  description = "Build tools ISO: VirtIO drivers, autounattend.xml, SSU bootstrap MSU"
-  default     = "ws2022-build-tools.iso"
+  description = "Ubuntu Server ISO filename"
 }
 
 # =============================================================================
@@ -91,12 +85,26 @@ variable "build_vlan" {
   default     = 15
 }
 
+variable "jump_host_ip" {
+  type        = string
+  description = "Jump host IP (for SSH firewall rule)"
+}
+
 # =============================================================================
-# Credentials
+# Identity / credentials
 # =============================================================================
 
-variable "admin_password" {
+variable "automation_username" {
   type        = string
-  description = "Local Administrator password - must match autounattend.xml"
-  sensitive   = true
+  description = "Automation service account (packer, terraform, ansible, etc)"
+}
+
+variable "ssh_authorized_pubkey" {
+  type        = string
+  description = "SSH public key for the automation service account (automation_username); stripped from the template by cleanup.sh."
+}
+
+variable "ssh_private_key_file" {
+  type        = string
+  description = "Path to the matching private key on the build host (used by Packer's SSH connection during build)"
 }
