@@ -1,0 +1,49 @@
+#cloud-config
+# Cloud-init - using Ubuntu autoinstall
+# https://docs.cloud-init.io/en/latest/reference/datasources/nocloud.html
+# https://canonical-subiquity.readthedocs-hosted.com/en/latest/reference/autoinstall-reference.html
+
+autoinstall:
+  version: 1
+
+  locale: en_US.UTF-8
+  keyboard:
+    layout: us
+
+  network:
+    version: 2
+    ethernets:
+      any-eth:
+        match:
+          name: "en*"
+        dhcp4: true
+
+  identity:
+    # Build hostname only
+    hostname: ubuntu-build
+    username: ${automation_username}
+    password: '*'
+
+  ssh:
+    install-server: true
+    allow-pw: false
+    authorized-keys:
+      - ${ssh_pubkey}
+
+  packages:
+    - qemu-guest-agent
+
+  storage:
+    layout:
+      name: direct
+      sizing-policy: all
+
+  shutdown: reboot
+
+  late-commands:
+    # Passwordless sudo for the automation account. 
+    - echo '${automation_username} ALL=(ALL) NOPASSWD:ALL' > /target/etc/sudoers.d/${automation_username}
+    - chmod 440 /target/etc/sudoers.d/${automation_username}
+
+  user-data:
+    timezone: Etc/UTC

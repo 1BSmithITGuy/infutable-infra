@@ -1,0 +1,14 @@
+#!/bin/sh
+# /etc/update-motd.d/01-banner: shows host info at login.
+
+HOSTNAME="$(hostname -f 2>/dev/null || hostname)"
+KERNEL="$(uname -r)"
+IP="$(hostname -I | awk '{print $1}')"
+UPTIME="$(uptime -p 2>/dev/null | sed 's/^up //')"
+
+printf '\n'
+printf '  Host:    %s\n'   "$HOSTNAME"
+printf '  IP:      %s\n'   "$IP"
+printf '  Kernel:  %s\n'   "$KERNEL"
+printf '  Uptime:  %s\n'   "$UPTIME"
+printf '\n'

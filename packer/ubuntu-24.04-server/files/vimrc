@@ -1,0 +1,57 @@
+" VIM settings (server)
+
+
+set nocompatible
+
+" syntax highlighting and filetype detection
+syntax on
+filetype plugin indent on
+
+
+" ---------------------------------
+" Editor
+" ---------------------------------
+
+" Show line numbers
+set number
+
+" Highlight the current cursor line
+set cursorline
+
+" Highlight matching brackets/parentheses
+set showmatch
+
+" Indentation behavior: 2 spaces, expand tabs
+set autoindent           " New lines inherit indentation
+set tabstop=2            " tab = 2 spaces
+set shiftwidth=2         " Indent/outdent uses 2 spaces
+set expandtab            " Insert spaces instead of tabs
+
+
+" ----------------
+" YAML formatting
+" ----------------
+
+" 2-space indentation (YAML)
+autocmd FileType yaml,yml setlocal ts=2 sts=2 sw=2 expandtab
+
+" Indent-based folding (YAML)
+autocmd FileType yaml,yml setlocal foldmethod=indent
+
+
+" ----------
+" Whitespace
+" ----------
+
+" Define a highlight group for trailing spaces
+highlight ExtraWhitespace ctermbg=red guibg=red
+
+" Highlight trailing whitespace
+autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
+
+" Avoid highlighting while typing
+autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+
+" Re-enable on returning to normal mode
+
+autocmd InsertLeave * match ExtraWhitespace /\s\+$/

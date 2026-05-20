@@ -10,9 +10,13 @@
 .idea/
 *.iml
 
+# Ansible
+vault.yml
+vault.yaml
+*.vault
+
 # Kubeconfigs & secrets
-# ops/jumpstation-v2/kubeconfigs/*
-# *.vars
+
 .env
 .env.*
 *.pem
@@ -39,7 +43,7 @@ packer_cache/
 charts/*/charts/
 *.tgz
 
-# Node modules (if you later have JS tooling)
+# Node modules
 node_modules/
 
 # Python cache
