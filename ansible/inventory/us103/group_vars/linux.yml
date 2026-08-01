@@ -1,0 +1,8 @@
+# vars for linux hosts
+#
+#  --------- Local execution (lab) ---------
+# Workstations apply their own configuration via ansible-pull; see
+# ansible/scripts/workstation-pull.sh
+
+ansible_connection: local
+ansible_python_interpreter: /usr/bin/python3

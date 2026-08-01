@@ -1,7 +1,9 @@
 # Group hierarchy for site US103
 #
 # Defines parent/child group relationships.
-# Host membership is in separate files (per role) and those are managed by terraform.
+# Host membership is in separate files (per role). Server inventory is managed
+# by terraform; workstation inventory is hand maintained (physical machines).
+
 
 all:
   children:
@@ -9,3 +11,13 @@ all:
     windows:
       children:
         domain_controllers: {}
+        windows_workstations: {}
+
+    linux:
+      children:
+        linux_workstations: {}
+
+    workstations:
+      children:
+        linux_workstations: {}
+        windows_workstations: {}

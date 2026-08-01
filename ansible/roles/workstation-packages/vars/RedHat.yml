@@ -1,0 +1,8 @@
+#  Package names specific to RedHat based distros (Fedora, Rocky, Alma, etc)
+#  Filename must match ansible_facts.os_family exactly.
+
+workstation_family_packages:
+  - fuse-sshfs
+  - openssh-clients
+  - remmina-plugins-rdp
+  - vim-enhanced

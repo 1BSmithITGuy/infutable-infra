@@ -1,0 +1,8 @@
+#  Linux workstations at site US103
+#
+#  NOTE:  this file is hand maintained; these are physical machines (not VMs).
+
+linux_workstations:
+  hosts:
+    bsus103ltfed01:
+    ltub01:  # renames to bsus103ltubu01 with the 26.04 reinstall

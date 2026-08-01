@@ -1,0 +1,23 @@
+#  Linux workstation vars
+#
+# Common packages (same name on both distros).
+# Names that differ go in roles/workstation-packages/vars/{RedHat,Debian}.yml
+
+workstation_common_packages:
+# (add in alphabetical order)
+  - audacity
+  - curl
+  - efibootmgr
+  - flatpak
+  - gimp
+  - git
+  - htop
+  - nodejs
+  - remmina
+  - rsync
+  - syncthing
+  - tmux
+  - tree
+  - wireguard-tools
+  - wl-clipboard
+  - xclip

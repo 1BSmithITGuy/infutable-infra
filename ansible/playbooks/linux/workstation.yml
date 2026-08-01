@@ -1,0 +1,21 @@
+#  Configure a physical Linux workstation (Fedora or Ubuntu)
+
+#  To run by hand, on the workstation:
+#    ansible-playbook playbooks/linux/workstation.yml --limit "$(hostname)" -K
+
+
+---
+
+- name: Configure Linux workstation
+  hosts: linux_workstations
+  gather_facts: true
+  pre_tasks:
+    - name: Ensure only the local host is targeted
+      ansible.builtin.assert:
+        that:
+          - ansible_play_hosts == [ansible_facts.hostname]
+        fail_msg: "Run with --limit \"$(hostname)\". Both hosts use connection: local."
+
+  roles:
+    - role: workstation-packages
+      tags: [packages]
