@@ -1,6 +1,6 @@
 #  Linux workstation vars
 
-# when adding apps,keep all alphabetical
+# when adding apps, keep all alphabetical
 
 #  --------- linux-packages role vars: ---------
 #  Installed by the distro's package manager (dnf, apt, etc). Names that differ between families are in roles/linux-packages/vars/<os_family>.yml
@@ -31,3 +31,11 @@ flatpak_apps:
   - com.jgraph.drawio.desktop
   - com.mattjakeman.ExtensionManager
   - md.obsidian.Obsidian
+
+#  --------- linux-vscode role vars: ---------
+
+vscode_extensions:
+  - ms-vscode-remote.remote-ssh
+  - ms-vscode-remote.remote-ssh-edit
+  - ms-vscode.remote-explorer
+  - pkief.material-icon-theme

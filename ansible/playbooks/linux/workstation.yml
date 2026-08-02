@@ -26,3 +26,6 @@
 
     - role: flatpak
       tags: [flatpak]
+
+    - role: linux-vscode
+      tags: [vscode]

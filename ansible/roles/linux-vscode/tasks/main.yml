@@ -1,0 +1,23 @@
+#  Installs VS Code from Microsoft's repo, and the extension list.
+#  Repo differs by family, so it is split into task files.
+
+---
+- name: Configure the Microsoft repo
+  ansible.builtin.include_tasks: "repo-{{ ansible_facts.os_family }}.yml"
+
+- name: Install VS Code
+  ansible.builtin.package:
+    name: code
+    state: present
+  become: true
+
+- name: List installed extensions
+  ansible.builtin.command: code --list-extensions
+  register: vscode_installed
+  changed_when: false
+
+- name: Install VS Code extensions
+  ansible.builtin.command: "code --install-extension {{ item }}"
+  loop: "{{ vscode_extensions }}"
+  when: item not in vscode_installed.stdout_lines
+  changed_when: true
