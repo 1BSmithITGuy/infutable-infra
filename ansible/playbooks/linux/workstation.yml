@@ -1,5 +1,8 @@
 #  Configure a physical Linux workstation (Fedora or Ubuntu)
 
+#  Collections:
+#    ansible-galaxy collection install -r requirements-linux.yml
+
 #  To run by hand, on the workstation:
 #    ansible-playbook playbooks/linux/workstation.yml --limit "$(hostname)" -K
 
@@ -13,9 +16,13 @@
     - name: Ensure only the local host is targeted
       ansible.builtin.assert:
         that:
-          - ansible_play_hosts == [ansible_facts.hostname]
-        fail_msg: "Run with --limit \"$(hostname)\". Both hosts use connection: local."
+          - ansible_play_hosts | length == 1
+          - inventory_hostname == ansible_facts.hostname
+        fail_msg: 'Run with --limit "$(hostname)". All hosts use connection: local.'
 
   roles:
-    - role: workstation-packages
+    - role: linux-packages
       tags: [packages]
+
+    - role: flatpak
+      tags: [flatpak]

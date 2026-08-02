@@ -1,7 +1,7 @@
 #  Package names specific to Debian based distros (Ubuntu)
 #  Filename must match ansible_facts.os_family exactly.
 
-workstation_family_packages:
+linux_packages_family:
   - openssh-client
   - remmina-plugin-rdp
   - sshfs

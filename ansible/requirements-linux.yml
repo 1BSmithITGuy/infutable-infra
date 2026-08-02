@@ -1,0 +1,6 @@
+---
+#  Collections for playbooks/linux/
+
+collections:
+  - name: community.general
+    version: ">=13.0.0,<14.0.0"

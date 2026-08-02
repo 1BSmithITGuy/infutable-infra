@@ -1,0 +1,21 @@
+#  Adds Flathub remote and installs apps that are packaged identically across distros.
+
+---
+- name: Install flatpak
+  ansible.builtin.package:
+    name: flatpak
+    state: present
+  become: true
+
+- name: Add Flathub remote
+  community.general.flatpak_remote:
+    name: flathub
+    flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+    state: present
+  become: true
+
+- name: Install flatpak applications
+  community.general.flatpak:
+    name: "{{ flatpak_apps }}"
+    state: present
+  become: true

@@ -1,9 +1,11 @@
 #  Linux workstation vars
-#
-# Common packages (same name on both distros).
-# Names that differ go in roles/workstation-packages/vars/{RedHat,Debian}.yml
 
-workstation_common_packages:
+# when adding apps,keep all alphabetical
+
+#  --------- linux-packages role vars: ---------
+#  Installed by the distro's package manager (dnf, apt, etc). Names that differ between families are in roles/linux-packages/vars/<os_family>.yml
+
+linux_packages_base:
 # (add in alphabetical order)
   - audacity
   - curl
@@ -21,3 +23,11 @@ workstation_common_packages:
   - wireguard-tools
   - wl-clipboard
   - xclip
+
+#  --------- flatpak role vars: ---------
+# Flathub application IDs, identical on every distro.
+
+flatpak_apps:
+  - com.jgraph.drawio.desktop
+  - com.mattjakeman.ExtensionManager
+  - md.obsidian.Obsidian
