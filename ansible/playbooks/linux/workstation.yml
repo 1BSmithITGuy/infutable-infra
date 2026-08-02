@@ -29,3 +29,6 @@
 
     - role: linux-vscode
       tags: [vscode]
+
+    - role: linux-chrome
+      tags: [chrome]

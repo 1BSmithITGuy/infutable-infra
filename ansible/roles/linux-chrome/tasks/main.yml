@@ -1,0 +1,11 @@
+#  Installs Google Chrome from Google repo.
+#  Repo differs by family, so it's split into task files.
+---
+- name: Configure the Google repo
+  ansible.builtin.include_tasks: "repo-{{ ansible_facts.os_family }}.yml"
+
+- name: Install chrome
+  ansible.builtin.package:
+    name: google-chrome-stable
+    state: present
+  become: true

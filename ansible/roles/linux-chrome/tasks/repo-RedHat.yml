@@ -1,0 +1,29 @@
+# Tasks to add the Google Chrome repo on the RedHat family
+# File has caps to match Ansible facts format
+
+# Chrome writes its own repo file with a different name value when upgrading, which would be flagged
+# "changed" on scheduled ansible runs. stat tests if the repo file exists, and if it does, ansible
+# will not add/modify the existing repo file.
+
+---
+- name: Import Google signing key
+  ansible.builtin.rpm_key:
+    key: https://dl.google.com/linux/linux_signing_key.pub
+    state: present
+  become: true
+
+- name: Check if Chrome repo exists
+  ansible.builtin.stat:
+    path: /etc/yum.repos.d/google-chrome.repo
+  register: chrome_repo
+
+- name: Add the Google Chrome repo
+  ansible.builtin.yum_repository:
+    name: google-chrome
+    description: Google Chrome
+    baseurl: https://dl.google.com/linux/chrome/rpm/stable/x86_64
+    gpgcheck: true
+    gpgkey: https://dl.google.com/linux/linux_signing_key.pub
+    enabled: true
+  become: true
+  when: not chrome_repo.stat.exists
