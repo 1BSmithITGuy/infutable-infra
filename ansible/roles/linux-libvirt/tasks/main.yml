@@ -1,0 +1,18 @@
+# Installs KVM/libvirt stack and adds user to libvirt group
+# Package names differ by family, so they are data in vars/
+
+- name: Load OS package names (by family)
+  ansible.builtin.include_vars: "{{ ansible_facts.os_family }}.yml"
+
+- name: Install Libvirt packages
+  ansible.builtin.package:
+    name: "{{ libvirt_packages }}"
+    state: present
+  become: true
+
+- name: Add the user to the libvirt group
+  ansible.builtin.user:
+    name: "{{ ansible_user_id }}"
+    groups: libvirt
+    append: true
+  become: true

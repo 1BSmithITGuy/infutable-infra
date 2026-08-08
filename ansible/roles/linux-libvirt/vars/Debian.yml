@@ -1,0 +1,8 @@
+# filename must match OS family; case sensitive
+
+libvirt_packages:
+  - libvirt-clients
+  - libvirt-daemon-system
+  - qemu-system-x86
+  - virt-manager
+  - virtinst

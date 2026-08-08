@@ -1,0 +1,9 @@
+# Install CLaude Code
+# No distro package exists
+# Creates - run only when binary is absent
+# Installed per user (no become)
+
+- name: Install Claude Code
+  ansible.builtin.shell:
+    cmd: curl -fsSL https://claude.ai/install.sh | bash
+    creates: "{{ ansible_env.HOME }}/.local/bin/claude"

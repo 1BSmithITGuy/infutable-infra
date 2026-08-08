@@ -1,0 +1,12 @@
+# Install VLC. Fedora needs RPM fusion
+
+---
+- name: Configure RPM fusion free
+  ansible.builtin.include_tasks: repo-RedHat.yml
+  when: ansible_facts.os_family == "RedHat"
+
+- name: Install VLC
+  ansible.builtin.package:
+    name: vlc
+    state: present
+  become: true

@@ -1,0 +1,8 @@
+# Filename must match ansible_facts.os_family, case sensitive
+
+libvirt_packages:
+  - libvirt-client
+  - libvirt-daemon-kvm
+  - qemu-kvm
+  - virt-install
+  - virt-manager

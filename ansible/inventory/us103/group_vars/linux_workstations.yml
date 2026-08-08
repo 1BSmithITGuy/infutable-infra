@@ -14,7 +14,10 @@ linux_packages_base:
   - gimp
   - git
   - htop
+  - libreoffice
+  - nemo
   - nodejs
+  - podman
   - remmina
   - rsync
   - syncthing

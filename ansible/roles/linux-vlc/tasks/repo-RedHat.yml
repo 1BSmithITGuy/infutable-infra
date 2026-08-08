@@ -1,0 +1,12 @@
+# RPM fusion required for VLC on Fedora
+# Filename must match ansible_facts.os_family
+# disable_gpg_check is required here -  the release RPM carries the key
+
+---
+
+- name: Install RPM Fusion free
+  ansible.builtin.dnf:
+    name: "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_facts.distribution_major_version }}.noarch.rpm"
+    state: present
+    disable_gpg_check: true
+  become: true
