@@ -1,63 +1,82 @@
+# VMware Host Inventory (PowerCLI)
 
-## General
+Author: Bryan Smith  
+Created: 2026-02-06  
+Last Updated: 2026-10-02
 
-This directory contains a focused VMware example from an archived lab repository (see [Get-InfutableVMWInventory.ps1](Get-InfutableVMWInventory.ps1)).
+## Revision History
 
-The script included here was intentionally chosen because it represents a broad, environment-wide use case rather than a narrow, one-off task. It scales well, iterates across multiple layers of the vSphere inventory, constructs structured host-level objects from multiple data sources, and produces output suitable for operational review and future automation.
-
-**This README serves two purposes:**
-
-* To explain what the script does and why it was designed this way.
-* To document why VMware is no longer the primary platform used in my lab while still demonstrating deep familiarity with vSphere and PowerCLI (see **Lab Direction and Platform Choices** section below).
-
----
-
-## Get-InfutableVMWInventory.ps1
-
-### This script generates a detailed vSphere host inventory report using data gathered and modeled from multiple sources:
-
-* **vCenter:** PowerCLI with direct vSphere Management API view objects (`Get-View`)
-* **External data sources:** CSV files and Excel spreadsheets in this lab, with the same logic easily adaptable to database-backed sources in a production environment
-
-### What makes this script powerful is not just the data it collects, but the way it is structured
-
-* **Engine-based design:**
-  The core logic functions as an engine that traverses an entire environment efficiently. Once this traversal exists, the same structure can be reused or extended for additional reporting, troubleshooting, automation, or deeper visibility without rewriting new scripts from scratch.
-
-* **Direct API access with Get-View:**
-  By relying on `Get-View` instead of higher-level PowerCLI cmdlets (`Get-VM`, `Get-VMHost`, etc.), the script interacts more directly with the vSphere Management API. This approach is significantly faster in larger environments and allows access to more granular data than traditional cmdlets expose.
+| Date       | Author | Change Summary                                                        |
+| ---------- | ------ | --------------------------------------------------------------------- |
+| 2026-02-06 | Bryan  | Initial document                                                      |
+| 2026-10-02 | Bryan  | Added sample output and field reference, trimmed lab platform section |
 
 ---
 
-## Output and Data Processing
+## Overview
 
-The script produces a formatted Excel workbook using `Export-Excel`, resulting in a structured Excel table with filters applied. The output is immediately usable for operational review and analysis, and the same data could just as easily be pushed into an external system such as a CMDB or NetBox.
+[Get-InfutableVMWInventory.ps1](Get-InfutableVMWInventory.ps1) builds an Excel report of every ESXi host in vCenter, one row per host: ESXi version, management network, out-of-band management IP (iDRAC, iLO, etc.), warranty status, licensing, and site contact/address.
 
-External data sources are incorporated and processed as part of the report, including:
+It is based on a script I wrote for a multi-site production environment with several hundred hosts. It started as a way to collect the out-of-band management IP for every host. Once it could walk the whole environment, teammates started asking for more data, and it became the base/engine for other reports and bulk changes.
 
-* **Warranty and support data:**
-  Vendor or internally sourced lifecycle data such as serial numbers or service tags, support start and end dates, ship dates, and related metadata. All major hardware vendors expose this data in structured formats suitable for import/correlation.
+**Sample output** (lab hosts, sample data, partial view):
 
-* **Site-specific information:**
-  Most organizations operating at scale maintain some method of identifying physical or logical sites across IT, networking, accounting, or facilities. This script demonstrates how that data can be incorporated into infrastructure reporting.
+![Sample output](images/sample-output.png)
 
-* **Example automation use cases:**
-  The same engine used for reporting can be leveraged to drive automation. One example includes:
+**Status:** `REPLACE` = hardware is 7+ years old (from support start), `RENEW` = support ends this year or has already ended, `OK` = in support, `! Data` = serial found but support dates are missing, blank = serial not in the asset spreadsheet.
 
-  * **Tagging:** Automatically tagging hosts with lifecycle, warranty, or site metadata
-  * **Alerting:** Including those tags in alerts or notifications when hardware ages out of support or requires replacement
+## Report Fields
 
----
+| Category               | Fields                                                                                | Source                                                                                                                                                                |
+| ---------------------- | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Host                   | HostName, version, build, Image Profile, Uptime (days)                                | vCenter (`Get-View HostSystem`)                                                                                                                                       |
+| Network                | vmk0 IP, vmk0 mask (prefix length), vmk0 CIDR                                         | vCenter, CIDR calculated from IP and mask                                                                                                                             |
+| Out-of-band management | Remote Mgt IP                                                                         | ESXCLI (`hardware ipmi bmc get`)                                                                                                                                      |
+| Hardware and warranty  | Model, Serial, Support Start, Support End, Status                                     | Model and serial from vCenter, support dates matched by serial from a hardware asset spreadsheet, Status calculated                                                   |
+| Licensing              | License Key, License Type                                                             | vCenter license manager                                                                                                                                               |
+| Site                   | Site Code, City, State, Zip Code, Address, Country, Site Contact, Site Contact: Email | Site code parsed from the hostname (`bsus103vm01` = `US103`, see [naming](../README.md#naming-and-multi-site-design)), the rest matched by site code from a sites CSV |
 
-## Lab Direction and Platform Choices
+## How It Works
 
-### Why my lab no longer runs on VMware
+1. `Get-View -ViewType HostSystem` pulls all hosts in one call with a property filter. Working with the vSphere API view objects directly is much faster than `Get-VMHost` in large environments and exposes more data.
+2. The script loops through each host, adds the report fields to the host object, and fills them from vCenter, ESXCLI, and the two input files.
+3. Results are sorted by hostname and exported with `Export-Excel` as a styled table with filters, on a worksheet named after the vCenter.
 
-When Broadcom acquired VMware, I chose not to continue running vSphere in my lab after my evaluation licenses expired. While I hold multiple VMware certifications and have extensive experience with the platform, I wanted to broaden my focus toward infrastructure-as-code, microservices and Kubernetes, and platform-agnostic automation rather than remain tied to a single-vendor virtualization stack.
+## Inputs
 
-Moving the lab to Xen/XCP-ng and Proxmox (KVM) created opportunities to work with different hypervisors, APIs, and tooling such as bash and Terraform, while expanding my exposure to alternative virtualization and operational models.
+| File | Matched on | Provides |
+|------|------------|----------|
+| `Input\sites.csv` | `Site Code` | Contact Name, Contact Email Address, Address, City, State, Zip Code, Country |
+| `Input\LabHardware.xlsx` (worksheet `Assets`) | `Serial Number` | Support Start, Support End |
 
-More broadly, I expect changes in VMware licensing and pricing, along with the increasing use of AI-assisted tooling, to:
+Paths are set at the top of the script. Either file could be replaced by a database or vendor warranty API.
 
-* Increase competition in the virtualization market
-* Accelerate development, adoption, and migration toward alternative hypervisors and microservices-based architectures.
+## Prerequisites
+
+- PowerCLI and ImportExcel modules
+- An active `Connect-VIServer` session to the target vCenter
+
+## Other Uses
+
+- Push the same host objects to a CMDB or NetBox instead of Excel
+- Tag hosts in vCenter with site and warranty data so alerts include it
+- Bulk configuration changes using the same loop
+
+## Lab Platform
+
+My lab moved from vSphere to XCP-ng and Proxmox when my evaluation licenses expired after the Broadcom acquisition. This script is kept as a reference and is not actively maintained.
+
+## Future Improvements
+
+- Split the section blocks (`Get-LicenseInfo`, `Get-HostCidrAndNetMask`, etc.) into functions
+- Run the license query once before the host loop (it returns every host's assignment), keep the per-host match inside the loop
+- Parameters for the input and output paths
+
+## References
+
+### Internal
+- [Naming and multi-site design](../README.md#naming-and-multi-site-design)
+
+### External
+- [ImportExcel module](https://github.com/dfinke/ImportExcel)
+- [VMware PowerCLI](https://developer.broadcom.com/powercli)
